@@ -1,0 +1,71 @@
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class MyTheme {
+  static late SharedPreferences _prefs;
+
+  // Initialize the _prefs variable
+  static Future<void> init() async {
+    _prefs = await SharedPreferences.getInstance();
+  }
+
+  static Color get mainbackground => _mainbackground();
+  static Color get background => _background();
+  static Color get textcolor => _textcolor();
+  static Color get button1 => _button1();
+  static Color get button2 => _button2();
+  static Color get boxshadow => _boxshadow();
+  static Color get highlightcolor => _highlightcolor();
+  static get toggleTheme => _toggleTheme();
+  static bool get isDarkMode => _isDarkMode();
+
+  static Color _mainbackground() {
+    return (_prefs.getBool("darkMode") ?? true)
+        ? Color.fromARGB(255, 9, 9, 3)
+        : const Color.fromARGB(255, 253, 253, 253);
+  }
+
+  static Color _background() {
+    return (_prefs.getBool("darkMode") ?? true)
+        ? const Color.fromARGB(255, 24, 29, 33)
+        : const Color.fromARGB(255, 215, 217, 217);
+  }
+
+  static Color _textcolor() {
+    return (_prefs.getBool("darkMode") ?? true)
+        ? const Color.fromARGB(255, 253, 254, 255)
+        : const Color.fromARGB(255, 25, 21, 19);
+  }
+
+  static Color _button1() {
+    return (_prefs.getBool("darkMode") ?? true)
+        ? const Color.fromARGB(255, 231, 192, 43)
+        : const Color.fromARGB(255, 55, 69, 67);
+  }
+
+  static Color _button2() {
+    return (_prefs.getBool("darkMode") ?? true)
+        ? const Color.fromARGB(255, 234, 56, 41)
+        : const Color.fromARGB(255, 228, 86, 75);
+  }
+
+  static Color _boxshadow() {
+    return (_prefs.getBool("darkMode") ?? true)
+        ? Colors.transparent
+        : Colors.grey.withOpacity(0.5);
+  }
+
+  static Color _highlightcolor() {
+    return (_prefs.getBool("darkMode") ?? true)
+        ? const Color.fromARGB(255, 7, 241, 228)
+        : const Color.fromARGB(255, 201, 208, 103);
+  }
+
+  static bool _isDarkMode() {
+    return _prefs.getBool("darkMode") ?? true;
+  }
+
+  static void _toggleTheme() {
+    _prefs.setBool('darkMode', !(_prefs.getBool("darkMode") ?? false));
+  }
+}
