@@ -3,14 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:smartclassmate/tools/helper.dart';
 
-class TeEditProfile extends StatefulWidget {
-  const TeEditProfile({Key? key}) : super(key: key);
+class EditProfile extends StatefulWidget {
+  const EditProfile({Key? key}) : super(key: key);
 
   @override
-  State<TeEditProfile> createState() => _EditProfileState();
+  State<EditProfile> createState() => _EditProfileState();
 }
 
-class _EditProfileState extends State<TeEditProfile> {
+class _EditProfileState extends State<EditProfile> {
   TextEditingController studentNameController = TextEditingController();
   TextEditingController mobileNumberController = TextEditingController();
   TextEditingController blockController = TextEditingController();

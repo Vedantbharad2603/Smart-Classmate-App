@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:smartclassmate/tools/helper.dart';
-import 'package:smartclassmate/tools/theme.dart';
 
-class TeSettings extends StatefulWidget {
-  const TeSettings({Key? key}) : super(key: key);
+class Settings extends StatefulWidget {
+  const Settings({Key? key}) : super(key: key);
 
   @override
-  State<TeSettings> createState() => _TeSettingsState();
+  State<Settings> createState() => _SettingsState();
 }
 
-class _TeSettingsState extends State<TeSettings> {
+class _SettingsState extends State<Settings> {
   int selectedThemeIndex = 0;
 
   @override
@@ -32,7 +31,7 @@ class _TeSettingsState extends State<TeSettings> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -135,14 +134,14 @@ class _ThemeSelectionDialogState extends State<ThemeSelectionDialog> {
         borderRadius: BorderRadius.circular(12.0),
       ),
       child: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Select Theme'),
-            SizedBox(height: 10),
+            const Text('Select Theme'),
+            const SizedBox(height: 10),
             ListTile(
-              title: Text('Dark Theme'),
+              title: const Text('Dark Theme'),
               leading: Radio(
                 value: 0,
                 groupValue: widget.selectedThemeIndex,
@@ -153,7 +152,7 @@ class _ThemeSelectionDialogState extends State<ThemeSelectionDialog> {
               ),
             ),
             ListTile(
-              title: Text('Light Theme'),
+              title: const Text('Light Theme'),
               leading: Radio(
                 value: 1,
                 groupValue: widget.selectedThemeIndex,

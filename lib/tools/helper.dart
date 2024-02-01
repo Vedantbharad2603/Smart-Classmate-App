@@ -1,3 +1,5 @@
+// ignore_for_file: sort_child_properties_last
+
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'package:smartclassmate/tools/theme.dart';
@@ -91,6 +93,59 @@ Future<void> showFullDescriptionDialog(String fullDescription, context) {
         ],
       );
     },
+  );
+}
+
+Future giveuserinfo(String username, context) {
+  return showModalBottomSheet(
+    context: context,
+    builder: (context) {
+      // Replace 'YourUsername' with the actual username
+      return Container(
+        height: 80,
+        color: MyTheme.background,
+        child: Center(
+          child: Text(
+            username,
+            style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: MyTheme.textcolor),
+          ),
+        ),
+      );
+    },
+  );
+}
+
+Widget buildDropdown(
+    int selectedValue, Function(int?) onChanged, List<int> values, context) {
+  return Padding(
+    padding: EdgeInsets.all(getHeight(context, 0.001)),
+    child: Container(
+      padding: EdgeInsets.only(
+          left: getWidth(context, 0.01), right: getWidth(context, 0.01)),
+      decoration: BoxDecoration(
+        color: MyTheme.background,
+        borderRadius: BorderRadius.circular(getHeight(context, 0.001)),
+      ),
+      child: DropdownButton<int>(
+        dropdownColor: MyTheme.background,
+        value: selectedValue,
+        icon: const Icon(Icons.arrow_drop_down_rounded),
+        iconSize: 40,
+        isExpanded: true,
+        underline: const SizedBox(),
+        style: TextStyle(color: MyTheme.textcolor, fontSize: 20),
+        items: values.map((unit) {
+          return DropdownMenuItem<int>(
+            value: unit,
+            child: Text(unit.toString()),
+          );
+        }).toList(),
+        onChanged: onChanged,
+      ),
+    ),
   );
 }
 

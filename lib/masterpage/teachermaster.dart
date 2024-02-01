@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:smartclassmate/Teacher_Screen/te_home_page.dart';
-import 'package:smartclassmate/Teacher_Screen/te_profilepage.dart';
-import 'package:smartclassmate/Teacher_Screen/te_updates.dart';
-import 'package:smartclassmate/Teacher_Screen/te_attendance.dart';
+import 'package:smartclassmate/Teacher_Screen/SearchStudent.dart';
+import 'package:smartclassmate/Teacher_Screen/Profilepage.dart';
+import 'package:smartclassmate/Teacher_Screen/Messages.dart';
+import 'package:smartclassmate/Teacher_Screen/Attendance.dart';
+import 'package:smartclassmate/tools/theme.dart';
 
 class TeacherMasterPage extends StatefulWidget {
   const TeacherMasterPage({super.key});
@@ -15,16 +16,17 @@ class TeacherMasterPage extends StatefulWidget {
 
 class _TeacherMasterPageState extends State<TeacherMasterPage> {
   int _selectedIndex = 2;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
   static const List<Widget> _widgetOptions = <Widget>[
-    TeMessage(),
-    TeHomepage(),
-    TeAttendance(),
-    TeProfilePage(),
+    Messages(),
+    SearchStudent(),
+    Attendance(),
+    Profilepage(),
   ];
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    double fontSize = screenWidth * 0.06;
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Center(
@@ -32,7 +34,7 @@ class _TeacherMasterPageState extends State<TeacherMasterPage> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: MyTheme.mainbackground,
           boxShadow: [
             BoxShadow(
               blurRadius: 20,
@@ -44,31 +46,36 @@ class _TeacherMasterPageState extends State<TeacherMasterPage> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
             child: GNav(
-              rippleColor: Colors.grey[300]!,
-              hoverColor: Colors.grey[100]!,
+              backgroundColor: MyTheme.mainbackground,
+              rippleColor: MyTheme.background,
+              hoverColor: MyTheme.background,
               gap: 8,
-              activeColor: Colors.black,
+              activeColor: MyTheme.button1,
               iconSize: 24,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              duration: Duration(milliseconds: 400),
-              tabBackgroundColor: Colors.grey[100]!,
-              color: Colors.black,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              duration: const Duration(milliseconds: 400),
+              tabBackgroundColor: MyTheme.background,
+              color: MyTheme.textcolor,
               tabs: [
                 GButton(
                   icon: Icons.message,
-                  text: 'Message',
+                  iconSize: fontSize,
+                  // text: 'Notice Board',
                 ),
                 GButton(
                   icon: LineIcons.search,
-                  text: 'Search',
+                  iconSize: fontSize,
+                  // text: 'Search',
                 ),
                 GButton(
                   icon: Icons.account_box,
-                  text: 'Attendance',
+                  iconSize: fontSize,
+                  // text: 'Attendance',
                 ),
                 GButton(
                   icon: LineIcons.user,
-                  text: 'Profile',
+                  iconSize: fontSize,
+                  // text: 'Profile',
                 ),
               ],
               selectedIndex: _selectedIndex,

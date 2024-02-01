@@ -1,6 +1,5 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:smartclassmate/Student_Screen/st_profilepage.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
 
@@ -117,7 +116,7 @@ class _STWorkState extends State<STWork> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Container(
+          SizedBox(
             height: getHeight(context, 1),
             child: ListView(
               scrollDirection: Axis.vertical,
@@ -198,7 +197,6 @@ class _STWorkState extends State<STWork> {
                             () async {
                               // Handle Upload or Reupload based on the 'uploaded' status
                               if (work['uploaded']) {
-                                print('Reupload work option selected');
                               } else {
                                 // Open file explorer to pick a PDF file
                                 FilePickerResult? result =
@@ -208,7 +206,6 @@ class _STWorkState extends State<STWork> {
 
                                 if (result != null) {
                                   String fileName = result.files.single.name;
-                                  print('Selected PDF file: $fileName');
 
                                   // Display the selected file name and provide upload and cancel buttons
                                   // ignore: use_build_context_synchronously
@@ -284,7 +281,6 @@ class _STWorkState extends State<STWork> {
                                   );
                                 } else {
                                   // User canceled the file picker
-                                  print('File picker canceled');
                                 }
                               }
                             },
@@ -318,7 +314,7 @@ class _STWorkState extends State<STWork> {
   String truncateDescription(String description, int maxWords) {
     List<String> words = description.split(' ');
     if (words.length > maxWords) {
-      return words.sublist(0, maxWords).join(' ') + '...';
+      return '${words.sublist(0, maxWords).join(' ')}...';
     } else {
       return description;
     }

@@ -1,16 +1,18 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:another_stepper/widgets/another_stepper.dart';
 import 'package:another_stepper/dto/stepper_data.dart';
 import 'package:smartclassmate/tools/helper.dart';
 
-class TeStudentCourses extends StatefulWidget {
-  const TeStudentCourses({super.key});
+class StudentCourses extends StatefulWidget {
+  const StudentCourses({super.key});
 
   @override
-  State<TeStudentCourses> createState() => _TeStudentCoursesState();
+  State<StudentCourses> createState() => _StudentCoursesState();
 }
 
-class _TeStudentCoursesState extends State<TeStudentCourses> {
+class _StudentCoursesState extends State<StudentCourses> {
   List<String> concepts = [
     "Writing-CP_SM",
     "Writing-Address",
@@ -87,7 +89,7 @@ class _TeStudentCoursesState extends State<TeStudentCourses> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 8),
+                  padding: const EdgeInsets.only(left: 8),
                   child: Text(
                     'My Courses',
                     style: TextStyle(fontSize: getSize(context, 2.8)),

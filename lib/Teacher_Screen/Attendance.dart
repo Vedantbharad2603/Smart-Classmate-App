@@ -1,15 +1,16 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
 
-class TeAttendance extends StatefulWidget {
-  const TeAttendance({Key? key}) : super(key: key);
+class Attendance extends StatefulWidget {
+  const Attendance({Key? key}) : super(key: key);
 
   @override
-  State<TeAttendance> createState() => _TeAttendanceState();
+  State<Attendance> createState() => _AttendanceState();
 }
 
-class _TeAttendanceState extends State<TeAttendance> {
+class _AttendanceState extends State<Attendance> {
   List<Map<String, dynamic>> studentData = [
     {'studentname': 'Vedant020124', 'name': 'Vedant', 'shift': 1, 'status': -1},
     {'studentname': 'Jhanvi020124', 'name': 'Jhanvi', 'shift': 1, 'status': -1},
@@ -20,10 +21,33 @@ class _TeAttendanceState extends State<TeAttendance> {
       'status': -1
     },
     {'studentname': 'Om020124', 'name': 'Om', 'shift': 2, 'status': -1},
+    {
+      'studentname': 'Dhaivat020124',
+      'name': 'Dhaivat',
+      'shift': 2,
+      'status': -1
+    },
   ];
 
-  int selectedShift = 1; // Default shift
-  String searchText = ''; // Variable to store search text
+  List<int> shiftTypes = [1, 2];
+  String searchText = '';
+  late int selectedShift;
+
+  @override
+  void initState() {
+    super.initState();
+    studentData.sort((a, b) => a['name'].compareTo(b['name']));
+    selectedShift = _getCurrentShift();
+  }
+
+  int _getCurrentShift() {
+    DateTime now = DateTime.now();
+    if (now.hour >= 6 && now.hour < 12) {
+      return 1;
+    } else {
+      return 2;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,25 +74,22 @@ class _TeAttendanceState extends State<TeAttendance> {
             "Student Attendance",
             style: TextStyle(
                 color: MyTheme.textcolor,
-                fontSize: 20.0,
+                fontSize: getSize(context, 2.7),
                 fontWeight: FontWeight.bold),
           ),
           actions: [
             InkWell(
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => STProfilePage(),
-                //   ),
-                // );
+                giveuserinfo('Username: Vedant Bharad', context);
               },
               child: Padding(
-                padding: EdgeInsets.only(right: 16.0, top: 8.0, bottom: 8.0),
+                padding:
+                    const EdgeInsets.only(right: 16.0, top: 8.0, bottom: 8.0),
                 child: CircleAvatar(
                   radius: 24.0,
-                  backgroundColor: Color.fromARGB(255, 0, 241, 101),
-                  child: Icon(Icons.person, color: Colors.black, size: 28.8),
+                  backgroundColor: MyTheme.highlightcolor,
+                  child: Icon(Icons.person,
+                      color: Colors.black, size: getSize(context, 3)),
                 ),
               ),
             )
@@ -80,32 +101,35 @@ class _TeAttendanceState extends State<TeAttendance> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Text(
+                    "Shift",
+                    style: TextStyle(
+                        color: MyTheme.textcolor,
+                        fontSize: getSize(context, 2.4)),
+                  ),
+                ),
                 Container(
                   color: MyTheme.background,
                   child: Padding(
                     padding: EdgeInsets.only(
-                        left: 10, bottom: 2.5, right: 10, top: 2.5),
-                    child: DropdownButton<int>(
-                      value: selectedShift,
-                      dropdownColor: MyTheme.background,
-                      style: TextStyle(color: MyTheme.textcolor),
-                      onChanged: (int? newValue) {
+                      left: getWidth(context, 0.02),
+                      right: getWidth(context, 0.02),
+                    ),
+                    child: buildDropdown(
+                      selectedShift,
+                      (int? newValue) {
                         setState(() {
                           selectedShift = newValue!;
                         });
                       },
-                      items: [1, 2]
-                          .map<DropdownMenuItem<int>>(
-                            (int value) => DropdownMenuItem<int>(
-                              value: value,
-                              child: Text('Shift $value'),
-                            ),
-                          )
-                          .toList(),
+                      shiftTypes,
+                      context,
                     ),
                   ),
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -125,8 +149,26 @@ class _TeAttendanceState extends State<TeAttendance> {
                           style: TextStyle(
                             color: MyTheme.mainbuttontext,
                             fontWeight: FontWeight.w600,
-                            fontSize: 18,
+                            fontSize: getSize(context, 2.2),
                           ),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        // _markAllStudentsPresent();
+                      },
+                      child: Container(
+                        height: getHeight(context, 0.05),
+                        width: getWidth(context, 0.11),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: MyTheme.button1.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(30)),
+                        child: Icon(
+                          Icons.download,
+                          color: MyTheme.button1,
+                          size: getSize(context, 2.6),
                         ),
                       ),
                     ),
@@ -146,7 +188,7 @@ class _TeAttendanceState extends State<TeAttendance> {
                           style: TextStyle(
                             color: MyTheme.button2,
                             fontWeight: FontWeight.w600,
-                            fontSize: 18,
+                            fontSize: getSize(context, 2.2),
                           ),
                         ),
                       ),
@@ -159,7 +201,7 @@ class _TeAttendanceState extends State<TeAttendance> {
                     // ),
                   ],
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 TextField(
                   onChanged: (value) {
                     setState(() {
@@ -176,45 +218,57 @@ class _TeAttendanceState extends State<TeAttendance> {
                     ),
                   ),
                 ),
-                SizedBox(height: 16.0),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: filteredStudents.length,
-                  itemBuilder: (context, index) {
-                    int status = filteredStudents[index]['status'];
-                    return Card(
-                      child: ListTile(
-                        title: Text(filteredStudents[index]['studentname']),
-                        subtitle: Text(_getStatusText(status)),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            _buildIconButton(Icons.check,
-                                status == 1 ? Colors.green : Colors.grey, () {
-                              // _updateStatus(index, 1); // Mark as Present
-                              _updateStatus(
-                                  filteredStudents[index]['studentname'],
-                                  1); // Mark as Present
-                            }),
-                            _buildIconButton(Icons.cancel,
-                                status == 0 ? Colors.red : Colors.grey, () {
-                              // _updateStatus(index, 0); // Mark as Absent
-                              _updateStatus(
-                                  filteredStudents[index]['studentname'],
-                                  0); // Mark as Absent
-                            }),
-                            _buildIconButton(Icons.note_alt,
-                                status == 3 ? Colors.orange : Colors.grey, () {
-                              // _updateStatus(index, 3); // Mark as On Leave
-                              _updateStatus(
-                                  filteredStudents[index]['studentname'],
-                                  3); // Mark as On Leave
-                            }),
-                          ],
+                const SizedBox(height: 16.0),
+                SizedBox(
+                  height: getHeight(context, 0.5),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: filteredStudents.length,
+                    itemBuilder: (context, index) {
+                      int status = filteredStudents[index]['status'];
+                      return Card(
+                        color: MyTheme.background,
+                        child: ListTile(
+                          title: Text(
+                            filteredStudents[index]['name'],
+                            style: TextStyle(color: MyTheme.textcolor),
+                          ),
+                          subtitle: Text(
+                            _getStatusText(status),
+                            style: TextStyle(
+                                color: MyTheme.textcolor.withOpacity(0.5)),
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _buildIconButton(Icons.check,
+                                  status == 1 ? Colors.green : Colors.grey, () {
+                                // _updateStatus(index, 1); // Mark as Present
+                                _updateStatus(
+                                    filteredStudents[index]['studentname'],
+                                    1); // Mark as Present
+                              }),
+                              _buildIconButton(Icons.cancel,
+                                  status == 0 ? Colors.red : Colors.grey, () {
+                                // _updateStatus(index, 0); // Mark as Absent
+                                _updateStatus(
+                                    filteredStudents[index]['studentname'],
+                                    0); // Mark as Absent
+                              }),
+                              _buildIconButton(Icons.note_alt,
+                                  status == 3 ? Colors.orange : Colors.grey,
+                                  () {
+                                // _updateStatus(index, 3); // Mark as On Leave
+                                _updateStatus(
+                                    filteredStudents[index]['studentname'],
+                                    3); // Mark as On Leave
+                              }),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
@@ -224,8 +278,12 @@ class _TeAttendanceState extends State<TeAttendance> {
           onPressed: () {
             // _saveData();
           },
-          child: Icon(Icons.save),
-          backgroundColor: Colors.blue,
+          backgroundColor: MyTheme.mainbutton,
+          child: Icon(
+            Icons.upload,
+            color: MyTheme.mainbuttontext,
+            size: getSize(context, 3),
+          ),
         ),
       ),
     );

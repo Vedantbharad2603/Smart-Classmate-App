@@ -3,27 +3,16 @@ import 'package:smartclassmate/Start_Screen/login.dart';
 import 'package:smartclassmate/Student_Screen/st_downloads.dart';
 import 'package:smartclassmate/Student_Screen/st_edit_profile.dart';
 import 'package:smartclassmate/Student_Screen/st_my_courses.dart';
-import 'package:smartclassmate/Student_Screen/st_settings.dart';
 import 'package:smartclassmate/tools/helper.dart';
 
-class TeProfilePage extends StatefulWidget {
-  const TeProfilePage({super.key});
+class Profilepage extends StatefulWidget {
+  const Profilepage({super.key});
 
   @override
-  State<TeProfilePage> createState() => _ProfilePageState();
+  State<Profilepage> createState() => _ProfilePageState();
 }
 
-List<MapEntry<DateTime, int>> dateIntList = [
-  MapEntry(DateTime(2024, 1, 1), 0),
-  MapEntry(DateTime(2024, 1, 2), 1),
-  MapEntry(DateTime(2024, 1, 3), 1),
-  MapEntry(DateTime(2024, 1, 4), 1),
-  MapEntry(DateTime(2024, 1, 5), 2),
-  MapEntry(DateTime(2024, 1, 6), 2),
-  MapEntry(DateTime(2024, 1, 7), 2),
-];
-
-class _ProfilePageState extends State<TeProfilePage> {
+class _ProfilePageState extends State<Profilepage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -58,10 +47,10 @@ class _ProfilePageState extends State<TeProfilePage> {
                               children: [
                                 CircleAvatar(
                                   backgroundColor:
-                                      Color.fromARGB(255, 0, 241, 101),
+                                      const Color.fromARGB(255, 0, 241, 101),
                                   radius: getSize(context, 4.2),
                                   child: Text(
-                                    "J",
+                                    "V",
                                     style: TextStyle(
                                         fontSize: getSize(context, 4.1),
                                         color: Colors.black),
@@ -75,7 +64,7 @@ class _ProfilePageState extends State<TeProfilePage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "JHANVI BHARAD",
+                                        "VEDANT BHARAD",
                                         style: TextStyle(
                                             fontSize: getSize(context, 3.1),
                                             fontWeight: FontWeight.bold),
@@ -240,7 +229,7 @@ class _ProfilePageState extends State<TeProfilePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => StMyCourses(),
+                              builder: (context) => const StMyCourses(),
                             ),
                           );
                         }, Icons.library_books_outlined),
@@ -248,7 +237,7 @@ class _ProfilePageState extends State<TeProfilePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => StDownloads(),
+                              builder: (context) => const StDownloads(),
                             ),
                           );
                         }, Icons.download),
@@ -298,13 +287,12 @@ class _ProfilePageState extends State<TeProfilePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => StEditProfile(),
+                              builder: (context) => const StEditProfile(),
                             ),
                           );
                         }, Icons.person_outline_sharp),
-                        customContainerWithInkWell("About Us", () {
-                          print("Downloads tapped!");
-                        }, Icons.info_outline_rounded),
+                        customContainerWithInkWell(
+                            "About Us", () {}, Icons.info_outline_rounded),
                         customContainerWithInkWell("Settings", () {
                           // Navigator.push(
                           //   context,
@@ -370,7 +358,7 @@ class _ProfilePageState extends State<TeProfilePage> {
                       ),
                       child: Icon(
                         myicon,
-                        color: Color.fromARGB(255, 76, 136, 15),
+                        color: const Color.fromARGB(255, 76, 136, 15),
                         size: getSize(context, 2),
                       ),
                     ),
