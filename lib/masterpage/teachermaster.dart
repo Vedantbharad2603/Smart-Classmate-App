@@ -18,8 +18,8 @@ class _TeacherMasterPageState extends State<TeacherMasterPage> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
   static const List<Widget> _widgetOptions = <Widget>[
-    TeHomepage(),
     TeMessage(),
+    TeHomepage(),
     TeAttendance(),
     TeProfilePage(),
   ];

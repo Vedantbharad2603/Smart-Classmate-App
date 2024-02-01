@@ -54,7 +54,7 @@ class _ProfilePageState extends State<STProfilePage> {
                                   "V",
                                   style: TextStyle(
                                       fontSize: getSize(context, 4.1),
-                                      color: MyTheme.background),
+                                      color: Colors.black),
                                 ),
                               ),
                               Padding(
@@ -126,7 +126,7 @@ class _ProfilePageState extends State<STProfilePage> {
                         children: [
                           Icon(Icons.arrow_right_outlined,
                               size: getSize(context, 4),
-                              color: MyTheme.highlightcolor),
+                              color: MyTheme.mainbuttontext),
                           Text(
                             "Content",
                             style: TextStyle(
@@ -184,7 +184,7 @@ class _ProfilePageState extends State<STProfilePage> {
                         children: [
                           Icon(Icons.arrow_right_outlined,
                               size: getSize(context, 4),
-                              color: MyTheme.highlightcolor),
+                              color: MyTheme.mainbuttontext),
                           Text(
                             "Rreferences",
                             style: TextStyle(
@@ -251,7 +251,7 @@ class _ProfilePageState extends State<STProfilePage> {
           width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(getSize(context, 1.2)),
-            color: MyTheme.background,
+            color: MyTheme.background2,
             border: Border.all(
                 color: MyTheme.textcolor.withOpacity(0.3),
                 width: getWidth(context, 0.004)),
@@ -269,12 +269,12 @@ class _ProfilePageState extends State<STProfilePage> {
                       decoration: BoxDecoration(
                         borderRadius:
                             BorderRadius.circular(getSize(context, 1.2)),
-                        color: MyTheme.mainbackground,
+                        color: MyTheme.background,
                       ),
                       child: Icon(
                         myicon,
-                        color: MyTheme.highlightcolor,
-                        size: getSize(context, 2),
+                        color: MyTheme.mainbuttontext,
+                        size: getSize(context, 2.5),
                       ),
                     ),
                     SizedBox(

@@ -17,19 +17,19 @@ class StSettings extends StatefulWidget {
 
 class _StSettingsState extends State<StSettings> {
   int selectedThemeIndex = 0;
-
+  bool notifications = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 243, 253, 233),
+      backgroundColor: MyTheme.mainbackground,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: Colors.black,
+            color: MyTheme.button1,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -45,7 +45,7 @@ class _StSettingsState extends State<StSettings> {
               Text(
                 'Settings',
                 style: TextStyle(
-                    fontSize: getSize(context, 2.8), color: Colors.black),
+                    fontSize: getSize(context, 2.8), color: MyTheme.textcolor),
               ),
               Padding(
                 padding: EdgeInsets.all(getSize(context, 1.2)),
@@ -53,7 +53,7 @@ class _StSettingsState extends State<StSettings> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(getSize(context, 1.2)),
-                    color: Colors.white,
+                    color: MyTheme.mainbutton,
                     border: Border.all(
                         color: Colors.grey, width: getWidth(context, 0.004)),
                   ),
@@ -66,9 +66,9 @@ class _StSettingsState extends State<StSettings> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Select Theme",
+                              "Dark Theme",
                               style: TextStyle(
-                                color: Colors.black,
+                                color: MyTheme.mainbuttontext,
                                 fontSize: getSize(context, 2.5),
                                 fontWeight: FontWeight.bold,
                               ),
@@ -76,6 +76,7 @@ class _StSettingsState extends State<StSettings> {
                           ],
                         ),
                         Switch(
+                          activeColor: MyTheme.mainbuttontext,
                           value: MyTheme.isDarkMode,
                           onChanged: (val) {
                             MyTheme.toggleTheme;
@@ -84,14 +85,47 @@ class _StSettingsState extends State<StSettings> {
                             setState(() {});
                           },
                         ),
-                        // IconButton(
-                        //   onPressed: onPressed,
-                        //   icon: Icon(
-                        //     Icons.arrow_forward_ios_rounded,
-                        //     size: getSize(context, 3),
-                        //     color: Colors.black,
-                        //   ),
-                        // ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(getSize(context, 1.2)),
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(getSize(context, 1.2)),
+                    color: MyTheme.mainbutton,
+                    border: Border.all(
+                        color: Colors.grey, width: getWidth(context, 0.004)),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(getSize(context, 0.9)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Notifications",
+                              style: TextStyle(
+                                color: MyTheme.mainbuttontext,
+                                fontSize: getSize(context, 2.5),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Switch(
+                          activeColor: MyTheme.mainbuttontext,
+                          value: notifications,
+                          onChanged: (val) {
+                            notifications = !notifications;
+                            setState(() {});
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -102,7 +136,7 @@ class _StSettingsState extends State<StSettings> {
               //     MyTheme.toggleTheme;
               //   });
               // }),
-              mycards("Notifications", () {}),
+              // mycards("Notifications", () {}),
             ],
           ),
         ),
@@ -117,7 +151,7 @@ class _StSettingsState extends State<StSettings> {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(getSize(context, 1.2)),
-          color: Colors.white,
+          color: MyTheme.mainbutton,
           border:
               Border.all(color: Colors.grey, width: getWidth(context, 0.004)),
         ),
@@ -132,7 +166,7 @@ class _StSettingsState extends State<StSettings> {
                   Text(
                     name,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: MyTheme.mainbuttontext,
                       fontSize: getSize(context, 2.5),
                       fontWeight: FontWeight.bold,
                     ),

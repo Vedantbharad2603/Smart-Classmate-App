@@ -60,7 +60,7 @@ class _StMyCoursesState extends State<StMyCourses> {
           ),
           child: Icon(
             isDone ? Icons.check : Icons.remove,
-            color: MyTheme.background,
+            color: MyTheme.textcolor,
           ),
         ),
       );

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:smartclassmate/tools/helper.dart';
+import 'package:smartclassmate/tools/theme.dart';
 
 class StEditProfile extends StatefulWidget {
   const StEditProfile({Key? key}) : super(key: key);
@@ -23,15 +24,15 @@ class _EditProfileState extends State<StEditProfile> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 243, 253, 233),
+      backgroundColor: MyTheme.mainbackground,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: Colors.black,
+            color: MyTheme.button1,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -50,6 +51,7 @@ class _EditProfileState extends State<StEditProfile> {
                     child: Text(
                       'Edit Profile',
                       style: TextStyle(
+                          color: MyTheme.textcolor,
                           fontSize: getSize(context, 2.8),
                           fontWeight: FontWeight.bold),
                     ),
@@ -71,7 +73,7 @@ class _EditProfileState extends State<StEditProfile> {
                   child: Text(
                     "Edit Address",
                     style: TextStyle(
-                        color: Colors.black,
+                        color: MyTheme.textcolor,
                         fontSize: getSize(context, 2.7),
                         fontWeight: FontWeight.bold),
                   ),
@@ -94,12 +96,12 @@ class _EditProfileState extends State<StEditProfile> {
                     width: getWidth(context, 0.38),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 76, 136, 15),
+                        color: MyTheme.mainbutton,
                         borderRadius: BorderRadius.circular(20)),
                     child: Text(
                       'Save',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: MyTheme.mainbuttontext,
                         fontWeight: FontWeight.w600,
                         fontSize: width * 0.06,
                       ),
@@ -133,7 +135,7 @@ class _EditProfileState extends State<StEditProfile> {
           top: getHeight(context, 0.02)),
       child: Container(
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 180, 180, 180),
+          color: MyTheme.background,
           borderRadius: BorderRadius.circular(getSize(context, 1.5)),
         ),
         child: Column(
@@ -147,7 +149,7 @@ class _EditProfileState extends State<StEditProfile> {
                 child: Text(
                   label,
                   style: TextStyle(
-                    color: Colors.black,
+                    color: MyTheme.textcolor,
                     fontSize: getSize(context, 2.6),
                   ),
                 ),
@@ -161,19 +163,19 @@ class _EditProfileState extends State<StEditProfile> {
                   keyboardType: keyboardType,
                   maxLength: maxLen,
                   style: TextStyle(
-                    color: Colors.black,
+                    color: MyTheme.textcolor,
                     fontSize: getSize(context, 2),
                     fontWeight: FontWeight.w400,
                   ),
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: const Color.fromARGB(255, 217, 217, 217),
+                    fillColor: MyTheme.background2,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(getSize(context, 2)),
                     ),
                     contentPadding: EdgeInsets.all(getSize(context, 1.5)),
-                    counterStyle: const TextStyle(
-                      color: Colors.black,
+                    counterStyle: TextStyle(
+                      color: MyTheme.textcolor,
                     ),
                   ),
                 ),

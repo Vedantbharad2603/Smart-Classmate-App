@@ -77,7 +77,7 @@ class _STWorkState extends State<STWork> {
                     radius: getSize(context, 3),
                     backgroundColor: MyTheme.highlightcolor,
                     child: Icon(Icons.person,
-                        color: MyTheme.background, size: getSize(context, 3.6)),
+                        color: Colors.black, size: getSize(context, 3.6)),
                   ),
                 ),
               )

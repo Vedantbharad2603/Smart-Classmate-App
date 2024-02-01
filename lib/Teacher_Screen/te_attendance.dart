@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:smartclassmate/tools/helper.dart';
+import 'package:smartclassmate/tools/theme.dart';
 
 class TeAttendance extends StatefulWidget {
   const TeAttendance({Key? key}) : super(key: key);
@@ -40,14 +42,14 @@ class _TeAttendanceState extends State<TeAttendance> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 243, 253, 233),
+        backgroundColor: MyTheme.mainbackground,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
           title: Text(
             "Student Attendance",
             style: TextStyle(
-                color: Colors.black,
+                color: MyTheme.textcolor,
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold),
           ),
@@ -78,38 +80,83 @@ class _TeAttendanceState extends State<TeAttendance> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                DropdownButton<int>(
-                  value: selectedShift,
-                  onChanged: (int? newValue) {
-                    setState(() {
-                      selectedShift = newValue!;
-                    });
-                  },
-                  items: [1, 2]
-                      .map<DropdownMenuItem<int>>(
-                        (int value) => DropdownMenuItem<int>(
-                          value: value,
-                          child: Text('Shift $value'),
-                        ),
-                      )
-                      .toList(),
+                Container(
+                  color: MyTheme.background,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        left: 10, bottom: 2.5, right: 10, top: 2.5),
+                    child: DropdownButton<int>(
+                      value: selectedShift,
+                      dropdownColor: MyTheme.background,
+                      style: TextStyle(color: MyTheme.textcolor),
+                      onChanged: (int? newValue) {
+                        setState(() {
+                          selectedShift = newValue!;
+                        });
+                      },
+                      items: [1, 2]
+                          .map<DropdownMenuItem<int>>(
+                            (int value) => DropdownMenuItem<int>(
+                              value: value,
+                              child: Text('Shift $value'),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
                 ),
                 SizedBox(height: 16.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
+                    InkWell(
+                      onTap: () {
                         _markAllStudentsPresent();
                       },
-                      child: Text('Present All'),
+                      child: Container(
+                        height: getHeight(context, 0.05),
+                        width: getWidth(context, 0.3),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: MyTheme.mainbutton,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Text(
+                          'Present All',
+                          style: TextStyle(
+                            color: MyTheme.mainbuttontext,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
                     ),
-                    ElevatedButton(
-                      onPressed: () {
+                    InkWell(
+                      onTap: () {
                         _markAllStudentsAbsent();
                       },
-                      child: Text('Absent All'),
+                      child: Container(
+                        height: getHeight(context, 0.05),
+                        width: getWidth(context, 0.3),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: MyTheme.button2.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Text(
+                          'Absent All',
+                          style: TextStyle(
+                            color: MyTheme.button2,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
                     ),
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     _markAllStudentsAbsent();
+                    //   },
+                    //   child: Text('Absent All'),
+                    // ),
                   ],
                 ),
                 SizedBox(height: 16.0),
@@ -119,9 +166,14 @@ class _TeAttendanceState extends State<TeAttendance> {
                       searchText = value;
                     });
                   },
+                  style: TextStyle(color: MyTheme.textcolor),
                   decoration: InputDecoration(
                     labelText: 'Search Student',
-                    suffixIcon: Icon(Icons.search),
+                    labelStyle: TextStyle(color: MyTheme.textcolor),
+                    suffixIcon: Icon(
+                      Icons.search,
+                      color: MyTheme.textcolor,
+                    ),
                   ),
                 ),
                 SizedBox(height: 16.0),

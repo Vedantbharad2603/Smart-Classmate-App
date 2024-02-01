@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smartclassmate/tools/helper.dart';
+import 'package:smartclassmate/tools/theme.dart';
 
 class StDownloads extends StatefulWidget {
   const StDownloads({super.key});
@@ -12,15 +13,15 @@ class _StMyCoursesState extends State<StDownloads> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 243, 253, 233),
+      backgroundColor: MyTheme.mainbackground,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: Colors.black,
+            color: MyTheme.button1,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -37,7 +38,9 @@ class _StMyCoursesState extends State<StDownloads> {
                   padding: const EdgeInsets.only(left: 8),
                   child: Text(
                     'Downloads',
-                    style: TextStyle(fontSize: getSize(context, 2.8)),
+                    style: TextStyle(
+                        fontSize: getSize(context, 2.8),
+                        color: MyTheme.textcolor),
                   ),
                 ),
               ],
@@ -58,9 +61,10 @@ class _StMyCoursesState extends State<StDownloads> {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(getSize(context, 1.2)),
-          color: Colors.white,
-          border:
-              Border.all(color: Colors.grey, width: getWidth(context, 0.004)),
+          color: MyTheme.background,
+          border: Border.all(
+              color: MyTheme.textcolor.withOpacity(0.3),
+              width: getWidth(context, 0.004)),
         ),
         child: Padding(
           padding: EdgeInsets.all(getSize(context, 0.9)),
@@ -76,14 +80,14 @@ class _StMyCoursesState extends State<StDownloads> {
                   Text(
                     bookname,
                     style: TextStyle(
-                        color: Colors.black,
+                        color: MyTheme.textcolor,
                         fontSize: getSize(context, 2.5),
                         fontWeight: FontWeight.bold),
                   ),
                   Text(
                     uploaddate,
                     style: TextStyle(
-                        color: Colors.black, fontSize: getSize(context, 2)),
+                        color: MyTheme.button1, fontSize: getSize(context, 2)),
                   ),
                 ],
               ),
@@ -92,7 +96,7 @@ class _StMyCoursesState extends State<StDownloads> {
                   icon: Icon(
                     Icons.download,
                     size: getSize(context, 3),
-                    color: Colors.black,
+                    color: MyTheme.highlightcolor,
                   )),
             ],
           ),

@@ -19,11 +19,11 @@ double getSize(context, double i) {
 
 Widget horizontalLine() {
   return SizedBox(
-    height: 1,
+    height: 1.5,
     width: double.infinity,
     child: DecoratedBox(
       decoration: BoxDecoration(
-        color: MyTheme.highlightcolor,
+        color: MyTheme.background,
       ),
     ),
   );
