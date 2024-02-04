@@ -10,21 +10,28 @@ class STMessage extends StatefulWidget {
   State<STMessage> createState() => _STMessageState();
 }
 
+class Message {
+  final String datetime;
+  final String description;
+
+  Message({required this.datetime, required this.description});
+}
+
 class _STMessageState extends State<STMessage> {
   TextEditingController _messageController = TextEditingController();
-  List<Map<String, dynamic>> updates = [
-    {
-      'datetime': '2024-02-02 11:30:26.953530',
-      'description': 'Tomorrow we have conversation',
-    },
-    {
-      'datetime': '2024-02-02 11:35:26.953530',
-      'description': 'Jhanvi and her group have GD',
-    },
-    {
-      'datetime': '2024-02-02 11:28:26.953530',
-      'description': 'All the group member have to report me before 4:30.',
-    },
+  List<Message> updates = [
+    Message(
+      datetime: '2024-02-01 11:30:26.953530',
+      description: 'Tomorrow we have a conversation',
+    ),
+    Message(
+      datetime: '2024-02-01 11:35:26.953530',
+      description: 'Jhanvi and her group have GD',
+    ),
+    Message(
+      datetime: '2024-02-01 11:28:26.953530',
+      description: 'All the group members have to report to me before 4:30.',
+    ),
   ];
   Future<void> _handleRefresh() async {
     // Simulate reloading data (replace this with your actual refresh logic)
@@ -34,10 +41,23 @@ class _STMessageState extends State<STMessage> {
     });
   }
 
+  final ScrollController _scrollController = ScrollController();
+
+  bool _shouldShowDateHeader(int index) {
+    if (index == 0) {
+      return true; // Always show date header for the first message
+    }
+
+    DateTime currentDate = DateTime.parse(updates[index].datetime);
+    DateTime previousDate = DateTime.parse(updates[index - 1].datetime);
+
+    return currentDate.day != previousDate.day ||
+        currentDate.month != previousDate.month ||
+        currentDate.year != previousDate.year;
+  }
+
   @override
   Widget build(BuildContext context) {
-    updates.sort((a, b) =>
-        DateTime.parse(a['datetime']).compareTo(DateTime.parse(b['datetime'])));
     return SafeArea(
       child: Scaffold(
         backgroundColor: MyTheme.mainbackground,
@@ -52,22 +72,9 @@ class _STMessageState extends State<STMessage> {
                 fontWeight: FontWeight.bold),
           ),
           actions: [
-            // IconButton(
-            //   onPressed: () {},
-            //   icon: Icon(
-            //     Icons.notifications_none,
-            //     size: getSize(context, 3),
-            //     color: MyTheme.textcolor,
-            //   ),
-            // ),
             InkWell(
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => STProfilePage(),
-                //   ),
-                // );
+                giveuserinfo('Username: Vedant Bharad', context);
               },
               child: Padding(
                 padding: EdgeInsets.only(
@@ -90,11 +97,40 @@ class _STMessageState extends State<STMessage> {
             children: [
               Expanded(
                 child: ListView.builder(
+                  controller: _scrollController,
                   itemCount: updates.length,
                   itemBuilder: (context, index) {
-                    return ChatBubble(
-                      message: updates[index]['description'],
-                      dateTime: updates[index]['datetime'],
+                    bool showDateHeader = _shouldShowDateHeader(index);
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (showDateHeader)
+                          Center(
+                            child: Container(
+                              height: 30,
+                              width: getWidth(context, 0.50),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: MyTheme.background,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  DateFormat('MMMM d, yyyy').format(
+                                    DateTime.parse(updates[index].datetime),
+                                  ),
+                                  style: TextStyle(
+                                    color: MyTheme.textcolor.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ChatBubble(
+                          message: updates[index].description,
+                          dateTime: updates[index].datetime,
+                        ),
+                      ],
                     );
                   },
                 ),

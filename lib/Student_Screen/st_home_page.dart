@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:smartclassmate/Student_Screen/st_profilepage.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
 
@@ -11,13 +10,13 @@ class STHomepage extends StatefulWidget {
 }
 
 List<MapEntry<DateTime, int>> dateIntList = [
-  MapEntry(DateTime(2024, 1, 1), 0),
-  MapEntry(DateTime(2024, 1, 2), 1),
-  MapEntry(DateTime(2024, 1, 3), 1),
-  MapEntry(DateTime(2024, 1, 4), 1),
-  MapEntry(DateTime(2024, 1, 5), 2),
-  MapEntry(DateTime(2024, 1, 6), 2),
-  MapEntry(DateTime(2024, 1, 7), 2),
+  MapEntry(DateTime(2024, 2, 1), 0),
+  MapEntry(DateTime(2024, 2, 2), 1),
+  MapEntry(DateTime(2024, 2, 3), 1),
+  MapEntry(DateTime(2024, 2, 4), 1),
+  MapEntry(DateTime(2024, 2, 5), 2),
+  MapEntry(DateTime(2024, 2, 6), 2),
+  MapEntry(DateTime(2024, 2, 7), 2),
 ];
 List<Map<String, dynamic>> upcomingEvents = [
   {
@@ -36,6 +35,8 @@ List<Map<String, dynamic>> upcomingEvents = [
     'description': 'Event details for Event 3.',
   },
 ];
+String workinfo =
+    "Complete 30 Wh quesitions,30 affirmative sentence and 30 negative sentences Complete 30 Wh quesitions,30 affirmative sentence and 30 negative sentences";
 
 class _STHomepageState extends State<STHomepage> {
   @override
@@ -55,22 +56,9 @@ class _STHomepageState extends State<STHomepage> {
                   fontWeight: FontWeight.bold),
             ),
             actions: [
-              // IconButton(
-              //   onPressed: () {},
-              //   icon: Icon(
-              //     Icons.notifications_none,
-              //     size: getSize(context, 3),
-              //     color: MyTheme.textcolor,
-              //   ),
-              // ),
               InkWell(
                 onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => STProfilePage(),
-                  //   ),
-                  // );
+                  giveuserinfo('Username: Vedant Bharad', context);
                 },
                 child: Padding(
                   padding: EdgeInsets.only(
@@ -198,41 +186,47 @@ class _STHomepageState extends State<STHomepage> {
                           ),
                           // height: getHeight(context, 0.12),
                           width: getWidth(context, 1),
-                          child: Padding(
-                            padding: EdgeInsets.all(getSize(context, 0.8)),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                RichText(
-                                  text: TextSpan(
-                                    text: 'Till :- ',
-                                    style: TextStyle(
-                                      fontSize: getSize(context, 2),
-                                      color: MyTheme.textcolor,
-                                    ),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: '2/2/24',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: MyTheme.button1),
+                          child: InkWell(
+                            onTap: () {
+                              showFullDescriptionDialog(
+                                  "Work", workinfo, context);
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(getSize(context, 0.8)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      text: 'Till :- ',
+                                      style: TextStyle(
+                                        fontSize: getSize(context, 2),
+                                        color: MyTheme.textcolor,
                                       ),
-                                    ],
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: '2/2/24',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: MyTheme.button1),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: getHeight(context, 0.02),
-                                ),
-                                Text(
-                                  truncateDescription(
-                                    "Complete 30 Wh quesitions,30 affirmative sentence and 30 negative sentences Complete 30 Wh quesitions,30 affirmative sentence and 30 negative sentences",
-                                    15,
+                                  SizedBox(
+                                    height: getHeight(context, 0.02),
                                   ),
-                                  style: TextStyle(
-                                      color: MyTheme.textcolor,
-                                      fontSize: getSize(context, 2)),
-                                ),
-                              ],
+                                  Text(
+                                    truncateDescription(
+                                      workinfo,
+                                      15,
+                                    ),
+                                    style: TextStyle(
+                                        color: MyTheme.textcolor,
+                                        fontSize: getSize(context, 2)),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         )
@@ -261,73 +255,82 @@ class _STHomepageState extends State<STHomepage> {
                     scrollDirection: Axis.horizontal,
                     children: List.generate(
                       upcomingEvents.length,
-                      (index) => SizedBox(
-                        width: getWidth(context, 0.8), // Adjust width as needed
-                        child: Padding(
-                          padding: EdgeInsets.all(getSize(context, 1.5)),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: MyTheme.boxshadow,
-                                      spreadRadius: getSize(context, 0.5),
-                                      blurRadius: getSize(context, 0.8),
-                                      offset: Offset(0, getSize(context, 0.3)),
-                                    ),
-                                  ],
-                                  borderRadius: BorderRadius.circular(
-                                      getSize(context, 1)),
-                                  color: MyTheme.background,
-                                ),
-                                width: getWidth(context, 1),
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.all(getSize(context, 0.8)),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      RichText(
-                                        text: TextSpan(
-                                          text: 'Date: ',
-                                          style: TextStyle(
-                                            fontSize: getSize(context, 2),
-                                            color: MyTheme.textcolor,
-                                          ),
-                                          children: <TextSpan>[
-                                            TextSpan(
-                                              text: upcomingEvents[index]
-                                                  ['date'],
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: MyTheme.button1,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: getHeight(context, 0.02),
-                                      ),
-                                      Text(
-                                        truncateDescription(
-                                          upcomingEvents[index]['description'],
-                                          6,
-                                        ),
-                                        style: TextStyle(
-                                          color: MyTheme.textcolor,
-                                          fontSize: getSize(context, 2),
-                                        ),
+                      (index) => InkWell(
+                        onTap: () {
+                          showFullDescriptionDialog("Event",
+                              upcomingEvents[index]['description'], context);
+                        },
+                        child: SizedBox(
+                          width:
+                              getWidth(context, 0.8), // Adjust width as needed
+                          child: Padding(
+                            padding: EdgeInsets.all(getSize(context, 1.5)),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: MyTheme.boxshadow,
+                                        spreadRadius: getSize(context, 0.5),
+                                        blurRadius: getSize(context, 0.8),
+                                        offset:
+                                            Offset(0, getSize(context, 0.3)),
                                       ),
                                     ],
+                                    borderRadius: BorderRadius.circular(
+                                        getSize(context, 1)),
+                                    color: MyTheme.background,
+                                  ),
+                                  width: getWidth(context, 1),
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.all(getSize(context, 0.8)),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                            text: 'Date: ',
+                                            style: TextStyle(
+                                              fontSize: getSize(context, 2),
+                                              color: MyTheme.textcolor,
+                                            ),
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                text: upcomingEvents[index]
+                                                    ['date'],
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: MyTheme.button1,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: getHeight(context, 0.02),
+                                        ),
+                                        Text(
+                                          truncateDescription(
+                                            upcomingEvents[index]
+                                                ['description'],
+                                            6,
+                                          ),
+                                          style: TextStyle(
+                                            color: MyTheme.textcolor,
+                                            fontSize: getSize(context, 2),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),

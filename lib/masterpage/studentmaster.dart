@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:smartclassmate/Student_Screen/st_home_page.dart';
-import 'package:smartclassmate/Student_Screen/st_updates.dart';
+import 'package:smartclassmate/Student_Screen/st_messages.dart';
 import 'package:smartclassmate/Student_Screen/st_profilepage.dart';
 import 'package:smartclassmate/Student_Screen/st_work.dart';
 import 'package:smartclassmate/tools/theme.dart';
@@ -59,19 +59,19 @@ class _StudentMasterPageState extends State<StudentMasterPage> {
               tabs: [
                 GButton(
                   icon: LineIcons.home,
-                  text: 'Home',
+                  // text: 'Home',
                 ),
                 GButton(
                   icon: LineIcons.book,
-                  text: 'Work',
+                  // text: 'Work',
                 ),
                 GButton(
                   icon: Icons.notifications_none,
-                  text: 'Update',
+                  // text: 'Update',
                 ),
                 GButton(
                   icon: LineIcons.user,
-                  text: 'Profile',
+                  // text: 'Profile',
                 ),
               ],
               selectedIndex: _selectedIndex,

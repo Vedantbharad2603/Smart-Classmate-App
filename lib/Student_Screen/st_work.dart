@@ -50,22 +50,9 @@ class _STWorkState extends State<STWork> {
                   fontWeight: FontWeight.bold),
             ),
             actions: [
-              // IconButton(
-              //   onPressed: () {},
-              //   icon: Icon(
-              //     Icons.notifications_none,
-              //     size: getSize(context, 3),
-              //     color: MyTheme.textcolor,
-              //   ),
-              // ),
               InkWell(
                 onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => STProfilePage(),
-                  //   ),
-                  // );
+                  giveuserinfo('Username: Vedant Bharad', context);
                 },
                 child: Padding(
                   padding: EdgeInsets.only(
@@ -140,69 +127,69 @@ class _STWorkState extends State<STWork> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: MyTheme.boxshadow,
-                    spreadRadius: getSize(context, 0.5),
-                    blurRadius: getSize(context, 0.8),
-                    offset: Offset(0, getSize(context, 0.3)),
-                  ),
-                ],
-                borderRadius: BorderRadius.circular(getSize(context, 1)),
-                color: MyTheme.background,
-              ),
-              width: getWidth(context, 1),
-              child: Padding(
-                padding: EdgeInsets.all(getSize(context, 0.8)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            text: 'Date: ',
-                            style: TextStyle(
-                              fontSize: getSize(context, 2),
-                              color: MyTheme.textcolor,
-                              decoration: work['uploaded']
-                                  ? TextDecoration.lineThrough
-                                  : null,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: work['date'],
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: MyTheme.button1,
-                                ),
+            InkWell(
+              onTap: () {
+                showFullDescriptionDialog("Work", work['description'], context);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: MyTheme.boxshadow,
+                      spreadRadius: getSize(context, 0.5),
+                      blurRadius: getSize(context, 0.8),
+                      offset: Offset(0, getSize(context, 0.3)),
+                    ),
+                  ],
+                  borderRadius: BorderRadius.circular(getSize(context, 1)),
+                  color: MyTheme.background,
+                ),
+                width: getWidth(context, 1),
+                child: Padding(
+                  padding: EdgeInsets.all(getSize(context, 0.8)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              text: 'Date: ',
+                              style: TextStyle(
+                                fontSize: getSize(context, 2),
+                                color: MyTheme.textcolor,
+                                decoration: work['uploaded']
+                                    ? TextDecoration.lineThrough
+                                    : null,
                               ),
-                            ],
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: work['date'],
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: MyTheme.button1,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        moreOptions(
-                          [
-                            'More info',
-                            work['uploaded'] ? 'Reupload Work' : 'Upload Work'
-                          ],
-                          [
-                            () {
-                              // Handle More info
-                              showFullDescriptionDialog(
-                                  work['description'], context);
-                            },
-                            () async {
+                          IconButton(
+                            icon: Icon(
+                              Icons.upload,
+                              color: MyTheme.button1,
+                            ),
+                            onPressed: () async {
                               // Handle Upload or Reupload based on the 'uploaded' status
                               if (work['uploaded']) {
+                                // Handle Reupload Work
                               } else {
                                 // Open file explorer to pick a PDF file
                                 FilePickerResult? result =
                                     await FilePicker.platform.pickFiles(
-                                        type: FileType.custom,
-                                        allowedExtensions: ['pdf']);
+                                  type: FileType.custom,
+                                  allowedExtensions: ['pdf'],
+                                );
 
                                 if (result != null) {
                                   String fileName = result.files.single.name;
@@ -218,7 +205,8 @@ class _STWorkState extends State<STWork> {
                                         title: Text(
                                           'Selected File: $fileName',
                                           style: TextStyle(
-                                              color: MyTheme.textcolor),
+                                            color: MyTheme.textcolor,
+                                          ),
                                         ),
                                         content: Row(
                                           mainAxisAlignment:
@@ -228,7 +216,7 @@ class _STWorkState extends State<STWork> {
                                               style: ButtonStyle(
                                                 backgroundColor:
                                                     MaterialStateProperty.all(
-                                                        MyTheme.button1),
+                                                        MyTheme.mainbutton),
                                                 shape:
                                                     MaterialStateProperty.all<
                                                         RoundedRectangleBorder>(
@@ -246,14 +234,16 @@ class _STWorkState extends State<STWork> {
                                               child: Text(
                                                 'Upload',
                                                 style: TextStyle(
-                                                    color: MyTheme.background),
+                                                  color: MyTheme.mainbuttontext,
+                                                ),
                                               ),
                                             ),
                                             ElevatedButton(
                                               style: ButtonStyle(
                                                 backgroundColor:
                                                     MaterialStateProperty.all(
-                                                        MyTheme.button2),
+                                                        MyTheme.button2
+                                                            .withOpacity(0.2)),
                                                 shape:
                                                     MaterialStateProperty.all<
                                                         RoundedRectangleBorder>(
@@ -271,7 +261,8 @@ class _STWorkState extends State<STWork> {
                                               child: Text(
                                                 'Cancel',
                                                 style: TextStyle(
-                                                    color: MyTheme.background),
+                                                  color: MyTheme.button2,
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -284,24 +275,24 @@ class _STWorkState extends State<STWork> {
                                 }
                               }
                             },
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: getHeight(context, 0.02),
-                    ),
-                    Text(
-                      truncateDescription(work['description'], 10),
-                      style: TextStyle(
-                        color: MyTheme.textcolor,
-                        fontSize: getSize(context, 2),
-                        decoration: work['uploaded']
-                            ? TextDecoration.lineThrough
-                            : null,
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                      SizedBox(
+                        height: getHeight(context, 0.02),
+                      ),
+                      Text(
+                        truncateDescription(work['description'], 10),
+                        style: TextStyle(
+                          color: MyTheme.textcolor,
+                          fontSize: getSize(context, 2),
+                          decoration: work['uploaded']
+                              ? TextDecoration.lineThrough
+                              : null,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -92,7 +92,7 @@ class _ProfilePageState extends State<STProfilePage> {
                           children: [
                             myinfobox("Shift", "1"),
                             myinfobox("Course", "advance"),
-                            myinfobox("Shift", "1"),
+                            myinfobox("Last Month", "4/2024"),
                           ],
                         )
                       ],

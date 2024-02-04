@@ -1,8 +1,9 @@
-// ignore_for_file: sort_child_properties_last
+// ignore_for_file: sort_child_properties_last, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'package:smartclassmate/tools/theme.dart';
+import 'package:file_picker/file_picker.dart';
 
 double getHeight(context, double i) {
   double result = MediaQuery.of(context).size.height * i;
@@ -66,14 +67,15 @@ Widget moreOptions(
   );
 }
 
-Future<void> showFullDescriptionDialog(String fullDescription, context) {
+Future<void> showFullDescriptionDialog(
+    String title, String fullDescription, context) {
   return showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
         backgroundColor: MyTheme.background,
         title: Text(
-          "Work",
+          title,
           style: TextStyle(color: MyTheme.highlightcolor),
         ),
         content: Text(
@@ -116,6 +118,194 @@ Future giveuserinfo(String username, context) {
       );
     },
   );
+}
+
+Future<void> _showGiveWorkPopup(BuildContext context) async {
+  TextEditingController textEditingController = TextEditingController();
+
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: MyTheme.background2,
+        title: Text('Give Work', style: TextStyle(color: MyTheme.textcolor)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text('Enter work details:',
+                style: TextStyle(color: MyTheme.textcolor)),
+            SizedBox(height: 10),
+            TextField(
+              style: TextStyle(color: MyTheme.textcolor),
+              controller: textEditingController,
+              decoration: InputDecoration(
+                hintText: 'Work details...',
+                hintStyle: TextStyle(color: MyTheme.textcolor),
+              ),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor:
+                  MaterialStateProperty.all(MyTheme.button2.withOpacity(0.2)),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(15.0), // Adjust the value as needed
+                ),
+              ),
+            ),
+            onPressed: () {
+              Navigator.pop(context); // Close the dialog
+            },
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: MyTheme.button2,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(MyTheme.mainbutton),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(15.0), // Adjust the value as needed
+                ),
+              ),
+            ),
+            onPressed: () {
+              String workDetails = textEditingController.text;
+              // Handle the work details
+              // ...
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: Text(
+              'Give',
+              style: TextStyle(
+                color: MyTheme.mainbuttontext,
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Widget studentbutton(
+  VoidCallback onTap,
+  String label,
+  double borderRadius,
+  Color color1,
+  Color color2,
+  BuildContext context,
+) {
+  return GestureDetector(
+    onTap: () {
+      if (label == "Give work") {
+        _showGiveWorkPopup(context);
+      } else if (label == "Give eBook") {
+        _showGiveEBookPopup(context);
+      }
+      // Handle other buttons as needed
+    },
+    child: Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(borderRadius),
+        gradient: LinearGradient(
+          colors: [color1, color2],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+      ),
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: MyTheme.textcolor,
+          fontSize: getSize(context, 1.8),
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> _showGiveEBookPopup(BuildContext context) async {
+  FilePickerResult? result = await FilePicker.platform.pickFiles(
+    type: FileType.custom,
+    allowedExtensions: ['pdf'],
+  );
+
+  if (result != null) {
+    String selectedFileName = result.files.single.name;
+
+    await showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: MyTheme.background,
+          title: Text(
+            'Selected File: $selectedFileName',
+            style: TextStyle(
+              color: MyTheme.textcolor,
+            ),
+          ),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(MyTheme.mainbutton),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          15.0), // Adjust the value as needed
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                },
+                child: Text(
+                  'Give',
+                  style: TextStyle(
+                    color: MyTheme.mainbuttontext,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                      MyTheme.button2.withOpacity(0.2)),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          15.0), // Adjust the value as needed
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: MyTheme.button2,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
 
 Widget buildDropdown(
