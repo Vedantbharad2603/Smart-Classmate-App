@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
@@ -16,15 +18,13 @@ class StudentMasterPage extends StatefulWidget {
 
 class _StudentMasterPageState extends State<StudentMasterPage> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
 
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
-      STHomepage(),
-      STWork(),
-      STMessage(),
+      const STHomepage(),
+      const STWork(),
+      const STMessage(),
       STProfilePage(onThemeToggleMaster: () => setState(() {})),
     ];
     return Scaffold(
@@ -52,11 +52,11 @@ class _StudentMasterPageState extends State<StudentMasterPage> {
               gap: 8,
               activeColor: MyTheme.button1,
               iconSize: 24,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              duration: Duration(milliseconds: 400),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              duration: const Duration(milliseconds: 400),
               tabBackgroundColor: MyTheme.background,
               color: MyTheme.textcolor,
-              tabs: [
+              tabs: const [
                 GButton(
                   icon: LineIcons.home,
                   // text: 'Home',

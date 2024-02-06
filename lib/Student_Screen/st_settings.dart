@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
 
+// ignore: must_be_immutable
 class StSettings extends StatefulWidget {
   void Function() onThemeToggleMaster;
   void Function() onThemeToggleProfile;
@@ -38,7 +39,7 @@ class _StSettingsState extends State<StSettings> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -183,79 +184,6 @@ class _StSettingsState extends State<StSettings> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  void _showThemeSelectionDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return ThemeSelectionDialog(
-          selectedThemeIndex: selectedThemeIndex,
-          onThemeSelected: (int index) {
-            setState(() {
-              selectedThemeIndex = index;
-            });
-            Navigator.of(context).pop();
-          },
-        );
-      },
-    );
-  }
-}
-
-class ThemeSelectionDialog extends StatefulWidget {
-  final int selectedThemeIndex;
-  final ValueChanged<int> onThemeSelected;
-
-  ThemeSelectionDialog({
-    required this.selectedThemeIndex,
-    required this.onThemeSelected,
-  });
-
-  @override
-  _ThemeSelectionDialogState createState() => _ThemeSelectionDialogState();
-}
-
-class _ThemeSelectionDialogState extends State<ThemeSelectionDialog> {
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: Container(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Select Theme'),
-            SizedBox(height: 10),
-            ListTile(
-              title: Text('Dark Theme'),
-              leading: Radio(
-                value: 0,
-                groupValue: widget.selectedThemeIndex,
-                onChanged: (int? value) {
-                  widget.onThemeSelected(value!);
-                  // _toggleTheme();
-                },
-              ),
-            ),
-            ListTile(
-              title: Text('Light Theme'),
-              leading: Radio(
-                value: 1,
-                groupValue: widget.selectedThemeIndex,
-                onChanged: (int? value) {
-                  widget.onThemeSelected(value!);
-                },
-              ),
-            ),
-            // Add more themes as needed
-          ],
         ),
       ),
     );

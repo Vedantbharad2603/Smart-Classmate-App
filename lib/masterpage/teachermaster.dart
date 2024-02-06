@@ -16,14 +16,14 @@ class TeacherMasterPage extends StatefulWidget {
 
 class _TeacherMasterPageState extends State<TeacherMasterPage> {
   int _selectedIndex = 2;
-  static const List<Widget> _widgetOptions = <Widget>[
-    Messages(),
-    SearchStudent(),
-    Attendance(),
-    Profilepage(),
-  ];
   @override
   Widget build(BuildContext context) {
+    List<Widget> _widgetOptions = <Widget>[
+      Messages(),
+      SearchStudent(),
+      Attendance(),
+      Profilepage(onThemeToggleMaster: () => setState(() {})),
+    ];
     double screenWidth = MediaQuery.of(context).size.width;
 
     double fontSize = screenWidth * 0.06;

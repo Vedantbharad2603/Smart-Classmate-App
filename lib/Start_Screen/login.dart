@@ -187,7 +187,7 @@ class _LoginPageState extends State<LoginPage> {
                           InkWell(
                             onTap: () {
                               String username = _usernameController.text;
-                              String password = _passwordController.text;
+                              // String password = _passwordController.text;
                               if (username == "student") {
                                 Navigator.pushReplacement(
                                   context,

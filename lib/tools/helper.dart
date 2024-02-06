@@ -98,21 +98,34 @@ Future<void> showFullDescriptionDialog(
   );
 }
 
-Future giveuserinfo(String username, context) {
+Future giveuserinfo(String username, String pass, context) {
   return showModalBottomSheet(
     context: context,
     builder: (context) {
       // Replace 'YourUsername' with the actual username
       return Container(
-        height: 80,
+        height: 100,
         color: MyTheme.background,
         child: Center(
-          child: Text(
-            username,
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: MyTheme.textcolor),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                username,
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: MyTheme.textcolor),
+              ),
+              Text(
+                pass,
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: MyTheme.textcolor),
+              ),
+            ],
           ),
         ),
       );
@@ -134,7 +147,7 @@ Future<void> _showGiveWorkPopup(BuildContext context) async {
           children: <Widget>[
             Text('Enter work details:',
                 style: TextStyle(color: MyTheme.textcolor)),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               style: TextStyle(color: MyTheme.textcolor),
               controller: textEditingController,
@@ -178,6 +191,7 @@ Future<void> _showGiveWorkPopup(BuildContext context) async {
               ),
             ),
             onPressed: () {
+              // ignore: unused_local_variable
               String workDetails = textEditingController.text;
               // Handle the work details
               // ...
@@ -222,7 +236,7 @@ Widget studentbutton(
           end: Alignment.centerRight,
         ),
       ),
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: Text(
         label,
         style: TextStyle(
@@ -306,6 +320,71 @@ Future<void> _showGiveEBookPopup(BuildContext context) async {
       },
     );
   }
+}
+
+Widget buildMyTextField(String label, TextEditingController controller,
+    double width, String inputType, int maxLen, context) {
+  TextInputType keyboardType;
+  if (inputType == "Number") {
+    keyboardType = TextInputType.number;
+  } else {
+    keyboardType = TextInputType.text;
+  }
+
+  return Padding(
+    padding: EdgeInsets.only(
+        left: getWidth(context, 0.03),
+        right: getWidth(context, 0.03),
+        top: getHeight(context, 0.02)),
+    child: Container(
+      decoration: BoxDecoration(
+        color: MyTheme.background,
+        borderRadius: BorderRadius.circular(getSize(context, 1.5)),
+      ),
+      child: Column(
+        children: [
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: getWidth(context, 0.02), top: getWidth(context, 0.02)),
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: MyTheme.textcolor,
+                  fontSize: getSize(context, 2.6),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(getSize(context, 1.2)),
+            child: TextField(
+              controller: controller,
+              keyboardType: keyboardType,
+              maxLength: maxLen,
+              style: TextStyle(
+                color: MyTheme.textcolor,
+                fontSize: getSize(context, 2),
+                fontWeight: FontWeight.w400,
+              ),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: MyTheme.background2,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(getSize(context, 2)),
+                ),
+                contentPadding: EdgeInsets.all(getSize(context, 1.5)),
+                counterStyle: TextStyle(
+                  color: MyTheme.textcolor,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 Widget buildDropdown(

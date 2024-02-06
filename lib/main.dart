@@ -3,11 +3,11 @@ import 'package:smartclassmate/Start_Screen/login.dart';
 import 'package:flutter/services.dart';
 import 'package:smartclassmate/tools/theme.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations(
+  await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  MyTheme.init();
+  await MyTheme.init();
   runApp(const MainApp());
 }
 

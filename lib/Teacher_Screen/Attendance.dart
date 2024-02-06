@@ -80,16 +80,20 @@ class _AttendanceState extends State<Attendance> {
           actions: [
             InkWell(
               onTap: () {
-                giveuserinfo('Username: Vedant Bharad', context);
+                giveuserinfo(
+                    'Username: Vedant Bharad', 'Password: Ved@nt123', context);
               },
               child: Padding(
-                padding:
-                    const EdgeInsets.only(right: 16.0, top: 8.0, bottom: 8.0),
+                padding: EdgeInsets.only(
+                  right: getSize(context, 1),
+                  top: getHeight(context, 0.007),
+                  bottom: getHeight(context, 0.007),
+                ),
                 child: CircleAvatar(
-                  radius: 24.0,
+                  radius: getSize(context, 3),
                   backgroundColor: MyTheme.highlightcolor,
                   child: Icon(Icons.person,
-                      color: Colors.black, size: getSize(context, 3)),
+                      color: Colors.black, size: getSize(context, 3.6)),
                 ),
               ),
             )

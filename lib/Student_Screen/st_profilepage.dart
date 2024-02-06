@@ -7,6 +7,7 @@ import 'package:smartclassmate/Student_Screen/st_settings.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
 
+// ignore: must_be_immutable
 class STProfilePage extends StatefulWidget {
   void Function() onThemeToggleMaster;
   STProfilePage({super.key, required this.onThemeToggleMaster});
@@ -81,6 +82,31 @@ class _ProfilePageState extends State<STProfilePage> {
                                           fontSize: getSize(context, 1.7),
                                           fontWeight: FontWeight.bold),
                                     ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Loreto",
+                                          style: TextStyle(
+                                              color: MyTheme.textcolor
+                                                  .withOpacity(0.7),
+                                              fontSize: getSize(context, 1.7),
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Icon(
+                                          Icons.arrow_right_rounded,
+                                          size: 30,
+                                          color: MyTheme.textcolor,
+                                        ),
+                                        Text(
+                                          "Student",
+                                          style: TextStyle(
+                                              color: MyTheme.textcolor
+                                                  .withOpacity(0.7),
+                                              fontSize: getSize(context, 1.7),
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
                                   ],
                                 ),
                               )
@@ -140,7 +166,7 @@ class _ProfilePageState extends State<STProfilePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => StMyCourses(),
+                            builder: (context) => const StMyCourses(),
                           ),
                         );
                       }, Icons.library_books_outlined),
@@ -148,7 +174,7 @@ class _ProfilePageState extends State<STProfilePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => StDownloads(),
+                            builder: (context) => const StDownloads(),
                           ),
                         );
                       }, Icons.download),
@@ -199,12 +225,12 @@ class _ProfilePageState extends State<STProfilePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => StEditProfile(),
+                            builder: (context) => const StEditProfile(),
                           ),
                         );
                       }, Icons.person_outline_sharp),
                       customContainerWithInkWell("About Us", () {
-                        print("Downloads tapped!");
+                        // print("Downloads tapped!");
                       }, Icons.info_outline_rounded),
                       customContainerWithInkWell("Settings", () {
                         Navigator.push(

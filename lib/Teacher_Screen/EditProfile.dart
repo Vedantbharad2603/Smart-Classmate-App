@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:smartclassmate/tools/helper.dart';
+import 'package:smartclassmate/tools/theme.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
@@ -11,7 +12,7 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  TextEditingController studentNameController = TextEditingController();
+  TextEditingController TeacherNameController = TextEditingController();
   TextEditingController mobileNumberController = TextEditingController();
   TextEditingController blockController = TextEditingController();
   TextEditingController streetController = TextEditingController();
@@ -23,15 +24,15 @@ class _EditProfileState extends State<EditProfile> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 243, 253, 233),
+      backgroundColor: MyTheme.mainbackground,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: Colors.black,
+            color: MyTheme.button1,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -50,16 +51,17 @@ class _EditProfileState extends State<EditProfile> {
                     child: Text(
                       'Edit Profile',
                       style: TextStyle(
+                          color: MyTheme.textcolor,
                           fontSize: getSize(context, 2.8),
                           fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
               ),
-              buildMyTextField(
-                  "Student Name", studentNameController, width, "String", 255),
-              buildMyTextField(
-                  "Mobile Number", mobileNumberController, width, "Number", 10),
+              buildMyTextField("Teacher Name", TeacherNameController, width,
+                  "String", 255, context),
+              buildMyTextField("Mobile Number", mobileNumberController, width,
+                  "Number", 10, context),
               SizedBox(
                 height: getHeight(context, 0.02),
               ),
@@ -71,20 +73,22 @@ class _EditProfileState extends State<EditProfile> {
                   child: Text(
                     "Edit Address",
                     style: TextStyle(
-                        color: Colors.black,
+                        color: MyTheme.textcolor,
                         fontSize: getSize(context, 2.7),
                         fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
+              buildMyTextField("Block No.(or name)", blockController, width,
+                  "String", 255, context),
+              buildMyTextField("Street Name", streetController, width, "String",
+                  255, context),
               buildMyTextField(
-                  "Block No.(or name)", blockController, width, "String", 255),
+                  "City", cityController, width, "String", 255, context),
               buildMyTextField(
-                  "Street Name", streetController, width, "String", 255),
-              buildMyTextField("City", cityController, width, "String", 255),
-              buildMyTextField("State", stateController, width, "String", 255),
+                  "State", stateController, width, "String", 255, context),
               buildMyTextField(
-                  "Pin Code", pinCodeController, width, "Number", 7),
+                  "Pin Code", pinCodeController, width, "Number", 7, context),
               Padding(
                 padding: const EdgeInsets.only(top: 50),
                 child: InkWell(
@@ -94,12 +98,12 @@ class _EditProfileState extends State<EditProfile> {
                     width: getWidth(context, 0.38),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 76, 136, 15),
+                        color: MyTheme.mainbutton,
                         borderRadius: BorderRadius.circular(20)),
                     child: Text(
                       'Save',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: MyTheme.mainbuttontext,
                         fontWeight: FontWeight.w600,
                         fontSize: width * 0.06,
                       ),
@@ -117,76 +121,8 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Widget buildMyTextField(String label, TextEditingController controller,
-      double width, String inputType, int maxLen) {
-    TextInputType keyboardType;
-    if (inputType == "Number") {
-      keyboardType = TextInputType.number;
-    } else {
-      keyboardType = TextInputType.text;
-    }
-
-    return Padding(
-      padding: EdgeInsets.only(
-          left: getWidth(context, 0.03),
-          right: getWidth(context, 0.03),
-          top: getHeight(context, 0.02)),
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 180, 180, 180),
-          borderRadius: BorderRadius.circular(getSize(context, 1.5)),
-        ),
-        child: Column(
-          children: [
-            Container(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.only(
-                    left: getWidth(context, 0.02),
-                    top: getWidth(context, 0.02)),
-                child: Text(
-                  label,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: getSize(context, 2.6),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              child: Padding(
-                padding: EdgeInsets.all(getSize(context, 1.2)),
-                child: TextField(
-                  controller: controller,
-                  keyboardType: keyboardType,
-                  maxLength: maxLen,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: getSize(context, 2),
-                    fontWeight: FontWeight.w400,
-                  ),
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: const Color.fromARGB(255, 217, 217, 217),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(getSize(context, 2)),
-                    ),
-                    contentPadding: EdgeInsets.all(getSize(context, 1.5)),
-                    counterStyle: const TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   bool areAllFieldsFilled() {
-    return studentNameController.text.isNotEmpty &&
+    return TeacherNameController.text.isNotEmpty &&
         mobileNumberController.text.isNotEmpty &&
         blockController.text.isNotEmpty &&
         streetController.text.isNotEmpty &&

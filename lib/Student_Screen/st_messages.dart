@@ -18,7 +18,6 @@ class Message {
 }
 
 class _STMessageState extends State<STMessage> {
-  TextEditingController _messageController = TextEditingController();
   List<Message> updates = [
     Message(
       datetime: '2024-02-01 11:30:26.953530',
@@ -35,7 +34,7 @@ class _STMessageState extends State<STMessage> {
   ];
   Future<void> _handleRefresh() async {
     // Simulate reloading data (replace this with your actual refresh logic)
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     setState(() {
       updates = updates;
     });
@@ -74,7 +73,8 @@ class _STMessageState extends State<STMessage> {
           actions: [
             InkWell(
               onTap: () {
-                giveuserinfo('Username: Vedant Bharad', context);
+                giveuserinfo(
+                    'Username: Vedant Bharad', 'Password: Ved@nt123', context);
               },
               child: Padding(
                 padding: EdgeInsets.only(
@@ -164,7 +164,7 @@ class ChatBubble extends StatelessWidget {
       child: Align(
         alignment: Alignment.centerLeft,
         child: Container(
-          padding: EdgeInsets.all(12),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: MyTheme.background,
             borderRadius: BorderRadius.circular(12),
@@ -173,7 +173,7 @@ class ChatBubble extends StatelessWidget {
                 color: MyTheme.boxshadow,
                 spreadRadius: 1,
                 blurRadius: 4,
-                offset: Offset(0, 2),
+                offset: const Offset(0, 2),
               ),
             ],
           ),
@@ -187,7 +187,7 @@ class ChatBubble extends StatelessWidget {
                   fontSize: 16,
                 ),
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
                 formattedDateTime,
                 style: TextStyle(

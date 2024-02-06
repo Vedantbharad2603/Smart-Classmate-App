@@ -58,10 +58,10 @@ class _EditProfileState extends State<StEditProfile> {
                   ),
                 ],
               ),
-              buildMyTextField(
-                  "Student Name", studentNameController, width, "String", 255),
-              buildMyTextField(
-                  "Mobile Number", mobileNumberController, width, "Number", 10),
+              buildMyTextField("Student Name", studentNameController, width,
+                  "String", 255, context),
+              buildMyTextField("Mobile Number", mobileNumberController, width,
+                  "Number", 10, context),
               SizedBox(
                 height: getHeight(context, 0.02),
               ),
@@ -79,14 +79,16 @@ class _EditProfileState extends State<StEditProfile> {
                   ),
                 ),
               ),
+              buildMyTextField("Block No.(or name)", blockController, width,
+                  "String", 255, context),
+              buildMyTextField("Street Name", streetController, width, "String",
+                  255, context),
               buildMyTextField(
-                  "Block No.(or name)", blockController, width, "String", 255),
+                  "City", cityController, width, "String", 255, context),
               buildMyTextField(
-                  "Street Name", streetController, width, "String", 255),
-              buildMyTextField("City", cityController, width, "String", 255),
-              buildMyTextField("State", stateController, width, "String", 255),
+                  "State", stateController, width, "String", 255, context),
               buildMyTextField(
-                  "Pin Code", pinCodeController, width, "Number", 7),
+                  "Pin Code", pinCodeController, width, "Number", 7, context),
               Padding(
                 padding: const EdgeInsets.only(top: 50),
                 child: InkWell(
@@ -114,74 +116,6 @@ class _EditProfileState extends State<StEditProfile> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildMyTextField(String label, TextEditingController controller,
-      double width, String inputType, int maxLen) {
-    TextInputType keyboardType;
-    if (inputType == "Number") {
-      keyboardType = TextInputType.number;
-    } else {
-      keyboardType = TextInputType.text;
-    }
-
-    return Padding(
-      padding: EdgeInsets.only(
-          left: getWidth(context, 0.03),
-          right: getWidth(context, 0.03),
-          top: getHeight(context, 0.02)),
-      child: Container(
-        decoration: BoxDecoration(
-          color: MyTheme.background,
-          borderRadius: BorderRadius.circular(getSize(context, 1.5)),
-        ),
-        child: Column(
-          children: [
-            Container(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.only(
-                    left: getWidth(context, 0.02),
-                    top: getWidth(context, 0.02)),
-                child: Text(
-                  label,
-                  style: TextStyle(
-                    color: MyTheme.textcolor,
-                    fontSize: getSize(context, 2.6),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              child: Padding(
-                padding: EdgeInsets.all(getSize(context, 1.2)),
-                child: TextField(
-                  controller: controller,
-                  keyboardType: keyboardType,
-                  maxLength: maxLen,
-                  style: TextStyle(
-                    color: MyTheme.textcolor,
-                    fontSize: getSize(context, 2),
-                    fontWeight: FontWeight.w400,
-                  ),
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: MyTheme.background2,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(getSize(context, 2)),
-                    ),
-                    contentPadding: EdgeInsets.all(getSize(context, 1.5)),
-                    counterStyle: TextStyle(
-                      color: MyTheme.textcolor,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );

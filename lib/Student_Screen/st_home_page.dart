@@ -58,7 +58,8 @@ class _STHomepageState extends State<STHomepage> {
             actions: [
               InkWell(
                 onTap: () {
-                  giveuserinfo('Username: Vedant Bharad', context);
+                  giveuserinfo('Username: Vedant Bharad', 'Password: Ved@nt123',
+                      context);
                 },
                 child: Padding(
                   padding: EdgeInsets.only(
