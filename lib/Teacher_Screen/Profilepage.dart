@@ -6,6 +6,7 @@ import 'package:smartclassmate/Start_Screen/login.dart';
 import 'package:smartclassmate/Teacher_Screen/AddStudent.dart';
 import 'package:smartclassmate/Teacher_Screen/AddTeacher.dart';
 import 'package:smartclassmate/Teacher_Screen/EditProfile.dart';
+import 'package:smartclassmate/Teacher_Screen/ManageTeacher.dart';
 import 'package:smartclassmate/Teacher_Screen/Settings.dart';
 import 'package:smartclassmate/Teacher_Screen/UploadEbook.dart';
 import 'package:smartclassmate/tools/helper.dart';
@@ -20,6 +21,7 @@ class Profilepage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<Profilepage> {
+  String role = "Admin";
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -110,7 +112,7 @@ class _ProfilePageState extends State<Profilepage> {
                                           color: MyTheme.textcolor,
                                         ),
                                         Text(
-                                          "Admin",
+                                          role,
                                           style: TextStyle(
                                               color: MyTheme.textcolor
                                                   .withOpacity(0.7),
@@ -232,32 +234,11 @@ class _ProfilePageState extends State<Profilepage> {
                           ),
                         );
                       }, LineIcons.userCircle),
-                      customContainerWithInkWell("Add Teacher", () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddTeacherPage(),
-                          ),
-                        );
-                      }, LineIcons.chalkboardTeacher),
-                      customContainerWithInkWell("Manage Teacher", () {
-                        giveuserinfo('Under development', '', context);
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => AddTeacherPage(),
-                        //   ),
-                        // );
-                      }, Icons.manage_accounts),
-                      customContainerWithInkWell("Pending registration", () {
-                        giveuserinfo('Under development', '', context);
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => AddTeacherPage(),
-                        //   ),
-                        // );
-                      }, LineIcons.userClock),
+                      Column(
+                        children: [
+                          ...chackrole(role),
+                        ],
+                      ),
                       customContainerWithInkWell("Settings", () {
                         Navigator.push(
                           context,
@@ -351,5 +332,39 @@ class _ProfilePageState extends State<Profilepage> {
         ),
       ),
     );
+  }
+
+  List<Widget> chackrole(String role) {
+    if (role == "Admin") {
+      List<Widget> adminOptions = [
+        customContainerWithInkWell("Manage Courses", () {
+          giveuserinfo('Under development', '', context);
+        }, Icons.my_library_books_outlined),
+        customContainerWithInkWell("Add Teacher", () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddTeacherPage(),
+            ),
+          );
+        }, LineIcons.chalkboardTeacher),
+        customContainerWithInkWell("Manage Teacher", () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ManageTeacher(),
+            ),
+          );
+        }, Icons.manage_accounts),
+        customContainerWithInkWell("Pending registration", () {
+          giveuserinfo('Under development', '', context);
+        }, LineIcons.userClock),
+      ];
+
+      return adminOptions;
+    } else {
+      // Return an empty list if the role is not "Admin"
+      return [];
+    }
   }
 }

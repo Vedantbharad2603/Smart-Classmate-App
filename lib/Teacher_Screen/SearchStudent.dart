@@ -179,7 +179,7 @@ class _SearchStudentState extends State<SearchStudent> {
                                           Text(
                                             student['name'],
                                             style: TextStyle(
-                                              fontSize: getSize(context, 2.7),
+                                              fontSize: getSize(context, 2.4),
                                               fontWeight: FontWeight.bold,
                                               color: MyTheme.textcolor,
                                             ),
@@ -190,7 +190,7 @@ class _SearchStudentState extends State<SearchStudent> {
                                           Text(
                                             "@${student['studentname']}",
                                             style: TextStyle(
-                                              fontSize: getSize(context, 1.7),
+                                              fontSize: getSize(context, 1.6),
                                               fontWeight: FontWeight.bold,
                                               color: MyTheme.textcolor
                                                   .withOpacity(0.5),

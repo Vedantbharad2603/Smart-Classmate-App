@@ -229,12 +229,12 @@ Widget studentbutton(
     },
     child: Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(borderRadius),
-        gradient: LinearGradient(
-          colors: [color1, color2],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
+        border: Border.all(
+          color: color2,
+          width: getWidth(context, 0.008),
         ),
+        borderRadius: BorderRadius.circular(15),
+        color: color1,
       ),
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: Text(

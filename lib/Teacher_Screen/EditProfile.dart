@@ -29,6 +29,13 @@ class _EditProfileState extends State<EditProfile> {
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
         centerTitle: true,
+        title: Text(
+          'Edit Profile',
+          style: TextStyle(
+              color: MyTheme.textcolor,
+              fontSize: getSize(context, 2.8),
+              fontWeight: FontWeight.bold),
+        ),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios_new_rounded,
@@ -43,21 +50,6 @@ class _EditProfileState extends State<EditProfile> {
         child: SafeArea(
           child: Column(
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Text(
-                      'Edit Profile',
-                      style: TextStyle(
-                          color: MyTheme.textcolor,
-                          fontSize: getSize(context, 2.8),
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
               buildMyTextField("Teacher Name", TeacherNameController, width,
                   "String", 255, context),
               buildMyTextField("Mobile Number", mobileNumberController, width,
