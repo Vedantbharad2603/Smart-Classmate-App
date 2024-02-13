@@ -13,6 +13,8 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+
   String selectedCourse = 'Not Selected';
 
   final List<String> courses = [
@@ -42,58 +44,62 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
         ),
         title: Text('Add Teacher', style: TextStyle(color: MyTheme.textcolor)),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            buildMyTextField("First Name", firstNameController, width, "String",
-                255, context),
-            buildMyTextField(
-                "Last Name", lastNameController, width, "String", 255, context),
-            buildMyTextField(
-                "Password", lastNameController, width, "String", 8, context),
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Text(
-                "Select Type",
-                style: TextStyle(color: MyTheme.textcolor, fontSize: 20),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              buildMyTextField("First Name", firstNameController, width,
+                  "String", 20, context),
+              buildMyTextField("Last Name", lastNameController, width, "String",
+                  20, context),
+              buildMyTextField(
+                  "Email ID", emailController, width, "String", 255, context),
+              buildMyTextField(
+                  "Password", passwordController, width, "String", 8, context),
+              const SizedBox(
+                height: 10,
               ),
-            ),
-            buildmainDropdown(selectedCourse, (value) {
-              setState(() {
-                selectedCourse = value!;
-              });
-            }, context, courses),
-            Padding(
-              padding: const EdgeInsets.only(top: 50),
-              child: InkWell(
-                onTap: () {},
-                child: Container(
-                  height: getHeight(context, 0.05),
-                  width: getWidth(context, 0.38),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      color: MyTheme.mainbutton,
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Text(
-                    'Add Teacher',
-                    style: TextStyle(
-                      color: MyTheme.mainbuttontext,
-                      fontWeight: FontWeight.w600,
-                      fontSize: width * 0.06,
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Text(
+                  "Select Type",
+                  style: TextStyle(color: MyTheme.textcolor, fontSize: 20),
+                ),
+              ),
+              buildmainDropdown(selectedCourse, (value) {
+                setState(() {
+                  selectedCourse = value!;
+                });
+              }, context, courses),
+              Padding(
+                padding: const EdgeInsets.only(top: 50),
+                child: InkWell(
+                  onTap: () {},
+                  child: Container(
+                    height: getHeight(context, 0.05),
+                    width: getWidth(context, 0.38),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: MyTheme.mainbutton,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Text(
+                      'Add Teacher',
+                      style: TextStyle(
+                        color: MyTheme.mainbuttontext,
+                        fontWeight: FontWeight.w600,
+                        fontSize: width * 0.06,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: getHeight(context, 0.02),
-            ),
-          ],
+              SizedBox(
+                height: getHeight(context, 0.02),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -131,11 +137,97 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
   }
 
   // ignore: unused_element
-  bool _validateFields() {
-    return firstNameController.text.isNotEmpty &&
-        lastNameController.text.isNotEmpty &&
-        passwordController.text.isNotEmpty &&
-        // ignore: unnecessary_null_comparison
-        selectedCourse != null;
+  bool _validateEmail(String email) {
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return emailRegex.hasMatch(email);
+  }
+
+  bool _validatePassword(String password) {
+    return password.length >= 8;
+  }
+
+// Inside _AddStudentPageState class
+  bool _validateFields(BuildContext context) {
+    if (firstNameController.text.isEmpty ||
+        lastNameController.text.isEmpty ||
+        emailController.text.isEmpty ||
+        passwordController.text.isEmpty ||
+        selectedCourse == "Not Selected" ||
+        !_validateEmail(emailController.text) ||
+        !_validatePassword(passwordController.text)) {
+      // Show popup with text field data
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: MyTheme.background,
+            title: Text(
+              'Validation Failed',
+              style: TextStyle(color: MyTheme.button2),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('First Name: ${firstNameController.text}',
+                    style: TextStyle(color: MyTheme.textcolor)),
+                Text('Last Name: ${lastNameController.text}',
+                    style: TextStyle(color: MyTheme.textcolor)),
+                Text('Email: ${emailController.text}',
+                    style: TextStyle(color: MyTheme.textcolor)),
+                Text('Password: ${passwordController.text}',
+                    style: TextStyle(color: MyTheme.textcolor)),
+                Text('Selected Course: $selectedCourse',
+                    style: TextStyle(color: MyTheme.textcolor)),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      return false; // Validation failed
+    }
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: MyTheme.background,
+          title: Text('Submitted Data',
+              style: TextStyle(color: MyTheme.mainbuttontext)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('First Name: ${firstNameController.text}',
+                  style: TextStyle(color: MyTheme.textcolor)),
+              Text('Last Name: ${lastNameController.text}',
+                  style: TextStyle(color: MyTheme.textcolor)),
+              Text('Email: ${emailController.text}',
+                  style: TextStyle(color: MyTheme.textcolor)),
+              Text('Password: ${passwordController.text}',
+                  style: TextStyle(color: MyTheme.textcolor)),
+              Text('Selected Course: $selectedCourse',
+                  style: TextStyle(color: MyTheme.textcolor)),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+    return true; // Validation passed
   }
 }

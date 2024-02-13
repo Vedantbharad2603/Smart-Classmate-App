@@ -1,5 +1,6 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
+import 'package:smartclassmate/Teacher_Screen/StudentInfo.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
 
@@ -16,57 +17,36 @@ class _SearchStudentState extends State<SearchStudent> {
       'studentname': 'Vedant020124',
       'name': 'Vedant',
       'course': 'Advance',
-      'shift': 1,
-      'status': -1
+      'shift': 1
     },
     {
       'studentname': 'Jhanvi020124',
       'name': 'Jhanvi',
       'course': 'Basic',
-      'shift': 1,
-      'status': -1
+      'shift': 1
     },
     {
       'studentname': 'VirenBhai020124',
       'name': 'VirenBhai',
       'course': 'Advance',
-      'shift': 2,
-      'status': -1
+      'shift': 2
     },
-    {
-      'studentname': 'Om020124',
-      'name': 'Om',
-      'course': 'Advance',
-      'shift': 2,
-      'status': -1
-    },
+    {'studentname': 'Om020124', 'name': 'Om', 'course': 'Advance', 'shift': 2},
     {
       'studentname': 'Dhaivat020124',
       'name': 'Dhaivat',
       'course': 'Advance',
-      'shift': 2,
-      'status': -1
+      'shift': 2
     },
   ];
 
   List<int> shiftTypes = [1, 2];
   String searchText = '';
-  late int selectedShift;
 
   @override
   void initState() {
     super.initState();
     studentData.sort((a, b) => a['name'].compareTo(b['name']));
-    selectedShift = _getCurrentShift();
-  }
-
-  int _getCurrentShift() {
-    DateTime now = DateTime.now();
-    if (now.hour >= 6 && now.hour < 12) {
-      return 1;
-    } else {
-      return 2;
-    }
   }
 
   @override
@@ -246,35 +226,79 @@ class _SearchStudentState extends State<SearchStudent> {
                                         ),
                                       ),
                                     ),
+                                    PopupMenuButton(
+                                      color: MyTheme.background2,
+                                      icon: Icon(Icons.more_vert,
+                                          color: MyTheme.textcolor),
+                                      itemBuilder: (BuildContext context) {
+                                        return [
+                                          PopupMenuItem(
+                                            child: InkWell(
+                                              onTap: () {
+                                                // Handle Give Work action
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  studentbutton(
+                                                      () {},
+                                                      "Give work",
+                                                      student['studentname'],
+                                                      7,
+                                                      MyTheme.highlightcolor
+                                                          .withOpacity(0.2),
+                                                      MyTheme.highlightcolor
+                                                          .withOpacity(0.6),
+                                                      context),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          PopupMenuItem(
+                                            child: InkWell(
+                                              onTap: () {
+                                                // Handle Give eBook action
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  studentbutton(() {
+                                                    // StudentInfo
+                                                  },
+                                                      "Show Profile",
+                                                      student['studentname'],
+                                                      7,
+                                                      MyTheme.button1
+                                                          .withOpacity(0.2),
+                                                      MyTheme.button1
+                                                          .withOpacity(0.8),
+                                                      context),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          PopupMenuItem(
+                                            child: InkWell(
+                                              onTap: () {
+                                                // Handle Show Profile action
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  studentbutton(
+                                                      () {},
+                                                      "Give eBook",
+                                                      student['studentname'],
+                                                      7,
+                                                      MyTheme.mainbutton,
+                                                      MyTheme.mainbuttontext,
+                                                      context),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ];
+                                      },
+                                    ),
                                   ],
                                 ),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  studentbutton(
-                                      () {},
-                                      "Give work",
-                                      7,
-                                      MyTheme.highlightcolor.withOpacity(0.2),
-                                      MyTheme.highlightcolor.withOpacity(0.6),
-                                      context),
-                                  studentbutton(
-                                      () {},
-                                      "Show Profile",
-                                      7,
-                                      MyTheme.button1.withOpacity(0.2),
-                                      MyTheme.button1.withOpacity(0.8),
-                                      context),
-                                  studentbutton(
-                                      () {},
-                                      "Give eBook",
-                                      7,
-                                      MyTheme.mainbutton,
-                                      MyTheme.mainbuttontext,
-                                      context),
-                                ],
                               ),
                               const SizedBox(
                                 height: 10,

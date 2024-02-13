@@ -5,6 +5,7 @@ import 'package:smartclassmate/masterpage/studentmaster.dart';
 import 'package:smartclassmate/masterpage/teachermaster.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -51,10 +52,11 @@ class _LoginPageState extends State<LoginPage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "APP LOGO",
-                              style: TextStyle(color: MyTheme.textcolor),
-                            ),
+                            // SvgPicture.asset(
+                            //   'assets/logo.png',
+                            //   height: getHeight(context, 0.005),
+                            //   width: getWidth(context, 0.005),
+                            // ),
                             SizedBox(
                               height: getHeight(context, 0.01),
                             ),

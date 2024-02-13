@@ -19,7 +19,22 @@ dependencies:
   file_picker: ^6.1.1
   intl: ^0.19.0
   flutter_slidable: ^3.0.1
+  http: ^1.1.0
+  path_provider: ^2.1.2
+  flutter_launcher_icons: ^0.13.1
+  flutter_svg: ^2.0.9
 
+
+assets:
+  - assets/logo_transparent.png
+  - assets/logo.png
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo.png"
+  adaptive_icon_foreground: "assets/logo_foreground.png"
+  adaptive_icon_background: "#ffffff"
 
 dev_dependencies:
   flutter_test:

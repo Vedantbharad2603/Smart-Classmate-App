@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:smartclassmate/Teacher_Screen/StudentInfo.dart';
 import 'package:smartclassmate/tools/theme.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -213,6 +215,7 @@ Future<void> _showGiveWorkPopup(BuildContext context) async {
 Widget studentbutton(
   VoidCallback onTap,
   String label,
+  String id,
   double borderRadius,
   Color color1,
   Color color2,
@@ -222,10 +225,16 @@ Widget studentbutton(
     onTap: () {
       if (label == "Give work") {
         _showGiveWorkPopup(context);
+      } else if (label == "Show Profile") {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => StudentInfo(),
+          ),
+        );
       } else if (label == "Give eBook") {
         _showGiveEBookPopup(context);
       }
-      // Handle other buttons as needed
     },
     child: Container(
       decoration: BoxDecoration(
@@ -569,4 +578,20 @@ Widget showAttendance(
       ),
     ),
   );
+}
+
+class LogoTransparent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // AssetImage assetImage = AssetImage('assets/logo_transparent.png');
+    // Image image = Image(image: assetImage);
+    return Container(
+      child: SvgPicture.asset(
+        'assets/logo.png',
+        semanticsLabel: 'My SVG Image',
+        height: getHeight(context, 0.005),
+        width: getWidth(context, 0.005),
+      ),
+    );
+  }
 }

@@ -1,35 +1,60 @@
-// ignore_for_file: must_be_immutable, prefer_const_constructors
-
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:smartclassmate/Start_Screen/login.dart';
-import 'package:smartclassmate/Teacher_Screen/AddStudent.dart';
-import 'package:smartclassmate/Teacher_Screen/AddTeacher.dart';
-import 'package:smartclassmate/Teacher_Screen/EditProfile.dart';
-import 'package:smartclassmate/Teacher_Screen/ListofHolidays.dart';
-import 'package:smartclassmate/Teacher_Screen/ManageCourse.dart';
-import 'package:smartclassmate/Teacher_Screen/ManageTeacher.dart';
-import 'package:smartclassmate/Teacher_Screen/PendingRegistration.dart';
-import 'package:smartclassmate/Teacher_Screen/Settings.dart';
-import 'package:smartclassmate/Teacher_Screen/UploadEbook.dart';
+import 'package:smartclassmate/Student_Screen/st_downloads.dart';
+import 'package:smartclassmate/Student_Screen/st_edit_profile.dart';
+import 'package:smartclassmate/Student_Screen/st_my_courses.dart';
+import 'package:smartclassmate/Student_Screen/st_settings.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
 
-class Profilepage extends StatefulWidget {
-  void Function() onThemeToggleMaster;
-  Profilepage({super.key, required this.onThemeToggleMaster});
+// ignore: must_be_immutable
+class StudentInfo extends StatefulWidget {
+  StudentInfo({super.key});
 
   @override
-  State<Profilepage> createState() => _ProfilePageState();
+  State<StudentInfo> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<Profilepage> {
-  String role = "Admin";
+class _ProfilePageState extends State<StudentInfo> {
+  List<Map<String, dynamic>> studentData = [
+    {
+      'studentname': 'Vedant020124',
+      'name': 'Vedant Bharad',
+      'course': 'Advance',
+      'shift': 1,
+      'lastmonth': '4/2024'
+    }
+  ];
+  List<MapEntry<DateTime, int>> dateIntList = [
+    MapEntry(DateTime(2024, 2, 1), 0),
+    MapEntry(DateTime(2024, 2, 2), 1),
+    MapEntry(DateTime(2024, 2, 3), 1),
+    MapEntry(DateTime(2024, 2, 4), 1),
+    MapEntry(DateTime(2024, 2, 5), 2),
+    MapEntry(DateTime(2024, 2, 6), 2),
+    MapEntry(DateTime(2024, 2, 7), 2),
+  ];
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: MyTheme.mainbackground,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          centerTitle: true,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: MyTheme.button1,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title:
+              Text('Student Info.', style: TextStyle(color: MyTheme.textcolor)),
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -56,20 +81,14 @@ class _ProfilePageState extends State<Profilepage> {
                           padding: EdgeInsets.all(getSize(context, 2)),
                           child: Row(
                             children: [
-                              InkWell(
-                                onTap: () {
-                                  giveuserinfo('Username: Vedant Bharad',
-                                      'Password: Ved@nt123', context);
-                                },
-                                child: CircleAvatar(
-                                  backgroundColor: MyTheme.highlightcolor,
-                                  radius: getSize(context, 4.2),
-                                  child: Text(
-                                    "V",
-                                    style: TextStyle(
-                                        fontSize: getSize(context, 4.1),
-                                        color: Colors.black),
-                                  ),
+                              CircleAvatar(
+                                backgroundColor: MyTheme.highlightcolor,
+                                radius: getSize(context, 4.2),
+                                child: Text(
+                                  studentData[0]['name'][0],
+                                  style: TextStyle(
+                                      fontSize: getSize(context, 4.1),
+                                      color: Colors.black),
                                 ),
                               ),
                               Padding(
@@ -79,7 +98,7 @@ class _ProfilePageState extends State<Profilepage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "VEDANT BHARAD",
+                                      studentData[0]['name'],
                                       style: TextStyle(
                                           color: MyTheme.textcolor,
                                           fontSize: getSize(context, 3.1),
@@ -89,15 +108,12 @@ class _ProfilePageState extends State<Profilepage> {
                                       height: getHeight(context, 0.01),
                                     ),
                                     Text(
-                                      "@vedantbharad010124",
+                                      "@" + studentData[0]['studentname'],
                                       style: TextStyle(
                                           color: MyTheme.textcolor
                                               .withOpacity(0.7),
                                           fontSize: getSize(context, 1.7),
                                           fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      height: getHeight(context, 0.01),
                                     ),
                                     Row(
                                       children: [
@@ -115,7 +131,7 @@ class _ProfilePageState extends State<Profilepage> {
                                           color: MyTheme.textcolor,
                                         ),
                                         Text(
-                                          role,
+                                          "Student",
                                           style: TextStyle(
                                               color: MyTheme.textcolor
                                                   .withOpacity(0.7),
@@ -130,12 +146,22 @@ class _ProfilePageState extends State<Profilepage> {
                             ],
                           ),
                         ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            myinfobox(
+                                "Shift", studentData[0]['shift'].toString()),
+                            myinfobox("Course", studentData[0]['course']),
+                            myinfobox(
+                                "Last Month", studentData[0]['lastmonth']),
+                          ],
+                        )
                       ],
                     ),
                   ),
                 ),
               ),
-              // showAttendance("Your Attendance", context, dateIntList),
+              showAttendance("Your Attendance", context, dateIntList),
               Padding(
                 padding: EdgeInsets.all(getSize(context, 1)),
                 child: Container(
@@ -171,25 +197,20 @@ class _ProfilePageState extends State<Profilepage> {
                           ),
                         ],
                       ),
-                      customContainerWithInkWell("Upload", () {
+                      customContainerWithInkWell("View Courses", () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => UploadEbook(),
+                            builder: (context) => const StMyCourses(),
                           ),
                         );
-                      }, Icons.upload),
+                      }, Icons.library_books_outlined),
                       SizedBox(
                         height: getHeight(context, 0.018),
                       ),
                     ],
                   ),
                 ),
-              ),
-              Column(
-                children: [
-                  ...chackrole(role),
-                ],
               ),
               Padding(
                 padding: EdgeInsets.all(getSize(context, 1)),
@@ -227,38 +248,21 @@ class _ProfilePageState extends State<Profilepage> {
                         ],
                       ),
                       customContainerWithInkWell("Edit Profile", () {
+                        //StEditProfile
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => EditProfile(),
+                            builder: (context) => const StEditProfile(),
                           ),
                         );
                       }, Icons.person_outline_sharp),
-                      customContainerWithInkWell("Settings", () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Settings(
-                                onThemeToggleMaster: widget.onThemeToggleMaster,
-                                onThemeToggleProfile: () => setState(() {})),
-                          ),
-                        );
-                      }, Icons.settings),
-                      customContainerWithInkWell("Logout", () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LoginPage(),
-                          ),
-                        );
-                      }, Icons.logout_outlined),
                       SizedBox(
                         height: getHeight(context, 0.02),
                       ),
                     ],
                   ),
                 ),
-              ),
+              )
             ],
           ),
         ),
@@ -329,106 +333,38 @@ class _ProfilePageState extends State<Profilepage> {
     );
   }
 
-  List<Widget> chackrole(String role) {
-    if (role == "Admin") {
-      List<Widget> adminOptions = [
-        Padding(
-          padding: EdgeInsets.all(getSize(context, 1)),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: MyTheme.background,
-              boxShadow: [
-                BoxShadow(
-                  color: MyTheme.boxshadow,
-                  spreadRadius: getSize(context, 1),
-                  blurRadius: getSize(context, 1),
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: getHeight(context, 0.02),
-                ),
-                Row(
-                  children: [
-                    Icon(Icons.arrow_right_outlined,
-                        size: getSize(context, 4),
-                        color: MyTheme.mainbuttontext),
-                    Text(
-                      "Manage",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: getSize(context, 2.7),
-                          color: MyTheme.textcolor),
-                    ),
-                  ],
-                ),
-                customContainerWithInkWell("Manage Holidays", () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ListofHolidays(),
-                    ),
-                  );
-                }, Icons.date_range_rounded),
-                customContainerWithInkWell("Add Students", () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AddStudentPage(),
-                    ),
-                  );
-                }, LineIcons.userCircle),
-                customContainerWithInkWell("Manage Courses", () {
-                  // giveuserinfo('Under development', '', context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ManageCourse(),
-                    ),
-                  );
-                }, Icons.my_library_books_outlined),
-                customContainerWithInkWell("Add Teacher", () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AddTeacherPage(),
-                    ),
-                  );
-                }, LineIcons.chalkboardTeacher),
-                customContainerWithInkWell("Manage Teacher", () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ManageTeacher(),
-                    ),
-                  );
-                }, Icons.manage_accounts),
-                customContainerWithInkWell("Registration Pending", () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PendingRegistration(),
-                    ),
-                  );
-                }, LineIcons.userClock),
-                SizedBox(
-                  height: getHeight(context, 0.02),
-                ),
-              ],
-            ),
-          ),
+  Widget myinfobox(String title, String info) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+              color: MyTheme.textcolor.withOpacity(0.3),
+              width: getWidth(context, 0.008)),
+          borderRadius: BorderRadius.circular(15),
+          color: Colors.transparent,
         ),
-      ];
-
-      return adminOptions;
-    } else {
-      // Return an empty list if the role is not "Admin"
-      return [];
-    }
+        height: getHeight(context, 0.065),
+        width: getWidth(context, 0.25),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                  color: MyTheme.textcolor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: getSize(context, 1.9)),
+            ),
+            Text(
+              info,
+              style: TextStyle(
+                  color: MyTheme.textcolor, fontSize: getSize(context, 1.7)),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
