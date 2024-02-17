@@ -221,7 +221,6 @@ class _ProfilePageState extends State<STProfilePage> {
                         ],
                       ),
                       customContainerWithInkWell("Edit Profile", () {
-                        //StEditProfile
                         Navigator.push(
                           context,
                           MaterialPageRoute(

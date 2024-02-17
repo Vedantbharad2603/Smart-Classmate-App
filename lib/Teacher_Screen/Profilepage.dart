@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:smartclassmate/Start_Screen/login.dart';
+import 'package:smartclassmate/Teacher_Screen/AddEvent.dart';
 import 'package:smartclassmate/Teacher_Screen/AddStudent.dart';
 import 'package:smartclassmate/Teacher_Screen/AddTeacher.dart';
 import 'package:smartclassmate/Teacher_Screen/EditProfile.dart';
@@ -375,6 +376,14 @@ class _ProfilePageState extends State<Profilepage> {
                     ),
                   );
                 }, Icons.date_range_rounded),
+                customContainerWithInkWell("Add Event", () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddEventPage(),
+                    ),
+                  );
+                }, LineIcons.calendarPlus),
                 customContainerWithInkWell("Add Students", () {
                   Navigator.push(
                     context,

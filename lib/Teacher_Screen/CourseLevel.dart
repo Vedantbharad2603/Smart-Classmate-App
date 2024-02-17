@@ -1,34 +1,31 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:smartclassmate/Teacher_Screen/ConceptsPage.dart';
-import 'package:smartclassmate/Teacher_Screen/CourseLevel.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
 
-class ManageCourse extends StatefulWidget {
-  const ManageCourse({Key? key}) : super(key: key);
+class CourseLevel extends StatefulWidget {
+  final String courseName;
+
+  const CourseLevel({Key? key, required this.courseName}) : super(key: key);
 
   @override
-  State<ManageCourse> createState() => _ManageCourseState();
+  State<CourseLevel> createState() => _CourseLevelState();
 }
 
-class _ManageCourseState extends State<ManageCourse> {
+class _CourseLevelState extends State<CourseLevel> {
   List<Map<String, dynamic>> CourseData = [
     {
-      'coursename': 'Course A',
-      'haselevel': true,
+      'levelname': 'level 0',
     },
     {
-      'coursename': 'Course B',
-      'haselevel': false,
+      'levelname': 'level 1',
     },
     {
-      'coursename': 'Course C',
-      'haselevel': true,
+      'levelname': 'level 2',
     },
     {
-      'coursename': 'Course D',
-      'haselevel': false,
+      'levelname': 'level 3',
     },
   ];
 
@@ -39,7 +36,7 @@ class _ManageCourseState extends State<ManageCourse> {
   @override
   void initState() {
     super.initState();
-    CourseData.sort((a, b) => a['coursename'].compareTo(b['coursename']));
+    // CourseData.sort((a, b) => a['levelname'].compareTo(b['coursename']));
     selectedShift = _getCurrentShift();
   }
 
@@ -55,7 +52,7 @@ class _ManageCourseState extends State<ManageCourse> {
   @override
   Widget build(BuildContext context) {
     List<Map<String, dynamic>> filteredcouress = CourseData.where((coures) =>
-        coures['coursename']
+        coures['levelname']
             .toLowerCase()
             .contains(searchText.toLowerCase())).toList();
 
@@ -81,7 +78,7 @@ class _ManageCourseState extends State<ManageCourse> {
             },
           ),
           title:
-              Text('Manage Course', style: TextStyle(color: MyTheme.textcolor)),
+              Text('Manage Level', style: TextStyle(color: MyTheme.textcolor)),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -144,7 +141,7 @@ class _ManageCourseState extends State<ManageCourse> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            coures['coursename'],
+                                            coures['levelname'],
                                             style: TextStyle(
                                               fontSize: getSize(context, 2.4),
                                               fontWeight: FontWeight.bold,
@@ -170,30 +167,14 @@ class _ManageCourseState extends State<ManageCourse> {
                                                 children: [
                                                   GestureDetector(
                                                     onTap: () {
-                                                      String courseName =
-                                                          coures['coursename'];
-                                                      bool hasLevel =
-                                                          coures['haselevel'];
-
-                                                      if (hasLevel) {
-                                                        // CourseLevel
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                CourseLevel(
-                                                                    courseName:
-                                                                        courseName),
-                                                          ),
-                                                        );
-                                                      } else {
-                                                        // ConceptsPage
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                ConceptsPage(
-                                                              concepts: const [
+                                                      String courseName = coures[
+                                                          'levelname']; // Assuming 'coures' is your course object
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ConceptsPage(
+                                                                  concepts: const [
                                                                 "Writing-CP_SM",
                                                                 "Writing-Address",
                                                                 "Vocab",
@@ -212,11 +193,9 @@ class _ManageCourseState extends State<ManageCourse> {
                                                                 "There is/are",
                                                                 "Test sec-2",
                                                                 "File given & Spiral"
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        );
-                                                      }
+                                                              ]),
+                                                        ),
+                                                      );
                                                     },
                                                     child: Container(
                                                       decoration: BoxDecoration(

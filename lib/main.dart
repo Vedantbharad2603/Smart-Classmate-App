@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:smartclassmate/Start_Screen/login.dart';
 import 'package:flutter/services.dart';
 import 'package:smartclassmate/tools/theme.dart';
@@ -16,7 +17,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
       home: LoginPage(),
       // theme: ThemeData(brightness: Brightness.dark),

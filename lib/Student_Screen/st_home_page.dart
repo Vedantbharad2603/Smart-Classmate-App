@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smartclassmate/Student_Screen/st_show_events.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
 
@@ -242,11 +243,47 @@ class _STHomepageState extends State<STHomepage> {
                       left: getWidth(context, 0.02)),
                   child: Container(
                     alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Upcoming events",
-                      style: TextStyle(
-                          color: MyTheme.textcolor,
-                          fontSize: getSize(context, 2)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Upcoming events",
+                          style: TextStyle(
+                              color: MyTheme.textcolor,
+                              fontSize: getSize(context, 2)),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 20),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const StShowEvents(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: MyTheme.mainbutton,
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                      color: MyTheme.mainbuttontext
+                                          .withOpacity(0.6))),
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 6, right: 6, top: 7, bottom: 7),
+                                child: Text(
+                                  "More info",
+                                  style: TextStyle(
+                                      color: MyTheme.mainbuttontext,
+                                      fontSize: 16),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 ),
