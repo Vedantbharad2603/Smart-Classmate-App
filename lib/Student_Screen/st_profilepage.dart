@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smartclassmate/Start_Screen/login.dart';
 import 'package:smartclassmate/Student_Screen/st_downloads.dart';
 import 'package:smartclassmate/Student_Screen/st_edit_profile.dart';
@@ -53,6 +55,7 @@ class _ProfilePageState extends State<STProfilePage> {
                                 radius: getSize(context, 4.2),
                                 child: Text(
                                   "V",
+                                  overflow: TextOverflow.fade,
                                   style: TextStyle(
                                       fontSize: getSize(context, 4.1),
                                       color: Colors.black),
@@ -64,28 +67,41 @@ class _ProfilePageState extends State<STProfilePage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      "VEDANT BHARAD",
-                                      style: TextStyle(
-                                          color: MyTheme.textcolor,
-                                          fontSize: getSize(context, 3.1),
-                                          fontWeight: FontWeight.bold),
+                                    SizedBox(
+                                      width: getWidth(context, 0.6),
+                                      child: Expanded(
+                                        child: Text(
+                                          "VEDANT BHARAD",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              color: MyTheme.textcolor,
+                                              fontSize: getSize(context, 3.1),
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
                                     ),
                                     SizedBox(
                                       height: getHeight(context, 0.01),
                                     ),
-                                    Text(
-                                      "@vedantbharad010124",
-                                      style: TextStyle(
-                                          color: MyTheme.textcolor
-                                              .withOpacity(0.7),
-                                          fontSize: getSize(context, 1.7),
-                                          fontWeight: FontWeight.bold),
+                                    SizedBox(
+                                      width: getWidth(context, 0.6),
+                                      child: Expanded(
+                                        child: Text(
+                                          "@vedantbharad010124",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              color: MyTheme.textcolor
+                                                  .withOpacity(0.7),
+                                              fontSize: getSize(context, 1.7),
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
                                     ),
                                     Row(
                                       children: [
                                         Text(
                                           "Loreto",
+                                          overflow: TextOverflow.fade,
                                           style: TextStyle(
                                               color: MyTheme.textcolor
                                                   .withOpacity(0.7),
@@ -99,6 +115,7 @@ class _ProfilePageState extends State<STProfilePage> {
                                         ),
                                         Text(
                                           "Student",
+                                          overflow: TextOverflow.fade,
                                           style: TextStyle(
                                               color: MyTheme.textcolor
                                                   .withOpacity(0.7),
@@ -153,12 +170,18 @@ class _ProfilePageState extends State<STProfilePage> {
                           Icon(Icons.arrow_right_outlined,
                               size: getSize(context, 4),
                               color: MyTheme.mainbuttontext),
-                          Text(
-                            "Content",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: getSize(context, 2.7),
-                                color: MyTheme.textcolor),
+                          SizedBox(
+                            width: getWidth(context, 0.7),
+                            child: Expanded(
+                              child: Text(
+                                "Content",
+                                overflow: TextOverflow.fade,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: getSize(context, 2.7),
+                                    color: MyTheme.textcolor),
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -211,12 +234,18 @@ class _ProfilePageState extends State<STProfilePage> {
                           Icon(Icons.arrow_right_outlined,
                               size: getSize(context, 4),
                               color: MyTheme.mainbuttontext),
-                          Text(
-                            "Rreferences",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: getSize(context, 2.7),
-                                color: MyTheme.textcolor),
+                          SizedBox(
+                            width: getWidth(context, 0.7),
+                            child: Expanded(
+                              child: Text(
+                                "Rreferences",
+                                overflow: TextOverflow.fade,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: getSize(context, 2.7),
+                                    color: MyTheme.textcolor),
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -305,11 +334,17 @@ class _ProfilePageState extends State<STProfilePage> {
                     SizedBox(
                       width: getWidth(context, 0.03),
                     ),
-                    Text(
-                      text,
-                      style: TextStyle(
-                          color: MyTheme.textcolor,
-                          fontSize: getSize(context, 2)),
+                    SizedBox(
+                      width: getWidth(context, 0.6),
+                      child: Expanded(
+                        child: Text(
+                          text,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: MyTheme.textcolor,
+                              fontSize: getSize(context, 2)),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -343,17 +378,23 @@ class _ProfilePageState extends State<STProfilePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              title,
-              style: TextStyle(
-                  color: MyTheme.textcolor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: getSize(context, 1.9)),
+            Expanded(
+              child: Text(
+                title,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    color: MyTheme.textcolor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: getSize(context, 1.9)),
+              ),
             ),
-            Text(
-              info,
-              style: TextStyle(
-                  color: MyTheme.textcolor, fontSize: getSize(context, 1.7)),
+            Expanded(
+              child: Text(
+                info,
+                overflow: TextOverflow.fade,
+                style: TextStyle(
+                    color: MyTheme.textcolor, fontSize: getSize(context, 1.7)),
+              ),
             )
           ],
         ),

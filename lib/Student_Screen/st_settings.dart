@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
 
@@ -43,10 +45,17 @@ class _StSettingsState extends State<StSettings> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Settings',
-                style: TextStyle(
-                    fontSize: getSize(context, 2.8), color: MyTheme.textcolor),
+              SizedBox(
+                width: getWidth(context, 0.8),
+                child: Expanded(
+                  child: Text(
+                    'Settings',
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontSize: getSize(context, 2.8),
+                        color: MyTheme.textcolor),
+                  ),
+                ),
               ),
               Padding(
                 padding: EdgeInsets.all(getSize(context, 1.2)),
@@ -66,12 +75,18 @@ class _StSettingsState extends State<StSettings> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Dark Theme",
-                              style: TextStyle(
-                                color: MyTheme.mainbuttontext,
-                                fontSize: getSize(context, 2.5),
-                                fontWeight: FontWeight.bold,
+                            SizedBox(
+                              width: getWidth(context, 0.5),
+                              child: Expanded(
+                                child: Text(
+                                  "Dark Theme",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: MyTheme.mainbuttontext,
+                                    fontSize: getSize(context, 2.5),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -91,97 +106,47 @@ class _StSettingsState extends State<StSettings> {
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.all(getSize(context, 1.2)),
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(getSize(context, 1.2)),
-                    color: MyTheme.mainbutton,
-                    border: Border.all(
-                        color: Colors.grey, width: getWidth(context, 0.004)),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(getSize(context, 0.9)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Notifications",
-                              style: TextStyle(
-                                color: MyTheme.mainbuttontext,
-                                fontSize: getSize(context, 2.5),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Switch(
-                          activeColor: MyTheme.mainbuttontext,
-                          value: notifications,
-                          onChanged: (val) {
-                            notifications = !notifications;
-                            setState(() {});
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              // mycards("Select Theme", () {
-              //   setState(() {
-              //     MyTheme.toggleTheme;
-              //   });
-              // }),
-              // mycards("Notifications", () {}),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget mycards(String name, VoidCallback onPressed) {
-    return Padding(
-      padding: EdgeInsets.all(getSize(context, 1.2)),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(getSize(context, 1.2)),
-          color: MyTheme.mainbutton,
-          border:
-              Border.all(color: Colors.grey, width: getWidth(context, 0.004)),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(getSize(context, 0.9)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style: TextStyle(
-                      color: MyTheme.mainbuttontext,
-                      fontSize: getSize(context, 2.5),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              IconButton(
-                onPressed: onPressed,
-                icon: Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: getSize(context, 3),
-                  color: Colors.black,
-                ),
-              ),
+              // Padding(
+              //   padding: EdgeInsets.all(getSize(context, 1.2)),
+              //   child: Container(
+              //     width: double.infinity,
+              //     decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(getSize(context, 1.2)),
+              //       color: MyTheme.mainbutton,
+              //       border: Border.all(
+              //           color: Colors.grey, width: getWidth(context, 0.004)),
+              //     ),
+              //     child: Padding(
+              //       padding: EdgeInsets.all(getSize(context, 0.9)),
+              //       child: Row(
+              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //         children: [
+              //           Column(
+              //             crossAxisAlignment: CrossAxisAlignment.start,
+              //             children: [
+              //               Text(
+              //                 "Notifications",
+              //                 style: TextStyle(
+              //                   color: MyTheme.mainbuttontext,
+              //                   fontSize: getSize(context, 2.5),
+              //                   fontWeight: FontWeight.bold,
+              //                 ),
+              //               ),
+              //             ],
+              //           ),
+              //           Switch(
+              //             activeColor: MyTheme.mainbuttontext,
+              //             value: notifications,
+              //             onChanged: (val) {
+              //               notifications = !notifications;
+              //               setState(() {});
+              //             },
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

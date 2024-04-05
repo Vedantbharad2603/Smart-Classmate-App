@@ -47,13 +47,19 @@ class _EditProfileState extends State<StEditProfile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Text(
-                      'Edit Profile',
-                      style: TextStyle(
-                          color: MyTheme.textcolor,
-                          fontSize: getSize(context, 2.8),
-                          fontWeight: FontWeight.bold),
+                    padding: EdgeInsets.only(left: getWidth(context, 0.02)),
+                    child: SizedBox(
+                      width: getWidth(context, 0.8),
+                      child: Expanded(
+                        child: Text(
+                          'Edit Profile',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: MyTheme.textcolor,
+                              fontSize: getSize(context, 2.8),
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -102,10 +108,11 @@ class _EditProfileState extends State<StEditProfile> {
                         borderRadius: BorderRadius.circular(20)),
                     child: Text(
                       'Save',
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: MyTheme.mainbuttontext,
                         fontWeight: FontWeight.w600,
-                        fontSize: width * 0.06,
+                        fontSize: getSize(context, 3),
                       ),
                     ),
                   ),

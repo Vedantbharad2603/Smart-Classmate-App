@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smartclassmate/Student_Screen/st_show_events.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
@@ -36,6 +38,7 @@ List<Map<String, dynamic>> upcomingEvents = [
     'description': 'Event details for Event 3.',
   },
 ];
+String studentname = "Vedant Bharad";
 String workinfo =
     "Complete 30 Wh quesitions,30 affirmative sentence and 30 negative sentences Complete 30 Wh quesitions,30 affirmative sentence and 30 negative sentences";
 
@@ -51,6 +54,7 @@ class _STHomepageState extends State<STHomepage> {
             shadowColor: Colors.transparent,
             title: Text(
               "Homepage",
+              overflow: TextOverflow.fade,
               style: TextStyle(
                   color: MyTheme.textcolor,
                   fontSize: getSize(context, 2.7),
@@ -88,38 +92,61 @@ class _STHomepageState extends State<STHomepage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          RichText(
-                            text: TextSpan(
-                              text: 'Hello, ',
-                              style: TextStyle(
-                                fontSize: getSize(context, 2),
-                                color: MyTheme.button1,
-                                // rgba(201, 208, 103, 1)
-                              ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: 'VEDANT',
+                          Container(
+                            // color: MyTheme.button1,
+                            width: getWidth(context, 0.5),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "Hello, ",
+                                  overflow: TextOverflow.fade,
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: MyTheme.textcolor),
+                                    fontSize: getSize(context, 2),
+                                    color: MyTheme.button1,
+                                    // rgba(201, 208, 103, 1)
+                                  ),
                                 ),
+                                Expanded(
+                                  child: Text(
+                                    "Vedant Bharad",
+                                    // truncateDescription(
+                                    //   studentname,
+                                    //   1,
+                                    // ),
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontSize: getSize(context, 2),
+                                        fontWeight: FontWeight.bold,
+                                        color: MyTheme.textcolor),
+                                  ),
+                                )
                               ],
                             ),
                           ),
-                          RichText(
-                            text: TextSpan(
-                              text: 'Course ',
-                              style: TextStyle(
-                                fontSize: getSize(context, 1.7),
-                                color: MyTheme.textcolor,
-                              ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: 'Advance',
+                          Container(
+                            // color: MyTheme.button1,
+                            width: getWidth(context, 0.5),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "Course ",
+                                  overflow: TextOverflow.fade,
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: MyTheme.button1),
+                                    fontSize: getSize(context, 1.6),
+                                    color: MyTheme.textcolor,
+                                    // rgba(201, 208, 103, 1)
+                                  ),
                                 ),
+                                Expanded(
+                                  child: Text(
+                                    "Advance",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontSize: getSize(context, 1.6),
+                                        fontWeight: FontWeight.bold,
+                                        color: MyTheme.button1),
+                                  ),
+                                )
                               ],
                             ),
                           ),
@@ -135,19 +162,33 @@ class _STHomepageState extends State<STHomepage> {
                               color: MyTheme.textcolor,
                             ),
                           ),
-                          Text(
-                            "Ram Lalla Pran Prathishtha",
-                            style: TextStyle(
-                                fontSize: getSize(context, 2),
-                                color: MyTheme.textcolor,
-                                fontWeight: FontWeight.bold),
+                          SizedBox(
+                            width: getWidth(context, 0.25),
+                            child: Expanded(
+                              child: Text(
+                                textAlign: TextAlign.end,
+                                "Mahashivratri",
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: getSize(context, 1.8),
+                                    color: MyTheme.textcolor,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
                           ),
-                          Text(
-                            "22-01-2023",
-                            style: TextStyle(
-                                fontSize: getSize(context, 2),
-                                color: MyTheme.textcolor,
-                                fontWeight: FontWeight.bold),
+                          SizedBox(
+                            width: getWidth(context, 0.25),
+                            child: Expanded(
+                              child: Text(
+                                "08-03-2023",
+                                textAlign: TextAlign.end,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: getSize(context, 1.8),
+                                    color: MyTheme.textcolor,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
                           ),
                         ],
                       )
@@ -165,6 +206,7 @@ class _STHomepageState extends State<STHomepage> {
                       children: [
                         Text(
                           "Today's Homework",
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               color: MyTheme.textcolor,
                               fontSize: getSize(context, 2)),
@@ -198,20 +240,30 @@ class _STHomepageState extends State<STHomepage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  RichText(
-                                    text: TextSpan(
-                                      text: 'Till :- ',
-                                      style: TextStyle(
-                                        fontSize: getSize(context, 2),
-                                        color: MyTheme.textcolor,
-                                      ),
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                          text: '2/2/24',
+                                  Container(
+                                    // color: MyTheme.button1,
+                                    width: getWidth(context, 0.5),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "Till :- ",
+                                          overflow: TextOverflow.fade,
                                           style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: MyTheme.button1),
+                                            fontSize: getSize(context, 2.1),
+                                            color: MyTheme.textcolor,
+                                            // rgba(201, 208, 103, 1)
+                                          ),
                                         ),
+                                        Expanded(
+                                          child: Text(
+                                            "2/2/24",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: getSize(context, 2.1),
+                                                fontWeight: FontWeight.bold,
+                                                color: MyTheme.button1),
+                                          ),
+                                        )
                                       ],
                                     ),
                                   ),
@@ -248,12 +300,14 @@ class _STHomepageState extends State<STHomepage> {
                       children: [
                         Text(
                           "Upcoming events",
+                          overflow: TextOverflow.fade,
                           style: TextStyle(
                               color: MyTheme.textcolor,
                               fontSize: getSize(context, 2)),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(right: 20),
+                          padding:
+                              EdgeInsets.only(right: getWidth(context, 0.02)),
                           child: InkWell(
                             onTap: () {
                               Navigator.push(
@@ -271,10 +325,14 @@ class _STHomepageState extends State<STHomepage> {
                                       color: MyTheme.mainbuttontext
                                           .withOpacity(0.6))),
                               child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 6, right: 6, top: 7, bottom: 7),
+                                padding: EdgeInsets.only(
+                                    left: getWidth(context, 0.02),
+                                    right: getWidth(context, 0.02),
+                                    top: getHeight(context, 0.008),
+                                    bottom: getHeight(context, 0.008)),
                                 child: Text(
                                   "More info",
+                                  overflow: TextOverflow.fade,
                                   style: TextStyle(
                                       color: MyTheme.mainbuttontext,
                                       fontSize: 16),
@@ -288,7 +346,7 @@ class _STHomepageState extends State<STHomepage> {
                   ),
                 ),
                 Container(
-                  height: getHeight(context, 0.12),
+                  height: getHeight(context, 0.14),
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: List.generate(
@@ -299,8 +357,7 @@ class _STHomepageState extends State<STHomepage> {
                               upcomingEvents[index]['description'], context);
                         },
                         child: SizedBox(
-                          width:
-                              getWidth(context, 0.8), // Adjust width as needed
+                          width: getWidth(context, 0.8),
                           child: Padding(
                             padding: EdgeInsets.all(getSize(context, 1.5)),
                             child: Column(
@@ -308,6 +365,7 @@ class _STHomepageState extends State<STHomepage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
+                                  // height: getHeight(context, 0.1),
                                   decoration: BoxDecoration(
                                     boxShadow: [
                                       BoxShadow(
@@ -330,22 +388,34 @@ class _STHomepageState extends State<STHomepage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        RichText(
-                                          text: TextSpan(
-                                            text: 'Date: ',
-                                            style: TextStyle(
-                                              fontSize: getSize(context, 2),
-                                              color: MyTheme.textcolor,
-                                            ),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                text: upcomingEvents[index]
-                                                    ['date'],
+                                        Container(
+                                          // color: MyTheme.button1,
+                                          width: getWidth(context, 0.5),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Date: ",
+                                                overflow: TextOverflow.fade,
                                                 style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: MyTheme.button1,
+                                                  fontSize:
+                                                      getSize(context, 1.6),
+                                                  color: MyTheme.textcolor,
+                                                  // rgba(201, 208, 103, 1)
                                                 ),
                                               ),
+                                              Expanded(
+                                                child: Text(
+                                                  upcomingEvents[index]['date'],
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          getSize(context, 1.6),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: MyTheme.button1),
+                                                ),
+                                              )
                                             ],
                                           ),
                                         ),

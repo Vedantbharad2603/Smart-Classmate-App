@@ -65,6 +65,7 @@ class _STMessageState extends State<STMessage> {
           shadowColor: Colors.transparent,
           title: Text(
             "Update",
+            overflow: TextOverflow.fade,
             style: TextStyle(
                 color: MyTheme.textcolor,
                 fontSize: getSize(context, 2.7),
@@ -129,6 +130,7 @@ class _STMessageState extends State<STMessage> {
                         ChatBubble(
                           message: updates[index].description,
                           dateTime: updates[index].datetime,
+                          onDelete: () => {},
                         ),
                       ],
                     );
@@ -146,56 +148,73 @@ class _STMessageState extends State<STMessage> {
 class ChatBubble extends StatelessWidget {
   final String message;
   final String dateTime;
+  final VoidCallback onDelete;
 
   const ChatBubble({
     Key? key,
     required this.message,
     required this.dateTime,
+    required this.onDelete,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     DateTime parsedDateTime = DateTime.parse(dateTime);
-    String formattedDateTime =
-        DateFormat('dd/MM/yyyy  HH:mm').format(parsedDateTime);
+    String formattedDateTime = DateFormat('hh:mm a').format(parsedDateTime);
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: MyTheme.background,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: MyTheme.boxshadow,
-                spreadRadius: 1,
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                message,
-                style: TextStyle(
-                  color: MyTheme.textcolor,
-                  fontSize: 16,
+    return GestureDetector(
+      onLongPress: onDelete,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: MyTheme.background,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: MyTheme.boxshadow,
+                  spreadRadius: 1,
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                formattedDateTime,
-                style: TextStyle(
-                  color: MyTheme.button1.withOpacity(0.7),
-                  fontSize: 12,
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        message,
+                        style: TextStyle(
+                          color: MyTheme.textcolor,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    // IconButton(
+                    //   onPressed: onDelete,
+                    //   icon: Icon(
+                    //     Icons.delete,
+                    //     color: MyTheme.textcolor.withOpacity(0.7),
+                    //   ),
+                    // ),
+                  ],
                 ),
-              ),
-            ],
+                const SizedBox(height: 4),
+                Text(
+                  formattedDateTime,
+                  style: TextStyle(
+                    color: MyTheme.textcolor.withOpacity(0.7),
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

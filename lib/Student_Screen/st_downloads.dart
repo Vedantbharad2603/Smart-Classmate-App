@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
 
@@ -36,11 +38,17 @@ class _StMyCoursesState extends State<StDownloads> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 8),
-                  child: Text(
-                    'Downloads',
-                    style: TextStyle(
-                        fontSize: getSize(context, 2.8),
-                        color: MyTheme.textcolor),
+                  child: SizedBox(
+                    width: getWidth(context, 0.8),
+                    child: Expanded(
+                      child: Text(
+                        'Downloads',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: getSize(context, 2.8),
+                            color: MyTheme.textcolor),
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -77,17 +85,30 @@ class _StMyCoursesState extends State<StDownloads> {
                   SizedBox(
                     width: getWidth(context, 0.03),
                   ),
-                  Text(
-                    bookname,
-                    style: TextStyle(
-                        color: MyTheme.textcolor,
-                        fontSize: getSize(context, 2.5),
-                        fontWeight: FontWeight.bold),
+                  SizedBox(
+                    width: getWidth(context, 0.6),
+                    child: Expanded(
+                      child: Text(
+                        bookname,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            color: MyTheme.textcolor,
+                            fontSize: getSize(context, 2.5),
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
-                  Text(
-                    uploaddate,
-                    style: TextStyle(
-                        color: MyTheme.button1, fontSize: getSize(context, 2)),
+                  SizedBox(
+                    width: getWidth(context, 0.6),
+                    child: Expanded(
+                      child: Text(
+                        uploaddate,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            color: MyTheme.button1,
+                            fontSize: getSize(context, 2)),
+                      ),
+                    ),
                   ),
                 ],
               ),

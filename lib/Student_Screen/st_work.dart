@@ -15,19 +15,19 @@ List<Map<String, dynamic>> yourwork = [
     'date': '2/2/24',
     'description':
         'Complete 30 Wh questions, 30 affirmative sentences, and 30 negative sentences Complete 30 Wh questions, 30 affirmative sentences, and 30 negative sentences',
-    'uploaded': true,
+    'Submited': true,
   },
   {
     'date': '6/2/24',
     'description':
         'Complete 30 Wh questions, 30 affirmative sentences, and 30 negative sentences Complete 30 Wh questions, 30 affirmative sentences, and 30 negative sentences',
-    'uploaded': false,
+    'Submited': false,
   },
   {
     'date': '12/2/24',
     'description':
         'Complete 30 Wh questions, 30 affirmative sentences, and 30 negative sentences Complete 30 Wh questions, 30 affirmative sentences, and 30 negative sentences',
-    'uploaded': true,
+    'Submited': true,
   },
 ];
 
@@ -35,7 +35,7 @@ class _STWorkState extends State<STWork> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, // Two tabs: Uploaded and Not Uploaded
+      length: 2, // Two tabs: Submited and Not Submited
       child: SafeArea(
         child: Scaffold(
           backgroundColor: MyTheme.mainbackground,
@@ -43,6 +43,7 @@ class _STWorkState extends State<STWork> {
             backgroundColor: Colors.transparent,
             shadowColor: Colors.transparent,
             title: Text(
+              overflow: TextOverflow.fade,
               "Your Work",
               style: TextStyle(
                   color: MyTheme.textcolor,
@@ -73,13 +74,15 @@ class _STWorkState extends State<STWork> {
               tabs: [
                 Tab(
                   child: Text(
-                    "Not Uploaded",
+                    "Not Submited",
+                    overflow: TextOverflow.fade,
                     style: TextStyle(color: MyTheme.textcolor),
                   ),
                 ),
                 Tab(
                   child: Text(
-                    "Uploaded",
+                    "Submited",
+                    overflow: TextOverflow.fade,
                     style: TextStyle(color: MyTheme.textcolor),
                   ),
                 ),
@@ -88,8 +91,8 @@ class _STWorkState extends State<STWork> {
           ),
           body: TabBarView(
             children: [
-              buildTabView(false), // Not Uploaded Tab View
-              buildTabView(true), // Uploaded Tab View
+              buildTabView(false), // Not Submited Tab View
+              buildTabView(true), // Submited Tab View
             ],
           ),
         ),
@@ -97,9 +100,9 @@ class _STWorkState extends State<STWork> {
     );
   }
 
-  Widget buildTabView(bool uploaded) {
+  Widget buildTabView(bool Submited) {
     List<Map<String, dynamic>> filteredList =
-        yourwork.where((work) => work['uploaded'] == uploaded).toList();
+        yourwork.where((work) => work['Submited'] == Submited).toList();
 
     return SingleChildScrollView(
       child: Column(
@@ -154,129 +157,140 @@ class _STWorkState extends State<STWork> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          RichText(
-                            text: TextSpan(
-                              text: 'Date: ',
-                              style: TextStyle(
-                                fontSize: getSize(context, 2),
-                                color: MyTheme.textcolor,
-                                decoration: work['uploaded']
-                                    ? TextDecoration.lineThrough
-                                    : null,
-                              ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: work['date'],
+                          Container(
+                            // color: MyTheme.button1,
+                            width: getWidth(context, 0.9),
+                            height: getHeight(context, 0.03),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "Date: ",
+                                  overflow: TextOverflow.fade,
                                   style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+                                    fontSize: getSize(context, 2),
                                     color: MyTheme.button1,
+                                    // rgba(201, 208, 103, 1)
                                   ),
                                 ),
+                                Expanded(
+                                  child: Text(
+                                    work['date'],
+                                    // truncateDescription(
+                                    //   studentname,
+                                    //   1,
+                                    // ),
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontSize: getSize(context, 2),
+                                        fontWeight: FontWeight.bold,
+                                        color: MyTheme.textcolor),
+                                  ),
+                                )
                               ],
                             ),
                           ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.upload,
-                              color: MyTheme.button1,
-                            ),
-                            onPressed: () async {
-                              // Handle Upload or Reupload based on the 'uploaded' status
-                              if (work['uploaded']) {
-                                // Handle Reupload Work
-                              } else {
-                                // Open file explorer to pick a PDF file
-                                FilePickerResult? result =
-                                    await FilePicker.platform.pickFiles(
-                                  type: FileType.custom,
-                                  allowedExtensions: ['pdf'],
-                                );
+                          // IconButton(
+                          //   icon: Icon(
+                          //     Icons.upload,
+                          //     color: MyTheme.button1,
+                          //   ),
+                          //   onPressed: () async {
+                          //     // Handle Upload or Reupload based on the 'Submited' status
+                          //     if (work['Submited']) {
+                          //       // Handle Reupload Work
+                          //     } else {
+                          //       // Open file explorer to pick a PDF file
+                          //       FilePickerResult? result =
+                          //           await FilePicker.platform.pickFiles(
+                          //         type: FileType.custom,
+                          //         allowedExtensions: ['pdf'],
+                          //       );
 
-                                if (result != null) {
-                                  String fileName = result.files.single.name;
+                          //       if (result != null) {
+                          //         String fileName = result.files.single.name;
 
-                                  // Display the selected file name and provide upload and cancel buttons
-                                  // ignore: use_build_context_synchronously
-                                  showDialog(
-                                    // barrierColor: MyTheme.background,
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        backgroundColor: MyTheme.background,
-                                        title: Text(
-                                          'Selected File: $fileName',
-                                          style: TextStyle(
-                                            color: MyTheme.textcolor,
-                                          ),
-                                        ),
-                                        content: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            ElevatedButton(
-                                              style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        MyTheme.mainbutton),
-                                                shape:
-                                                    MaterialStateProperty.all<
-                                                        RoundedRectangleBorder>(
-                                                  RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15.0), // Adjust the value as needed
-                                                  ),
-                                                ),
-                                              ),
-                                              onPressed: () {
-                                                Navigator.pop(
-                                                    context); // Close the dialog
-                                              },
-                                              child: Text(
-                                                'Upload',
-                                                style: TextStyle(
-                                                  color: MyTheme.mainbuttontext,
-                                                ),
-                                              ),
-                                            ),
-                                            ElevatedButton(
-                                              style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        MyTheme.button2
-                                                            .withOpacity(0.2)),
-                                                shape:
-                                                    MaterialStateProperty.all<
-                                                        RoundedRectangleBorder>(
-                                                  RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15.0), // Adjust the value as needed
-                                                  ),
-                                                ),
-                                              ),
-                                              onPressed: () {
-                                                Navigator.pop(
-                                                    context); // Close the dialog
-                                              },
-                                              child: Text(
-                                                'Cancel',
-                                                style: TextStyle(
-                                                  color: MyTheme.button2,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  );
-                                } else {
-                                  // User canceled the file picker
-                                }
-                              }
-                            },
-                          ),
+                          //         // Display the selected file name and provide upload and cancel buttons
+                          //         // ignore: use_build_context_synchronously
+                          //         showDialog(
+                          //           // barrierColor: MyTheme.background,
+                          //           context: context,
+                          //           builder: (BuildContext context) {
+                          //             return AlertDialog(
+                          //               backgroundColor: MyTheme.background,
+                          //               title: Text(
+                          //                 'Selected File: $fileName',
+                          //                 style: TextStyle(
+                          //                   color: MyTheme.textcolor,
+                          //                 ),
+                          //               ),
+                          //               content: Row(
+                          //                 mainAxisAlignment:
+                          //                     MainAxisAlignment.spaceAround,
+                          //                 children: [
+                          //                   ElevatedButton(
+                          //                     style: ButtonStyle(
+                          //                       backgroundColor:
+                          //                           MaterialStateProperty.all(
+                          //                               MyTheme.mainbutton),
+                          //                       shape:
+                          //                           MaterialStateProperty.all<
+                          //                               RoundedRectangleBorder>(
+                          //                         RoundedRectangleBorder(
+                          //                           borderRadius:
+                          //                               BorderRadius.circular(
+                          //                                   15.0), // Adjust the value as needed
+                          //                         ),
+                          //                       ),
+                          //                     ),
+                          //                     onPressed: () {
+                          //                       Navigator.pop(
+                          //                           context); // Close the dialog
+                          //                     },
+                          //                     child: Text(
+                          //                       'Upload',
+                          //                       style: TextStyle(
+                          //                         color: MyTheme.mainbuttontext,
+                          //                       ),
+                          //                     ),
+                          //                   ),
+                          //                   ElevatedButton(
+                          //                     style: ButtonStyle(
+                          //                       backgroundColor:
+                          //                           MaterialStateProperty.all(
+                          //                               MyTheme.button2
+                          //                                   .withOpacity(0.2)),
+                          //                       shape:
+                          //                           MaterialStateProperty.all<
+                          //                               RoundedRectangleBorder>(
+                          //                         RoundedRectangleBorder(
+                          //                           borderRadius:
+                          //                               BorderRadius.circular(
+                          //                                   15.0), // Adjust the value as needed
+                          //                         ),
+                          //                       ),
+                          //                     ),
+                          //                     onPressed: () {
+                          //                       Navigator.pop(
+                          //                           context); // Close the dialog
+                          //                     },
+                          //                     child: Text(
+                          //                       'Cancel',
+                          //                       style: TextStyle(
+                          //                         color: MyTheme.button2,
+                          //                       ),
+                          //                     ),
+                          //                   ),
+                          //                 ],
+                          //               ),
+                          //             );
+                          //           },
+                          //         );
+                          //       } else {
+                          //         // User canceled the file picker
+                          //       }
+                          //     }
+                          //   },
+                          // ),
                         ],
                       ),
                       SizedBox(
@@ -284,10 +298,11 @@ class _STWorkState extends State<STWork> {
                       ),
                       Text(
                         truncateDescription(work['description'], 10),
+                        overflow: TextOverflow.fade,
                         style: TextStyle(
                           color: MyTheme.textcolor,
                           fontSize: getSize(context, 2),
-                          decoration: work['uploaded']
+                          decoration: work['Submited']
                               ? TextDecoration.lineThrough
                               : null,
                         ),

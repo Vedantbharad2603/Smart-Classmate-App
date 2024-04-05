@@ -14,26 +14,26 @@ class SearchStudent extends StatefulWidget {
 class _SearchStudentState extends State<SearchStudent> {
   List<Map<String, dynamic>> studentData = [
     {
-      'studentname': 'Vedant020124',
+      'username': 'Vedant020124',
       'name': 'Vedant',
       'course': 'Advance',
       'shift': 1
     },
     {
-      'studentname': 'Jhanvi020124',
+      'username': 'Jhanvi020124',
       'name': 'Jhanvi',
       'course': 'Basic',
       'shift': 1
     },
     {
-      'studentname': 'VirenBhai020124',
+      'username': 'VirenBhai020124',
       'name': 'VirenBhai',
       'course': 'Advance',
       'shift': 2
     },
-    {'studentname': 'Om020124', 'name': 'Om', 'course': 'Advance', 'shift': 2},
+    {'username': 'Om020124', 'name': 'Om', 'course': 'Advance', 'shift': 2},
     {
-      'studentname': 'Dhaivat020124',
+      'username': 'Dhaivat020124',
       'name': 'Dhaivat',
       'course': 'Advance',
       'shift': 2
@@ -52,15 +52,15 @@ class _SearchStudentState extends State<SearchStudent> {
   @override
   Widget build(BuildContext context) {
     List<Map<String, dynamic>> filteredStudents = studentData
-        .where((student) => student['studentname']
+        .where((student) => student['username']
             .toLowerCase()
             .contains(searchText.toLowerCase()))
         .toList();
 
     // // Sort the students based on their names
-    // filteredStudents.sort((a, b) => a['studentname']
+    // filteredStudents.sort((a, b) => a['username']
     //     .toLowerCase()
-    //     .compareTo(b['studentname'].toLowerCase()));
+    //     .compareTo(b['username'].toLowerCase()));
 
     return SafeArea(
       child: Scaffold(
@@ -168,7 +168,7 @@ class _SearchStudentState extends State<SearchStudent> {
                                             height: getHeight(context, 0.001),
                                           ),
                                           Text(
-                                            "@${student['studentname']}",
+                                            "@${student['username']}",
                                             style: TextStyle(
                                               fontSize: getSize(context, 1.6),
                                               fontWeight: FontWeight.bold,
@@ -195,7 +195,7 @@ class _SearchStudentState extends State<SearchStudent> {
                                                 BorderRadius.circular(15),
                                             color: Colors.transparent,
                                           ),
-                                          height: getHeight(context, 0.050),
+                                          height: getHeight(context, 0.057),
                                           width: getWidth(context, 0.20),
                                           child: Column(
                                             mainAxisAlignment:
@@ -242,7 +242,7 @@ class _SearchStudentState extends State<SearchStudent> {
                                                   studentbutton(
                                                       () {},
                                                       "Give work",
-                                                      student['studentname'],
+                                                      student['username'],
                                                       7,
                                                       MyTheme.highlightcolor
                                                           .withOpacity(0.2),
@@ -264,7 +264,7 @@ class _SearchStudentState extends State<SearchStudent> {
                                                     // StudentInfo
                                                   },
                                                       "Show Profile",
-                                                      student['studentname'],
+                                                      student['username'],
                                                       7,
                                                       MyTheme.button1
                                                           .withOpacity(0.2),
@@ -285,7 +285,7 @@ class _SearchStudentState extends State<SearchStudent> {
                                                   studentbutton(
                                                       () {},
                                                       "Give eBook",
-                                                      student['studentname'],
+                                                      student['username'],
                                                       7,
                                                       MyTheme.mainbutton,
                                                       MyTheme.mainbuttontext,

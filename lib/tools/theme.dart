@@ -31,7 +31,7 @@ class MyTheme {
 
   static Color _background() {
     return (_prefs.getBool("darkMode") ?? true)
-        ? const Color.fromARGB(255, 43, 43, 43)
+        ? Color.fromARGB(255, 30, 30, 30)
         : Color.fromARGB(255, 189, 192, 195);
   }
 

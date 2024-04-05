@@ -5,6 +5,7 @@ import 'package:smartclassmate/Teacher_Screen/SearchStudent.dart';
 import 'package:smartclassmate/Teacher_Screen/Profilepage.dart';
 import 'package:smartclassmate/Teacher_Screen/Messages.dart';
 import 'package:smartclassmate/Teacher_Screen/Attendance.dart';
+import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
 
 class TeacherMasterPage extends StatefulWidget {
@@ -44,15 +45,19 @@ class _TeacherMasterPageState extends State<TeacherMasterPage> {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+            padding: EdgeInsets.symmetric(
+                horizontal: getWidth(context, 0.07),
+                vertical: getHeight(context, 0.009)),
             child: GNav(
               backgroundColor: MyTheme.mainbackground,
               rippleColor: MyTheme.background,
               hoverColor: MyTheme.background,
-              gap: 8,
+              gap: 0,
               activeColor: MyTheme.button1,
               iconSize: 24,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              padding: EdgeInsets.symmetric(
+                  horizontal: getWidth(context, 0.04),
+                  vertical: getHeight(context, 0.012)),
               duration: const Duration(milliseconds: 400),
               tabBackgroundColor: MyTheme.background,
               color: MyTheme.textcolor,

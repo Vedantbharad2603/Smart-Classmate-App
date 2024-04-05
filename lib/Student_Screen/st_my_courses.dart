@@ -33,10 +33,7 @@ class _StMyCoursesState extends State<StMyCourses> {
     "File given & Spiral"
   ];
 
-  int activeIndex = 3; // Set the active index based on your progress
-
-  List<bool> checkedSteps =
-      List.filled(19, false); // Initialize all steps as unchecked
+  int activeIndex = 3;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +45,7 @@ class _StMyCoursesState extends State<StMyCourses> {
           textStyle: TextStyle(
             color:
                 isDone ? MyTheme.textcolor : MyTheme.textcolor.withOpacity(0.4),
-            fontSize: 16.0,
+            fontSize: getSize(context, 2),
             fontWeight: isDone ? FontWeight.bold : FontWeight.normal,
           ),
         ),
@@ -90,11 +87,17 @@ class _StMyCoursesState extends State<StMyCourses> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: 8),
-                  child: Text(
-                    'My Courses',
-                    style: TextStyle(
-                        fontSize: getSize(context, 2.8),
-                        color: MyTheme.highlightcolor),
+                  child: SizedBox(
+                    width: getWidth(context, 0.8),
+                    child: Expanded(
+                      child: Text(
+                        'My Courses',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: getSize(context, 2.8),
+                            color: MyTheme.highlightcolor),
+                      ),
+                    ),
                   ),
                 ),
               ],

@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_final_fields
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smartclassmate/masterpage/studentmaster.dart';
 import 'package:smartclassmate/masterpage/teachermaster.dart';
 import 'package:smartclassmate/tools/helper.dart';
@@ -33,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
                 Stack(
                   children: <Widget>[
                     Container(
-                      margin: const EdgeInsets.only(bottom: 20.0),
+                      margin: const EdgeInsets.only(bottom: 50.0),
                       width: double.infinity,
                       height: getHeight(context, 0.20),
                       decoration: BoxDecoration(
@@ -60,22 +62,35 @@ class _LoginPageState extends State<LoginPage> {
                             SizedBox(
                               height: getHeight(context, 0.01),
                             ),
-                            Text(
-                              "Welcome back",
-                              style: TextStyle(
-                                fontSize: getSize(context, 3),
-                                fontWeight: FontWeight.bold,
-                                color: MyTheme.textcolor,
+                            SizedBox(
+                              width: getWidth(context, 0.8),
+                              child: Expanded(
+                                child: Text(
+                                  "Welcome back",
+                                  overflow: TextOverflow.fade,
+                                  style: TextStyle(
+                                    fontSize: getSize(context, 3),
+                                    fontWeight: FontWeight.bold,
+                                    color: MyTheme.textcolor,
+                                  ),
+                                ),
                               ),
                             ),
                             SizedBox(
                               height: getHeight(context, 0.01),
                             ),
-                            Text(
-                              "Please log in to continue and get the best form our app",
-                              style: TextStyle(
-                                fontSize: getSize(context, 1.8),
-                                color: MyTheme.textcolor,
+                            SizedBox(
+                              width: getWidth(context, 0.8),
+                              // height: 30,
+                              child: Expanded(
+                                child: Text(
+                                  "Please log in to continue and get the best form our app",
+                                  overflow: TextOverflow.fade,
+                                  style: TextStyle(
+                                    fontSize: getSize(context, 1.8),
+                                    color: MyTheme.textcolor,
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -100,12 +115,17 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Login or Sign up",
-                            style: TextStyle(
-                              color: MyTheme.textcolor,
-                              fontSize: getSize(context, 2.8),
-                              fontWeight: FontWeight.bold,
+                          SizedBox(
+                            width: getWidth(context, 0.8),
+                            child: Expanded(
+                              child: Text(
+                                "Login or Sign up",
+                                style: TextStyle(
+                                  color: MyTheme.textcolor,
+                                  fontSize: getSize(context, 2.8),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ),
                           SizedBox(height: getHeight(context, 0.02)),

@@ -25,15 +25,28 @@ class _StShowEventsState extends State<StShowEvents> {
     _focusedDay = DateTime.now();
     _selectedDay = DateTime.now();
     _events = {
-      DateTime.now(): [
-        Event('Event 1', 'Shift 1'),
-        Event('Event 2', 'Shift 2'),
-        Event('Event 3', 'Shift 1'),
+      DateTime.utc(2024, 3, 19): [
+        Event(
+            'Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1',
+            'Shift 1'),
       ],
-      DateTime.now().add(Duration(days: 1)): [
-        Event('Event 4', 'Shift 2'),
+      DateTime.utc(2024, 3, 25): [
+        Event('Event 2', 'Shift 2'),
+      ],
+      DateTime.utc(2024, 3, 26): [
+        Event('Event 3', 'Shift 2'),
       ],
     };
+    // _events = {
+    //   DateTime.now(): [
+    //     Event('Event 1', 'Shift 1'),
+    //     Event('Event 2', 'Shift 2'),
+    //     Event('Event 3', 'Shift 1'),
+    //   ],
+    //   DateTime.now().add(Duration(days: 1)): [
+    //     Event('Event 4', 'Shift 2'),
+    //   ],
+    // };
   }
 
   @override
@@ -54,8 +67,9 @@ class _StShowEventsState extends State<StShowEvents> {
             Navigator.pop(context);
           },
         ),
-        title:
-            Text('List of Events', style: TextStyle(color: MyTheme.textcolor)),
+        title: Text('List of Events',
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(color: MyTheme.textcolor)),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -63,21 +77,18 @@ class _StShowEventsState extends State<StShowEvents> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(
-                height: 10,
-              ),
               TableCalendar(
                 headerStyle: HeaderStyle(
                   // formatButtonShowsNext: false,
                   formatButtonVisible: false,
                   rightChevronIcon: Icon(
                     Icons.arrow_right,
-                    size: 30,
+                    size: getSize(context, 4),
                     color: MyTheme.textcolor,
                   ),
                   leftChevronIcon: Icon(
                     Icons.arrow_left,
-                    size: 30,
+                    size: getSize(context, 4),
                     color: MyTheme.textcolor,
                   ),
                   titleTextStyle: TextStyle(color: MyTheme.button1),
@@ -144,6 +155,8 @@ class _StShowEventsState extends State<StShowEvents> {
                   children: [
                     Expanded(
                       child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
                         itemCount: _events.length,
                         itemBuilder: (context, index) {
                           DateTime date = _events.keys.elementAt(index);
@@ -153,51 +166,32 @@ class _StShowEventsState extends State<StShowEvents> {
                             children: [
                               Text(
                                 "Date: ${date.toIso8601String().substring(0, 10)}",
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: MyTheme.textcolor),
+                                  fontWeight: FontWeight.bold,
+                                  color: MyTheme.textcolor,
+                                ),
                               ),
                               ListView.builder(
                                 shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
+                                // physics: NeverScrollableScrollPhysics(),
                                 itemCount: events.length,
                                 itemBuilder: (context, innerIndex) {
                                   Event event = events[innerIndex];
                                   return ListTile(
-                                    title: RichText(
-                                      text: TextSpan(
-                                        text: 'Event: ',
-                                        style: TextStyle(
-                                          fontSize: getSize(context, 2),
-                                          color: MyTheme.button1,
-                                          // rgba(201, 208, 103, 1)
-                                        ),
-                                        children: <TextSpan>[
-                                          TextSpan(
-                                            text: event.title,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: MyTheme.textcolor),
-                                          ),
-                                        ],
+                                    title: Text(
+                                      "Event: ${event.title}",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: MyTheme.textcolor,
                                       ),
                                     ),
-                                    subtitle: RichText(
-                                      text: TextSpan(
-                                        text: 'Shift: ',
-                                        style: TextStyle(
-                                          fontSize: getSize(context, 1.7),
-                                          color: MyTheme.mainbuttontext,
-                                          // rgba(201, 208, 103, 1)
-                                        ),
-                                        children: <TextSpan>[
-                                          TextSpan(
-                                            text: event.shift,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: MyTheme.textcolor),
-                                          ),
-                                        ],
+                                    subtitle: Text(
+                                      "Shift: ${event.shift}",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: MyTheme.button1,
                                       ),
                                     ),
                                   );

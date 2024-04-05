@@ -7,6 +7,7 @@ import 'package:smartclassmate/Student_Screen/st_home_page.dart';
 import 'package:smartclassmate/Student_Screen/st_messages.dart';
 import 'package:smartclassmate/Student_Screen/st_profilepage.dart';
 import 'package:smartclassmate/Student_Screen/st_work.dart';
+import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
 
 class StudentMasterPage extends StatefulWidget {
@@ -44,16 +45,20 @@ class _StudentMasterPageState extends State<StudentMasterPage> {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+            padding: EdgeInsets.symmetric(
+                horizontal: getWidth(context, 0.07),
+                vertical: getHeight(context, 0.009)),
             child: GNav(
               backgroundColor: MyTheme.mainbackground,
               rippleColor: MyTheme.background,
               hoverColor: MyTheme.background,
-              gap: 8,
+              gap: 0,
               activeColor: MyTheme.button1,
-              iconSize: 24,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              duration: const Duration(milliseconds: 400),
+              iconSize: getSize(context, 2.7),
+              padding: EdgeInsets.symmetric(
+                  horizontal: getWidth(context, 0.04),
+                  vertical: getHeight(context, 0.012)),
+              duration: const Duration(milliseconds: 300),
               tabBackgroundColor: MyTheme.background,
               color: MyTheme.textcolor,
               tabs: const [

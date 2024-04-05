@@ -115,6 +115,7 @@ Future giveuserinfo(String username, String pass, context) {
             children: [
               Text(
                 username,
+                overflow: TextOverflow.fade,
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -122,6 +123,7 @@ Future giveuserinfo(String username, String pass, context) {
               ),
               Text(
                 pass,
+                overflow: TextOverflow.fade,
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -342,9 +344,7 @@ Widget buildMyTextField(String label, TextEditingController controller,
 
   return Padding(
     padding: EdgeInsets.only(
-        left: getWidth(context, 0.03),
-        right: getWidth(context, 0.03),
-        top: getHeight(context, 0.02)),
+        left: getWidth(context, 0.03), right: getWidth(context, 0.03), top: 15),
     child: Container(
       decoration: BoxDecoration(
         color: MyTheme.background,
@@ -357,11 +357,17 @@ Widget buildMyTextField(String label, TextEditingController controller,
             child: Padding(
               padding: EdgeInsets.only(
                   left: getWidth(context, 0.02), top: getWidth(context, 0.02)),
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: MyTheme.textcolor,
-                  fontSize: getSize(context, 2.6),
+              child: SizedBox(
+                width: getWidth(context, 0.8),
+                child: Expanded(
+                  child: Text(
+                    label,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: MyTheme.textcolor,
+                      fontSize: getSize(context, 2.6),
+                    ),
+                  ),
                 ),
               ),
             ),
