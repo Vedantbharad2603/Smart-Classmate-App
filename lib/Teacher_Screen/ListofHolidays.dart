@@ -1,17 +1,18 @@
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
-
+import 'package:smartclassmate/tools/apiconst.dart';
 import 'package:smartclassmate/tools/theme.dart';
 
 class HolidayData {
+  late int id;
   final String name;
   final String date;
   bool consider;
 
   HolidayData({
+    this.id = 0,
     required this.name,
     required this.date,
     this.consider = true, // Default value is true
@@ -27,19 +28,24 @@ class HolidayData {
 }
 
 class ListofHolidays extends StatefulWidget {
+  const ListofHolidays({super.key});
+
   @override
   _ListofHolidaysState createState() => _ListofHolidaysState();
 }
 
 class _ListofHolidaysState extends State<ListofHolidays> {
   List<HolidayData> holidayDataList = []; // Store fetched holiday data
-  List<bool> selected = []; // Track selected holidays
-  late Future<List<HolidayData>> _futureHolidays;
+  // List<bool> selected = []; // Track selected holidays
+  // List<bool> selected = List.generate(holidayDataList.length, (index) => false);
+
+  late Future<List<HolidayData>> _futureHolidays = Future.value([]);
 
   @override
   void initState() {
     super.initState();
-    _futureHolidays = fetchHolidays();
+    _futureHolidays = getholiday();
+    // selected = List.generate(holidayDataList.length, (index) => false);
   }
 
   Future<List<HolidayData>> fetchHolidays() async {
@@ -53,7 +59,7 @@ class _ListofHolidaysState extends State<ListofHolidays> {
       List<dynamic> fetchedHolidays = data['response']['holidays'];
 
       // Initialize the selected list with false values
-      selected = List.generate(fetchedHolidays.length, (index) => true);
+      // selected = List.generate(fetchedHolidays.length, (index) => true);
 
       // Store fetched holiday data with default consider value as true
       holidayDataList = fetchedHolidays
@@ -62,42 +68,102 @@ class _ListofHolidaysState extends State<ListofHolidays> {
                 date: holiday['date']['iso'],
               ))
           .toList();
-
-      // Write data to file
-      writeToFile(json.encode(holidayDataList));
-
+      addholiday(holidayDataList);
       return holidayDataList;
     } else {
       throw Exception('Failed to load holidays');
     }
   }
 
-  Future<void> writeToFile(String data) async {
-    final directory = await getApplicationDocumentsDirectory();
-    final file = File('${directory.path}/holidays.txt');
-    await file.writeAsString(data);
-  }
+  void addholiday(List<HolidayData> holidayDataList) async {
+    for (var holiday in holidayDataList) {
+      Map<String, dynamic> body = {
+        "holiday_name": holiday.name,
+        "holiday_date": holiday.date,
+        "is_holiday": holiday.consider,
+      };
+      try {
+        http.Response response = await http.post(
+          Uri.parse(Apiconst.addholidays),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(body),
+        );
 
-  Future<String> readFromFile() async {
-    try {
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/holidays.txt');
-      String contents = await file.readAsString();
-      return contents;
-    } catch (e) {
-      print('Error reading file: $e');
-      return '';
-    }
-  }
-
-  void printSelectedHolidays() {
-    List<Map<String, dynamic>> selectedHolidays = [];
-    for (int i = 0; i < holidayDataList.length; i++) {
-      if (selected[i]) {
-        selectedHolidays.add(holidayDataList[i].toJson());
+        if (response.statusCode == 200) {
+          // Holiday added successfully
+          // print('Holiday added: ${holiday.name}');
+        } else {
+          // Handle unsuccessful response
+          // print('Failed to add holiday: ${holiday.name}');
+        }
+      } catch (e) {
+        // Handle any errors
       }
     }
-    print(json.encode(selectedHolidays));
+  }
+
+  Future<List<HolidayData>> getholiday() async {
+    List<HolidayData> holidayDataList = [];
+
+    try {
+      http.Response response = await http.get(
+        Uri.parse(Apiconst.getholidays),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        // Parse the response body
+        Map<String, dynamic> data = json.decode(response.body);
+        List<dynamic> holidays =
+            data['data']; // Assuming 'holidays' is the key for the list
+
+        // Map the list of holidays to HolidayData objects
+        // print(data['data'][1]['is_holiday']);
+        holidayDataList = holidays.map((holiday) {
+          return HolidayData(
+            id: holiday['id'],
+            name: holiday['holiday_name'],
+            date: holiday['holiday_date'],
+            consider: holiday['is_holiday'],
+          );
+        }).toList();
+      } else {
+        throw Exception('Failed to fetch holidays');
+      }
+    } catch (e) {
+      // Handle any errors
+    }
+    return holidayDataList;
+  }
+
+  Future<bool> updateHolidays(
+      int id, String name, String date, bool consider) async {
+    Map<String, dynamic> body = {
+      "id": id,
+      "holiday_name": name,
+      "holiday_date": date,
+      "is_holiday": consider,
+    };
+    try {
+      http.Response response = await http.put(
+        Uri.parse(
+            Apiconst.updateHoliday), // Use the correct endpoint for updating
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(body),
+      );
+
+      if (response.statusCode == 200) {
+        // Holiday updated successfully
+        return true;
+      } else {
+        // Handle unsuccessful response
+        // print('Failed to update holiday: $name');
+        return false;
+      }
+    } catch (e) {
+      // Handle any errors
+      return false;
+    }
   }
 
   @override
@@ -123,29 +189,18 @@ class _ListofHolidaysState extends State<ListofHolidays> {
           },
         ),
         actions: [
+          // if (isJanuary)
           IconButton(
             icon: Icon(
-              Icons.check,
-              color: MyTheme.mainbuttontext,
+              Icons.refresh,
+              color: MyTheme.button1,
             ),
             onPressed: () {
               setState(() {
-                printSelectedHolidays();
+                _futureHolidays = fetchHolidays();
               });
             },
           ),
-          if (isJanuary)
-            IconButton(
-              icon: Icon(
-                Icons.refresh,
-                color: MyTheme.button1,
-              ),
-              onPressed: () {
-                setState(() {
-                  _futureHolidays = fetchHolidays();
-                });
-              },
-            ),
         ],
         title:
             Text('Manage Holidays', style: TextStyle(color: MyTheme.textcolor)),
@@ -154,11 +209,23 @@ class _ListofHolidaysState extends State<ListofHolidays> {
         future: _futureHolidays,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(
+                child: Text(
+              'Error: ${snapshot.error}',
+              style: const TextStyle(color: Colors.white),
+            ));
+          } else if (snapshot.data == null) {
+            return const Center(
+                child: Text(
+              "Could not find holidays data",
+              style: TextStyle(color: Colors.white),
+            ));
           } else {
             List<HolidayData> fetchedHolidays = snapshot.data!;
+            holidayDataList =
+                fetchedHolidays; // Assign fetchedHolidays to holidayDataList
             return ListView.builder(
               itemCount: fetchedHolidays.length,
               itemBuilder: (context, index) {
@@ -174,22 +241,69 @@ class _ListofHolidaysState extends State<ListofHolidays> {
                   trailing: Checkbox(
                     activeColor: MyTheme.mainbuttontext,
                     checkColor: MyTheme.mainbutton,
-                    value: selected[index],
-                    onChanged: (bool? value) {
-                      setState(() {
-                        selected[index] = value!;
-                      });
+                    value: holiday.consider,
+                    onChanged: (bool? value) async {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const AlertDialog(
+                            title: Text("Updating Holidays"),
+                            content: CircularProgressIndicator(),
+                          );
+                        },
+                        barrierDismissible: false,
+                      );
+                      bool success = await updateHolidays(
+                        holiday.id,
+                        holiday.name,
+                        holiday.date,
+                        !holiday.consider,
+                      );
+                      Navigator.pop(context); // Close the loading dialog
+                      if (success) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text("Success"),
+                              content:
+                                  const Text("Holidays updated successfully."),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("OK"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                        setState(() {
+                          holiday.consider = value ?? false;
+                        });
+                      } else {
+                        // Show error dialog if update failed
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text("Error"),
+                              content: const Text("Failed to update holidays."),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("OK"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
                     },
                     side: BorderSide(color: MyTheme.textcolor, width: 2),
-                    // fillColor: MaterialStateProperty.resolveWith<Color?>(
-                    //   (Set<MaterialState> states) {
-                    //     if (!states.contains(MaterialState.selected)) {
-                    //       return MyTheme.textcolor.withOpacity(
-                    //           0.5); // Color of the unticked checkbox
-                    //     }
-                    //     return null; // Use default value for selected checkbox
-                    //   },
-                    // ),
                   ),
                 );
               },
@@ -198,32 +312,5 @@ class _ListofHolidaysState extends State<ListofHolidays> {
         },
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    // Clear selected list to avoid memory leaks
-    selected.clear();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Read data from file every time the widget rebuilds
-    readFromFile().then((value) {
-      if (value.isNotEmpty) {
-        setState(() {
-          holidayDataList = (json.decode(value) as List)
-              .map((item) => HolidayData(
-                    name: item['name'],
-                    date: item['date'],
-                    consider: item['consider'],
-                  ))
-              .toList();
-          selected = List.generate(holidayDataList.length, (index) => false);
-        });
-      }
-    });
   }
 }

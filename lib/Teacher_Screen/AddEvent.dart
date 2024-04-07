@@ -2,10 +2,41 @@
 
 import 'package:flutter/material.dart';
 import 'package:smartclassmate/Model/Event.dart';
+import 'package:smartclassmate/tools/apiconst.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
 import 'package:get/get.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class EventData {
+  final String description;
+  final String date;
+  final int shiftid;
+
+  EventData({
+    required this.description,
+    required this.date,
+    required this.shiftid,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'description': description,
+      'date': date,
+      'shiftid': shiftid,
+    };
+  }
+
+  factory EventData.fromJson(Map<String, dynamic> json) {
+    return EventData(
+      description: json['description'],
+      date: json['date'],
+      shiftid: json['shiftid'],
+    );
+  }
+}
 
 class AddEventPage extends StatefulWidget {
   const AddEventPage({Key? key}) : super(key: key);
@@ -21,15 +52,76 @@ class _AddEventPageState extends State<AddEventPage> {
   late Map<DateTime, List<Event>> _events;
   Rx<String> selectedShift = 'Shift 1'.obs;
   late String shift;
-  final List<String> shifts = ['Shift 1', 'Shift 2'];
 
   @override
   void initState() {
     super.initState();
+    fetchShifts();
     _calendarFormat = CalendarFormat.month;
     _focusedDay = DateTime.now();
     _selectedDay = DateTime.now();
     _events = {};
+  }
+
+  Future<List<EventData>> fetchEvents() async {
+    try {
+      final response = await http.get(Uri.parse(Apiconst.listallEvents));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        List<EventData> events =
+            data.map((e) => EventData.fromJson(e)).toList();
+        return events;
+      } else {
+        throw Exception('Failed to fetch events');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch events: $e');
+    }
+  }
+
+  List<Map<String, dynamic>> shifts = [];
+
+  Future<void> fetchShifts() async {
+    try {
+      final response = await http.get(Uri.parse(Apiconst.listallShift));
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        if (data.containsKey('data')) {
+          final List<dynamic> shiftsData = data['data'];
+          shifts = shiftsData.map((shift) {
+            return {
+              'id': shift['id'],
+              'shiftName': shift['shiftName'].toString(),
+            };
+          }).toList();
+          setState(() {});
+          print(shifts);
+        } else {
+          throw Exception('Data key not found in API response');
+        }
+      } else {
+        throw Exception('Failed to fetch shifts');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> addEvent(EventData event) async {
+    try {
+      final response = await http.post(
+        Uri.parse(Apiconst.addEvent),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(event.toJson()),
+      );
+      if (response.statusCode == 200) {
+        print('Event added successfully');
+      } else {
+        throw Exception('Failed to add event');
+      }
+    } catch (e) {
+      throw Exception('Failed to add event: $e');
+    }
   }
 
   @override
@@ -339,7 +431,7 @@ class _AddEventPageState extends State<AddEventPage> {
   }
 
   Widget buildmainDropdown(String selectedValue, Function(String?) onChanged,
-      context, List<String> types) {
+      context, List<Map<String, dynamic>> shifts) {
     double height = MediaQuery.of(context).size.height;
     return Padding(
       padding: EdgeInsets.all(height * 0.011),
@@ -357,10 +449,10 @@ class _AddEventPageState extends State<AddEventPage> {
           isExpanded: true,
           underline: const SizedBox(),
           style: TextStyle(color: MyTheme.textcolor, fontSize: height * 0.018),
-          items: types.map((unit) {
-            return DropdownMenuItem(
-              value: unit,
-              child: Text(unit),
+          items: shifts.map<DropdownMenuItem<String>>((shift) {
+            return DropdownMenuItem<String>(
+              value: shift['id'].toString(), // Use unique identifier as value
+              child: Text(shift['shiftName']),
             );
           }).toList(),
           onChanged: onChanged,

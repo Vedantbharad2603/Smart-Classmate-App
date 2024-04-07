@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:smartclassmate/Start_Screen/login.dart';
 import 'package:smartclassmate/Teacher_Screen/AddEvent.dart';
@@ -25,7 +26,26 @@ class Profilepage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<Profilepage> {
-  String role = "Admin";
+  String role = "";
+  String full_name_d = "";
+  String username_d = "";
+  String password_d = "";
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize GetStorage
+    GetStorage storage = GetStorage();
+    final mydata = storage.read('login_data');
+
+    if (mydata != null) {
+      role = mydata['data']['login']['type'] ?? "";
+      full_name_d = mydata['data']['teacher']['full_name'] ?? "";
+      username_d = mydata['data']['login']['username'] ?? "";
+      password_d = mydata['data']['login']['password'] ?? "";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -59,8 +79,8 @@ class _ProfilePageState extends State<Profilepage> {
                             children: [
                               InkWell(
                                 onTap: () {
-                                  giveuserinfo('Username: Vedant Bharad',
-                                      'Password: Ved@nt123', context);
+                                  giveuserinfo('Username: $username_d',
+                                      'Password: $password_d', context);
                                 },
                                 child: CircleAvatar(
                                   backgroundColor: MyTheme.highlightcolor,
@@ -80,7 +100,7 @@ class _ProfilePageState extends State<Profilepage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "VEDANT BHARAD",
+                                      "$full_name_d",
                                       style: TextStyle(
                                           color: MyTheme.textcolor,
                                           fontSize: getSize(context, 3.1),
@@ -90,7 +110,7 @@ class _ProfilePageState extends State<Profilepage> {
                                       height: getHeight(context, 0.01),
                                     ),
                                     Text(
-                                      "@vedantbharad010124",
+                                      "@$username_d",
                                       style: TextStyle(
                                           color: MyTheme.textcolor
                                               .withOpacity(0.7),
@@ -331,7 +351,7 @@ class _ProfilePageState extends State<Profilepage> {
   }
 
   List<Widget> chackrole(String role) {
-    if (role == "Admin") {
+    if (role == "admin") {
       List<Widget> adminOptions = [
         Padding(
           padding: EdgeInsets.all(getSize(context, 1)),
