@@ -57,11 +57,6 @@ class _ListofHolidaysState extends State<ListofHolidays> {
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
       List<dynamic> fetchedHolidays = data['response']['holidays'];
-
-      // Initialize the selected list with false values
-      // selected = List.generate(fetchedHolidays.length, (index) => true);
-
-      // Store fetched holiday data with default consider value as true
       holidayDataList = fetchedHolidays
           .map((holiday) => HolidayData(
                 name: holiday['name'],

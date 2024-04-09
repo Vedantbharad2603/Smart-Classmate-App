@@ -310,12 +310,12 @@ class _STHomepageState extends State<STHomepage> {
                               EdgeInsets.only(right: getWidth(context, 0.02)),
                           child: InkWell(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const StShowEvents(),
-                                ),
-                              );
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => const StShowEvents(),
+                              //   ),
+                              // );
                             },
                             child: Container(
                               decoration: BoxDecoration(

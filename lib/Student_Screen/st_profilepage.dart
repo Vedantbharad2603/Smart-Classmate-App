@@ -1,13 +1,15 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:smartclassmate/Start_Screen/login.dart';
 import 'package:smartclassmate/Student_Screen/st_downloads.dart';
 import 'package:smartclassmate/Student_Screen/st_edit_profile.dart';
 import 'package:smartclassmate/Student_Screen/st_my_courses.dart';
 import 'package:smartclassmate/Student_Screen/st_settings.dart';
+import 'package:smartclassmate/tools/apiconst.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
+import 'package:http/http.dart' as http;
 
 // ignore: must_be_immutable
 class STProfilePage extends StatefulWidget {
@@ -19,6 +21,76 @@ class STProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<STProfilePage> {
+  String role = "";
+  String full_name_d = "";
+  String username_d = "";
+  String password_d = "";
+  String shift_d = "";
+  List<Map<String, dynamic>> shifts = [];
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchShifts();
+    GetStorage storage = GetStorage();
+    final mydata = storage.read('login_data');
+    // print(mydata['data']['userdata']['shiftdatumId']);
+    if (mydata != null) {
+      role = mydata['data']['login']['type'] ?? "";
+      full_name_d = mydata['data']['userdata']['full_name'] ?? "";
+      username_d = mydata['data']['login']['username'] ?? "";
+      password_d = mydata['data']['login']['password'] ?? "";
+      shift_d = mydata['data']['userdata']['shiftdatumId'].toString() ?? "";
+    }
+  }
+
+  Future<void> fetchShifts() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      final response = await http.get(Uri.parse(Apiconst.listallShift));
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        if (data.containsKey('data')) {
+          final List<dynamic> shiftsData = data['data'];
+          shifts = shiftsData.map((shift) {
+            return {
+              'id': shift['id'],
+              'shiftName': shift['shiftName'].toString(),
+            };
+          }).toList();
+          setState(() {});
+          print(shifts);
+        } else {
+          throw Exception('Data key not found in API response');
+        }
+      } else {
+        throw Exception('Failed to fetch shifts');
+      }
+    } catch (e) {
+      print('Error: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  String getShiftNameById(int id, List<Map<String, dynamic>>? shifts) {
+    if (shifts == null || shifts.isEmpty) return '';
+
+    // Find the shift with the matching id
+    Map<String, dynamic> shift = shifts.firstWhere(
+      (shift) => shift['id'] == id,
+      orElse: () => {},
+    );
+
+    // Return the shift name if it exists, otherwise return an empty string
+    return shift.isNotEmpty ? shift['shiftName'] ?? '' : '';
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -50,15 +122,21 @@ class _ProfilePageState extends State<STProfilePage> {
                           padding: EdgeInsets.all(getSize(context, 2)),
                           child: Row(
                             children: [
-                              CircleAvatar(
-                                backgroundColor: MyTheme.highlightcolor,
-                                radius: getSize(context, 4.2),
-                                child: Text(
-                                  "V",
-                                  overflow: TextOverflow.fade,
-                                  style: TextStyle(
-                                      fontSize: getSize(context, 4.1),
-                                      color: Colors.black),
+                              InkWell(
+                                onTap: () {
+                                  giveuserinfo('Username: $username_d',
+                                      'Password: $password_d', context);
+                                },
+                                child: CircleAvatar(
+                                  backgroundColor: MyTheme.highlightcolor,
+                                  radius: getSize(context, 4.2),
+                                  child: Text(
+                                    full_name_d.substring(0, 1).toUpperCase(),
+                                    overflow: TextOverflow.fade,
+                                    style: TextStyle(
+                                        fontSize: getSize(context, 4.1),
+                                        color: Colors.black),
+                                  ),
                                 ),
                               ),
                               Padding(
@@ -71,7 +149,7 @@ class _ProfilePageState extends State<STProfilePage> {
                                       width: getWidth(context, 0.6),
                                       child: Expanded(
                                         child: Text(
-                                          "VEDANT BHARAD",
+                                          "$full_name_d",
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                               color: MyTheme.textcolor,
@@ -87,7 +165,7 @@ class _ProfilePageState extends State<STProfilePage> {
                                       width: getWidth(context, 0.6),
                                       child: Expanded(
                                         child: Text(
-                                          "@vedantbharad010124",
+                                          "@$username_d",
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                               color: MyTheme.textcolor
@@ -114,7 +192,7 @@ class _ProfilePageState extends State<STProfilePage> {
                                           color: MyTheme.textcolor,
                                         ),
                                         Text(
-                                          "Student",
+                                          "$role",
                                           overflow: TextOverflow.fade,
                                           style: TextStyle(
                                               color: MyTheme.textcolor
@@ -133,7 +211,10 @@ class _ProfilePageState extends State<STProfilePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            myinfobox("Shift", "1"),
+                            // myinfobox(
+                            //     "Shift", getShiftNameById(shift_d, shifts)),
+                            myinfobox("Shift",
+                                getShiftNameById(int.parse(shift_d), shifts)),
                             myinfobox("Course", "advance"),
                             myinfobox("Last Month", "4/2024"),
                           ],
@@ -270,7 +351,10 @@ class _ProfilePageState extends State<STProfilePage> {
                           ),
                         );
                       }, Icons.settings),
-                      customContainerWithInkWell("Logout", () {
+                      customContainerWithInkWell("Logout", () async {
+                        final storage = GetStorage();
+                        await storage.remove('login_data');
+                        await storage.write('logedin', false);
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(

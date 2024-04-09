@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:smartclassmate/tools/apiconst.dart';
 import 'package:smartclassmate/tools/helper.dart';
+import 'package:smartclassmate/tools/mailSender.dart';
 import 'package:smartclassmate/tools/theme.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class AddTeacherPage extends StatefulWidget {
   const AddTeacherPage({Key? key}) : super(key: key);
@@ -14,15 +19,276 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
 
-  String selectedCourse = 'Not Selected';
+  String selectedType = 'Not Selected';
+  bool _isLoading = false;
 
-  final List<String> courses = [
+  final List<String> t_type = [
     'Not Selected',
-    'Admin',
-    'Teacher',
-    'Trainee',
+    'admin',
+    'teacher',
+    'trainee',
   ];
+
+  Future<void> addTeacher(String firstName, String lastName, String password,
+      String email, String selectedType, String phone) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      String username = generateUsername(firstName, lastName);
+      // print(username);
+      int id = await addLogin(username, password, selectedType);
+      print(id);
+      await addTeacherData(firstName, lastName, email, phone, id);
+
+      EmailService emailService = EmailService();
+      String mailStatus = await emailService.sendEmail(selectedType, email,
+          (firstName + " " + lastName), username, password);
+      String dialogMessage = mailStatus == 'Email sent successfully'
+          ? 'Teacher added successfully.Email sent successfully'
+          : 'Failed to send email. Please try again later.';
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Email Status'),
+            content: Text(dialogMessage),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      setState(() {
+        firstNameController.text = '';
+        lastNameController.text = '';
+        passwordController.text = '';
+        emailController.text = '';
+        phoneController.text = '';
+        selectedType = 'Not Selected';
+      });
+    } catch (e) {
+      // Show error popup
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to add teacher: $e'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  String generateUsername(String firstName, String lastName) {
+    String formattedDate = DateFormat('ddMMyy').format(DateTime.now());
+    return '${firstName.toLowerCase()}${lastName.toLowerCase()}$formattedDate';
+  }
+
+  Future<int> addLogin(
+      String username, String password, String selectedType) async {
+    Map<String, dynamic> body = {
+      "username": username,
+      "password": password,
+      "type": selectedType,
+      "isActive": true
+    };
+
+    final response = await http.post(
+      Uri.parse(Apiconst.addLogindata),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(body),
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> body2 = {"username": username};
+      final response2 = await http.post(
+        Uri.parse(Apiconst.giveuserlogin),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(body2),
+      );
+      if (response2.statusCode == 200) {
+        Map<String, dynamic> jsonData = jsonDecode(response2.body);
+        // Get the 'id' from the 'data' object
+        return jsonData['data']['id'];
+      } else {
+        throw Exception('Failed to add teacher');
+      }
+    } else {
+      throw Exception('Failed to add teacher');
+    }
+  }
+
+  Future<void> addTeacherData(String firstName, String lastName, String email,
+      String phone, int id) async {
+    Map<String, dynamic> addteacherdata = {
+      "full_name": '$firstName $lastName',
+      "email": email,
+      "mobile_number": phone,
+      "logindatumId": id
+    };
+    final teacherResponse = await http.post(
+      Uri.parse(Apiconst.addTeacher),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(addteacherdata),
+    );
+
+    if (teacherResponse.statusCode != 200) {
+      throw Exception('Failed to add teacher');
+    }
+  }
+
+  // Future<void> addTeacher(String firstName, String lastName, String password,
+  //     String email, String selectedType, String phone) async {
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
+  //   String formattedDate = DateFormat('ddMMyy').format(DateTime.now());
+  //   String username =
+  //       '${firstName.toLowerCase()}${lastName.toLowerCase()}$formattedDate';
+  //   print(username);
+  //   try {
+  //     Map<String, dynamic> body = {
+  //       "username": username,
+  //       "password": password,
+  //       "type": selectedType,
+  //       "isActive": true
+  //     };
+  //     final response = await http.post(
+  //       Uri.parse(Apiconst.addLogin),
+  //       headers: {'Content-Type': 'application/json'},
+  //       body: json.encode(body),
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       Map<String, dynamic> body2 = {"username": username};
+  //       final response2 = await http.post(
+  //         Uri.parse(Apiconst.giveuserlogin),
+  //         headers: {'Content-Type': 'application/json'},
+  //         body: json.encode(body2),
+  //       );
+  //       if (response2.statusCode == 200) {
+  //         Map<String, dynamic> jsonData = jsonDecode(response2.body);
+  //         // Get the 'id' from the 'data' object
+  //         int id = jsonData['data']['id'];
+  //         Map<String, dynamic> addteacherdata = {
+  //           "full_name": firstName + " " + lastName,
+  //           "email": email,
+  //           "mobile_number": phone,
+  //           "logindatumId ": id
+  //         };
+  //         final teacherResponse = await http.post(
+  //           Uri.parse(Apiconst.addTeacher),
+  //           headers: {'Content-Type': 'application/json'},
+  //           body: json.encode(addteacherdata),
+  //         );
+  //         if (teacherResponse.statusCode == 200) {
+  //           // Show success popup
+  //           showDialog(
+  //             context: context,
+  //             builder: (BuildContext context) {
+  //               return AlertDialog(
+  //                 title: Text('Success'),
+  //                 content: Text('Teacher added successfully'),
+  //                 actions: [
+  //                   TextButton(
+  //                     onPressed: () {
+  //                       Navigator.of(context).pop();
+  //                     },
+  //                     child: Text('OK'),
+  //                   ),
+  //                 ],
+  //               );
+  //             },
+  //           );
+  //         } else {
+  //           showDialog(
+  //             context: context,
+  //             builder: (BuildContext context) {
+  //               return AlertDialog(
+  //                 title: Text('Error'),
+  //                 content: Text('Failed to add teacher:'),
+  //                 actions: [
+  //                   TextButton(
+  //                     onPressed: () {
+  //                       Navigator.of(context).pop();
+  //                     },
+  //                     child: Text('OK'),
+  //                   ),
+  //                 ],
+  //               );
+  //             },
+  //           );
+  //         }
+  //       } else {
+  //         showDialog(
+  //           context: context,
+  //           builder: (BuildContext context) {
+  //             return AlertDialog(
+  //               title: Text('Error'),
+  //               content: Text('Failed to add teacher:'),
+  //               actions: [
+  //                 TextButton(
+  //                   onPressed: () {
+  //                     Navigator.of(context).pop();
+  //                   },
+  //                   child: Text('OK'),
+  //                 ),
+  //               ],
+  //             );
+  //           },
+  //         );
+  //       }
+  //     } else {
+  //       throw Exception('Failed to add teacher');
+  //     }
+  //   } catch (e) {
+  //     // Show error popup
+  //     // print(e);
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: Text('Error'),
+  //           content: Text('Failed to add teacher: $e'),
+  //           actions: [
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //               child: Text('OK'),
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   } finally {
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -44,64 +310,79 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
         ),
         title: Text('Add Teacher', style: TextStyle(color: MyTheme.textcolor)),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              buildMyTextField("First Name", firstNameController, width,
-                  "String", 20, context),
-              buildMyTextField("Last Name", lastNameController, width, "String",
-                  20, context),
-              buildMyTextField(
-                  "Email ID", emailController, width, "String", 255, context),
-              buildMyTextField(
-                  "Password", passwordController, width, "String", 8, context),
-              const SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Text(
-                  "Select Type",
-                  style: TextStyle(color: MyTheme.textcolor, fontSize: 20),
-                ),
-              ),
-              buildmainDropdown(selectedCourse, (value) {
-                setState(() {
-                  selectedCourse = value!;
-                });
-              }, context, courses),
-              Padding(
-                padding: const EdgeInsets.only(top: 50),
-                child: InkWell(
-                  onTap: () {},
-                  child: Container(
-                    height: getHeight(context, 0.05),
-                    width: getWidth(context, 0.38),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: MyTheme.mainbutton,
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Text(
-                      'Add Teacher',
-                      style: TextStyle(
-                        color: MyTheme.mainbuttontext,
-                        fontWeight: FontWeight.w600,
-                        fontSize: width * 0.06,
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    buildMyTextField("First Name", firstNameController, width,
+                        "String", 20, context),
+                    buildMyTextField("Last Name", lastNameController, width,
+                        "String", 20, context),
+                    buildMyTextField("Email ID", emailController, width,
+                        "String", 255, context),
+                    buildMyTextField("Mobile No", phoneController, width,
+                        "Number", 10, context),
+                    buildMyTextField("Password", passwordController, width,
+                        "String", 8, context),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Text(
+                        "Select Type",
+                        style:
+                            TextStyle(color: MyTheme.textcolor, fontSize: 20),
                       ),
                     ),
-                  ),
+                    buildmainDropdown(selectedType, (value) {
+                      setState(() {
+                        selectedType = value!;
+                      });
+                    }, context, t_type),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 50),
+                      child: InkWell(
+                        onTap: () {
+                          if (_validateFields(context)) {
+                            addTeacher(
+                                firstNameController.text,
+                                lastNameController.text,
+                                passwordController.text,
+                                emailController.text,
+                                selectedType,
+                                phoneController.text);
+                          }
+                        },
+                        child: Container(
+                          height: getHeight(context, 0.05),
+                          width: getWidth(context, 0.38),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              color: MyTheme.mainbutton,
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Text(
+                            'Add Teacher',
+                            style: TextStyle(
+                              color: MyTheme.mainbuttontext,
+                              fontWeight: FontWeight.w600,
+                              fontSize: width * 0.06,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: getHeight(context, 0.02),
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(
-                height: getHeight(context, 0.02),
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 
@@ -143,7 +424,16 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
   }
 
   bool _validatePassword(String password) {
-    return password.length >= 8;
+    // Regular expressions for password validation
+    RegExp specialChar = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+    RegExp upperCase = RegExp(r'[A-Z]');
+    RegExp lowerCase = RegExp(r'[a-z]');
+
+    // Check if password meets all criteria
+    return password.length >= 8 &&
+        specialChar.hasMatch(password) &&
+        upperCase.hasMatch(password) &&
+        lowerCase.hasMatch(password);
   }
 
 // Inside _AddStudentPageState class
@@ -152,7 +442,7 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
         lastNameController.text.isEmpty ||
         emailController.text.isEmpty ||
         passwordController.text.isEmpty ||
-        selectedCourse == "Not Selected" ||
+        selectedType == "Not Selected" ||
         !_validateEmail(emailController.text) ||
         !_validatePassword(passwordController.text)) {
       // Show popup with text field data
@@ -169,16 +459,17 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('First Name: ${firstNameController.text}',
+                Text('Mail should be in Proper format.',
                     style: TextStyle(color: MyTheme.textcolor)),
-                Text('Last Name: ${lastNameController.text}',
+                Text(
+                    'Password must contain At least 8 characters and password must contain 1 small and 1 special character.',
                     style: TextStyle(color: MyTheme.textcolor)),
-                Text('Email: ${emailController.text}',
-                    style: TextStyle(color: MyTheme.textcolor)),
-                Text('Password: ${passwordController.text}',
-                    style: TextStyle(color: MyTheme.textcolor)),
-                Text('Selected Course: $selectedCourse',
-                    style: TextStyle(color: MyTheme.textcolor)),
+                // Text('Email: ${emailController.text}',
+                //     style: TextStyle(color: MyTheme.textcolor)),
+                // Text('Password: ${passwordController.text}',
+                //     style: TextStyle(color: MyTheme.textcolor)),
+                // Text('Selected Course: $selectedType',
+                //     style: TextStyle(color: MyTheme.textcolor)),
               ],
             ),
             actions: [
@@ -194,40 +485,40 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
       );
       return false; // Validation failed
     }
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: MyTheme.background,
-          title: Text('Submitted Data',
-              style: TextStyle(color: MyTheme.mainbuttontext)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('First Name: ${firstNameController.text}',
-                  style: TextStyle(color: MyTheme.textcolor)),
-              Text('Last Name: ${lastNameController.text}',
-                  style: TextStyle(color: MyTheme.textcolor)),
-              Text('Email: ${emailController.text}',
-                  style: TextStyle(color: MyTheme.textcolor)),
-              Text('Password: ${passwordController.text}',
-                  style: TextStyle(color: MyTheme.textcolor)),
-              Text('Selected Course: $selectedCourse',
-                  style: TextStyle(color: MyTheme.textcolor)),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
+    // showDialog(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return AlertDialog(
+    //       backgroundColor: MyTheme.background,
+    //       title: Text('Submitted Data',
+    //           style: TextStyle(color: MyTheme.mainbuttontext)),
+    //       content: Column(
+    //         mainAxisSize: MainAxisSize.min,
+    //         crossAxisAlignment: CrossAxisAlignment.start,
+    //         children: [
+    //           Text('First Name: ${firstNameController.text}',
+    //               style: TextStyle(color: MyTheme.textcolor)),
+    //           Text('Last Name: ${lastNameController.text}',
+    //               style: TextStyle(color: MyTheme.textcolor)),
+    //           Text('Email: ${emailController.text}',
+    //               style: TextStyle(color: MyTheme.textcolor)),
+    //           Text('Password: ${passwordController.text}',
+    //               style: TextStyle(color: MyTheme.textcolor)),
+    //           Text('Selected Course: $selectedType',
+    //               style: TextStyle(color: MyTheme.textcolor)),
+    //         ],
+    //       ),
+    //       actions: [
+    //         TextButton(
+    //           onPressed: () {
+    //             Navigator.of(context).pop();
+    //           },
+    //           child: Text('OK'),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
     return true; // Validation passed
   }
 }

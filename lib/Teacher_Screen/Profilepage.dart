@@ -40,7 +40,7 @@ class _ProfilePageState extends State<Profilepage> {
 
     if (mydata != null) {
       role = mydata['data']['login']['type'] ?? "";
-      full_name_d = mydata['data']['teacher']['full_name'] ?? "";
+      full_name_d = mydata['data']['userdata']['full_name'] ?? "";
       username_d = mydata['data']['login']['username'] ?? "";
       password_d = mydata['data']['login']['password'] ?? "";
     }
@@ -265,7 +265,10 @@ class _ProfilePageState extends State<Profilepage> {
                           ),
                         );
                       }, Icons.settings),
-                      customContainerWithInkWell("Logout", () {
+                      customContainerWithInkWell("Logout", () async {
+                        final storage = GetStorage();
+                        await storage.remove('login_data');
+                        await storage.write('logedin', false);
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(

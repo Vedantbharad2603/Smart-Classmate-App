@@ -1,0 +1,47 @@
+import 'package:get/get.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
+
+class EmailService {
+  Future<String> sendEmail(String type, String email, String name,
+      String usernamein, String passwordin) async {
+    String username = 'vedantbharad26@gmail.com'; // Your Gmail address
+    String password = 'bsli ymzm wgbz xqzc'; // Your Gmail password
+    final smtpServer = gmail(username, password);
+    final message = Message()
+      ..from = Address(username, 'LORETO') // Your name
+      ..recipients.add(email) // Recipient's email address
+      ..subject = 'App Credentials';
+    if (type != 'student') {
+      message.html = '''
+      <h3><p>Dear $name,</p></h3>
+      <h5><p>Welcome to LORETO! We're thrilled to have you join us.</p></h5>
+      <h5><p>Your login credentials:</p></h5>
+      <p><strong>Username:</strong> $usernamein</p>
+      <p><strong>Password:</strong> $passwordin</p>
+      <p>We hope you have a great learning experience with us.</p>
+      <p>Best regards,<br>Your Team at LORETO</p>
+      ''';
+    } else {
+      message.html = '''
+      <h3><p>Dear $name,</p></h3>
+      <h5><p>Welcome to LORETO! We're excited to have you on board as a $type.</p></h5>
+      <h5><p>Your login credentials:</p></h5>
+      <p><strong>Username:</strong> $usernamein</p>
+      <p><strong>Password:</strong> $passwordin</p>
+      <p>We look forward to working with you and hope you have a rewarding experience teaching at LORETO.</p>
+      <p>Best regards,<br>Your Team at LORETO</p>
+      ''';
+    }
+    try {
+      final sendReport = await send(message, smtpServer);
+      print('Message sent: ' + sendReport.toString());
+      Get.snackbar('Success', 'Email sent successfully');
+      return 'Email sent successfully';
+    } catch (error) {
+      print('Error sending email: $error');
+      Get.snackbar('Error', 'Failed to send email. Please try again later.');
+      return 'Failed to send email. Please try again later.';
+    }
+  }
+}

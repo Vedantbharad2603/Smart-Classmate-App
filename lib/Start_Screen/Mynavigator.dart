@@ -3,6 +3,7 @@ import 'package:smartclassmate/Start_Screen/login.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:smartclassmate/masterpage/studentmaster.dart';
 import 'package:smartclassmate/masterpage/teachermaster.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class Mynavigator extends StatelessWidget {
   const Mynavigator({Key? key});
