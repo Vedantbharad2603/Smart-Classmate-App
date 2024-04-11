@@ -327,7 +327,7 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
                     buildMyTextField("Mobile No", phoneController, width,
                         "Number", 10, context),
                     buildMyTextField("Password", passwordController, width,
-                        "String", 8, context),
+                        "String", 20, context),
                     const SizedBox(
                       height: 10,
                     ),

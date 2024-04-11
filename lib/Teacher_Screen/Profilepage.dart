@@ -86,7 +86,7 @@ class _ProfilePageState extends State<Profilepage> {
                                   backgroundColor: MyTheme.highlightcolor,
                                   radius: getSize(context, 4.2),
                                   child: Text(
-                                    "V",
+                                    full_name_d.substring(0, 1).toUpperCase(),
                                     style: TextStyle(
                                         fontSize: getSize(context, 4.1),
                                         color: Colors.black),

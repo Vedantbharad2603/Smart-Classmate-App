@@ -3,58 +3,75 @@ import 'package:flutter/material.dart';
 import 'package:smartclassmate/Teacher_Screen/ConceptsPage.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
+import 'package:smartclassmate/tools/apiconst.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class CourseLevel extends StatefulWidget {
+  final int courseid;
   final String courseName;
 
-  const CourseLevel({Key? key, required this.courseName}) : super(key: key);
+  const CourseLevel(
+      {Key? key, required this.courseid, required this.courseName})
+      : super(key: key);
 
   @override
   State<CourseLevel> createState() => _CourseLevelState();
 }
 
 class _CourseLevelState extends State<CourseLevel> {
-  List<Map<String, dynamic>> CourseData = [
-    {
-      'levelname': 'level 0',
-    },
-    {
-      'levelname': 'level 1',
-    },
-    {
-      'levelname': 'level 2',
-    },
-    {
-      'levelname': 'level 3',
-    },
-  ];
+  List<Map<String, dynamic>> courselevellist = [];
 
-  List<int> shiftTypes = [1, 2];
   String searchText = '';
-  late int selectedShift;
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    // CourseData.sort((a, b) => a['levelname'].compareTo(b['coursename']));
-    selectedShift = _getCurrentShift();
+    fetchCourses(widget.courseid);
+    // CourseLevel.sort((a, b) => a['levelname'].compareTo(b['coursename']));
   }
 
-  int _getCurrentShift() {
-    DateTime now = DateTime.now();
-    if (now.hour >= 6 && now.hour < 12) {
-      return 1;
-    } else {
-      return 2;
+  Future<void> fetchCourses(int id) async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      Map<String, int> body = {'courseId': id};
+      final response = await http.post(
+        Uri.parse(Apiconst.getCourseLevels),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(body),
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        if (responseData.containsKey('data')) {
+          final List<dynamic> data = responseData['data'];
+          courselevellist.clear();
+          courselevellist
+              .addAll(data.map((e) => e as Map<String, dynamic>).toList());
+        } else {
+          throw Exception('Data key not found in API response');
+        }
+      } else {
+        throw Exception('Failed to fetch events');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch events: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Map<String, dynamic>> filteredcouress = CourseData.where((coures) =>
-        coures['levelname']
+    List<Map<String, dynamic>> filteredcouress = courselevellist
+        .where((coures) => coures['level_name']
             .toLowerCase()
-            .contains(searchText.toLowerCase())).toList();
+            .contains(searchText.toLowerCase()))
+        .toList();
 
     // // Sort the couress based on their names
     // filteredcouress.sort((a, b) => a['couresname']
@@ -62,197 +79,215 @@ class _CourseLevelState extends State<CourseLevel> {
     //     .compareTo(b['couresname'].toLowerCase()));
 
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: MyTheme.mainbackground,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          centerTitle: true,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: MyTheme.button1,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title:
-              Text('Manage Level', style: TextStyle(color: MyTheme.textcolor)),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      searchText = value;
-                    });
-                  },
-                  style: TextStyle(color: MyTheme.textcolor),
-                  decoration: InputDecoration(
-                    labelText: 'Search Course',
-                    labelStyle: TextStyle(color: MyTheme.textcolor),
-                    suffixIcon: Icon(
-                      Icons.search,
-                      color: MyTheme.textcolor,
-                    ),
+      child: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : Scaffold(
+              backgroundColor: MyTheme.mainbackground,
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                centerTitle: true,
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    color: MyTheme.button1,
                   ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                 ),
-                const SizedBox(height: 16.0),
-                SizedBox(
-                  height: getHeight(context, 0.75),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: filteredcouress.length,
-                    itemBuilder: (context, index) {
-                      Map<String, dynamic> coures = filteredcouress[index];
-                      return Padding(
-                        padding: EdgeInsets.all(getSize(context, 0.7)),
-                        child: Container(
-                          // height: getHeight(context, 0.08),
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(getSize(context, 1)),
-                            color: MyTheme.background,
-                            boxShadow: [
-                              BoxShadow(
-                                color: MyTheme.boxshadow,
-                                spreadRadius: getSize(context, 0.5),
-                                blurRadius: getSize(context, 0.8),
-                                offset: Offset(0, getSize(context, 0.3)),
-                              ),
-                            ],
+                title: Text(widget.courseName,
+                    style: TextStyle(color: MyTheme.textcolor)),
+              ),
+              body: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      TextField(
+                        onChanged: (value) {
+                          setState(() {
+                            searchText = value;
+                          });
+                        },
+                        style: TextStyle(color: MyTheme.textcolor),
+                        decoration: InputDecoration(
+                          labelText: 'Search Course Level',
+                          labelStyle: TextStyle(color: MyTheme.textcolor),
+                          suffixIcon: Icon(
+                            Icons.search,
+                            color: MyTheme.textcolor,
                           ),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.all(getSize(context, 1)),
-                                child: Row(
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                      SizedBox(
+                        height: getHeight(context, 0.75),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: filteredcouress.length,
+                          itemBuilder: (context, index) {
+                            Map<String, dynamic> coures =
+                                filteredcouress[index];
+                            return Padding(
+                              padding: EdgeInsets.all(getSize(context, 0.7)),
+                              child: Container(
+                                // height: getHeight(context, 0.08),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      getSize(context, 1)),
+                                  color: MyTheme.background,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: MyTheme.boxshadow,
+                                      spreadRadius: getSize(context, 0.5),
+                                      blurRadius: getSize(context, 0.8),
+                                      offset: Offset(0, getSize(context, 0.3)),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.only(
-                                          left: getSize(context, 1)),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                      padding:
+                                          EdgeInsets.all(getSize(context, 1)),
+                                      child: Row(
                                         children: [
-                                          Text(
-                                            coures['levelname'],
-                                            style: TextStyle(
-                                              fontSize: getSize(context, 2.4),
-                                              fontWeight: FontWeight.bold,
-                                              color: MyTheme.textcolor,
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                left: getSize(context, 1)),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  coures['level_name'],
+                                                  style: TextStyle(
+                                                    fontSize:
+                                                        getSize(context, 2.4),
+                                                    fontWeight: FontWeight.bold,
+                                                    color: MyTheme.textcolor,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
+                                          ),
+                                          const Spacer(),
+                                          PopupMenuButton(
+                                            color: MyTheme.background2,
+                                            icon: Icon(Icons.more_vert,
+                                                color: MyTheme.textcolor),
+                                            itemBuilder:
+                                                (BuildContext context) {
+                                              return [
+                                                PopupMenuItem(
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      // Handle Give Work action
+                                                    },
+                                                    child: Row(
+                                                      children: [
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            // String courseName = coures[
+                                                            //     'levelname']; // Assuming 'coures' is your course object
+                                                            // Navigator.push(
+                                                            //   context,
+                                                            //   MaterialPageRoute(
+                                                            //     builder: (context) =>
+                                                            //         ConceptsPage(
+                                                            //             concepts: const [
+                                                            //           "Writing-CP_SM",
+                                                            //           "Writing-Address",
+                                                            //           "Vocab",
+                                                            //           "Noun",
+                                                            //           "Capital letters",
+                                                            //           "C/U",
+                                                            //           "Sin/Plu",
+                                                            //           "Possessive",
+                                                            //           "Test",
+                                                            //           "Opp",
+                                                            //           "Adj",
+                                                            //           "c.ofAdj",
+                                                            //           "Gender",
+                                                            //           "Pronouns",
+                                                            //           "Articles",
+                                                            //           "There is/are",
+                                                            //           "Test sec-2",
+                                                            //           "File given & Spiral"
+                                                            //         ]),
+                                                            //   ),
+                                                            // );
+                                                          },
+                                                          child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              border:
+                                                                  Border.all(
+                                                                color: MyTheme
+                                                                    .highlightcolor
+                                                                    .withOpacity(
+                                                                        0.6),
+                                                                width: getWidth(
+                                                                    context,
+                                                                    0.008),
+                                                              ),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15),
+                                                              color: MyTheme
+                                                                  .highlightcolor
+                                                                  .withOpacity(
+                                                                      0.2),
+                                                            ),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                                    vertical:
+                                                                        10,
+                                                                    horizontal:
+                                                                        10),
+                                                            child: Text(
+                                                              "Edit Course",
+                                                              style: TextStyle(
+                                                                color: MyTheme
+                                                                    .textcolor,
+                                                                fontSize:
+                                                                    getSize(
+                                                                        context,
+                                                                        1.8),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                //add active course and deactive course button
+                                              ];
+                                            },
                                           ),
                                         ],
                                       ),
                                     ),
-                                    const Spacer(),
-                                    PopupMenuButton(
-                                      color: MyTheme.background2,
-                                      icon: Icon(Icons.more_vert,
-                                          color: MyTheme.textcolor),
-                                      itemBuilder: (BuildContext context) {
-                                        return [
-                                          PopupMenuItem(
-                                            child: InkWell(
-                                              onTap: () {
-                                                // Handle Give Work action
-                                              },
-                                              child: Row(
-                                                children: [
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      String courseName = coures[
-                                                          'levelname']; // Assuming 'coures' is your course object
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              ConceptsPage(
-                                                                  concepts: const [
-                                                                "Writing-CP_SM",
-                                                                "Writing-Address",
-                                                                "Vocab",
-                                                                "Noun",
-                                                                "Capital letters",
-                                                                "C/U",
-                                                                "Sin/Plu",
-                                                                "Possessive",
-                                                                "Test",
-                                                                "Opp",
-                                                                "Adj",
-                                                                "c.ofAdj",
-                                                                "Gender",
-                                                                "Pronouns",
-                                                                "Articles",
-                                                                "There is/are",
-                                                                "Test sec-2",
-                                                                "File given & Spiral"
-                                                              ]),
-                                                        ),
-                                                      );
-                                                    },
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                          color: MyTheme
-                                                              .highlightcolor
-                                                              .withOpacity(0.6),
-                                                          width: getWidth(
-                                                              context, 0.008),
-                                                        ),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(15),
-                                                        color: MyTheme
-                                                            .highlightcolor
-                                                            .withOpacity(0.2),
-                                                      ),
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          vertical: 10,
-                                                          horizontal: 10),
-                                                      child: Text(
-                                                        "Edit Course",
-                                                        style: TextStyle(
-                                                          color:
-                                                              MyTheme.textcolor,
-                                                          fontSize: getSize(
-                                                              context, 1.8),
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          //add active course and deactive course button
-                                        ];
-                                      },
-                                    ),
                                   ],
                                 ),
                               ),
-                            ],
-                          ),
+                            );
+                          },
                         ),
-                      );
-                    },
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

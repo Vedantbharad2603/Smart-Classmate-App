@@ -32,15 +32,16 @@ class _ManageTeacherState extends State<ManageTeacher> {
       final response = await http.get(Uri.parse(Apiconst.getTeacher));
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
+        // print(responseData['data'][0]['login']);
         if (responseData.containsKey('data')) {
           List<dynamic> data = responseData['data'];
           List<Map<String, dynamic>> updatedTeacherData = [];
           for (var teacher in data) {
             updatedTeacherData.add({
-              'id': teacher['id'],
-              'username': teacher['username'],
-              'type': teacher['type'],
-              'isActive': teacher['isActive'],
+              'id': teacher['login']['id'],
+              'username': teacher['login']['username'],
+              'type': teacher['login']['type'],
+              'isActive': teacher['login']['isActive'],
             });
           }
           setState(() {

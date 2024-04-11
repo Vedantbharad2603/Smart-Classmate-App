@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:smartclassmate/tools/theme.dart';
 
 class ConceptsPage extends StatefulWidget {
-  final List<String> concepts;
+  final int courseid;
+  final String courseName;
 
-  ConceptsPage({required this.concepts});
+  ConceptsPage({Key? key, required this.courseid, required this.courseName})
+      : super(key: key);
 
   @override
   _ConceptsPageState createState() => _ConceptsPageState();
@@ -15,12 +17,13 @@ class _ConceptsPageState extends State<ConceptsPage> {
   String? _selectedConcept;
 
   List<String> _editableConcepts = [];
+  List<String> concepts = [];
 
   @override
   void initState() {
     super.initState();
     // Create a copy of the concepts list to make it modifiable
-    _editableConcepts.addAll(widget.concepts);
+    // _editableConcepts.addAll(widget.concepts);
   }
 
   @override
