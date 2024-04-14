@@ -66,6 +66,9 @@ class _ManageCourseState extends State<ManageCourse> {
             );
           },
         );
+        setState(() {
+          fetchCourses();
+        });
       } else {
         throw Exception('Failed to add Course');
       }

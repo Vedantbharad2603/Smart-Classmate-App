@@ -4,8 +4,13 @@ import 'package:smartclassmate/tools/theme.dart';
 class ConceptsPage extends StatefulWidget {
   final int courseid;
   final String courseName;
+  final int? levelid;
 
-  ConceptsPage({Key? key, required this.courseid, required this.courseName})
+  ConceptsPage(
+      {Key? key,
+      required this.courseid,
+      required this.courseName,
+      this.levelid})
       : super(key: key);
 
   @override
@@ -22,6 +27,7 @@ class _ConceptsPageState extends State<ConceptsPage> {
   @override
   void initState() {
     super.initState();
+
     // Create a copy of the concepts list to make it modifiable
     // _editableConcepts.addAll(widget.concepts);
   }
@@ -43,7 +49,8 @@ class _ConceptsPageState extends State<ConceptsPage> {
             Navigator.pop(context);
           },
         ),
-        title: Text('Concepts', style: TextStyle(color: MyTheme.textcolor)),
+        title:
+            Text(widget.courseName, style: TextStyle(color: MyTheme.textcolor)),
       ),
       body: ListView.builder(
         itemCount: _editableConcepts.length,

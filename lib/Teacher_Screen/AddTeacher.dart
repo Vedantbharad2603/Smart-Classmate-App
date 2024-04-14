@@ -159,137 +159,6 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
     }
   }
 
-  // Future<void> addTeacher(String firstName, String lastName, String password,
-  //     String email, String selectedType, String phone) async {
-  //   setState(() {
-  //     _isLoading = true;
-  //   });
-  //   String formattedDate = DateFormat('ddMMyy').format(DateTime.now());
-  //   String username =
-  //       '${firstName.toLowerCase()}${lastName.toLowerCase()}$formattedDate';
-  //   print(username);
-  //   try {
-  //     Map<String, dynamic> body = {
-  //       "username": username,
-  //       "password": password,
-  //       "type": selectedType,
-  //       "isActive": true
-  //     };
-  //     final response = await http.post(
-  //       Uri.parse(Apiconst.addLogin),
-  //       headers: {'Content-Type': 'application/json'},
-  //       body: json.encode(body),
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       Map<String, dynamic> body2 = {"username": username};
-  //       final response2 = await http.post(
-  //         Uri.parse(Apiconst.giveuserlogin),
-  //         headers: {'Content-Type': 'application/json'},
-  //         body: json.encode(body2),
-  //       );
-  //       if (response2.statusCode == 200) {
-  //         Map<String, dynamic> jsonData = jsonDecode(response2.body);
-  //         // Get the 'id' from the 'data' object
-  //         int id = jsonData['data']['id'];
-  //         Map<String, dynamic> addteacherdata = {
-  //           "full_name": firstName + " " + lastName,
-  //           "email": email,
-  //           "mobile_number": phone,
-  //           "logindatumId ": id
-  //         };
-  //         final teacherResponse = await http.post(
-  //           Uri.parse(Apiconst.addTeacher),
-  //           headers: {'Content-Type': 'application/json'},
-  //           body: json.encode(addteacherdata),
-  //         );
-  //         if (teacherResponse.statusCode == 200) {
-  //           // Show success popup
-  //           showDialog(
-  //             context: context,
-  //             builder: (BuildContext context) {
-  //               return AlertDialog(
-  //                 title: Text('Success'),
-  //                 content: Text('Teacher added successfully'),
-  //                 actions: [
-  //                   TextButton(
-  //                     onPressed: () {
-  //                       Navigator.of(context).pop();
-  //                     },
-  //                     child: Text('OK'),
-  //                   ),
-  //                 ],
-  //               );
-  //             },
-  //           );
-  //         } else {
-  //           showDialog(
-  //             context: context,
-  //             builder: (BuildContext context) {
-  //               return AlertDialog(
-  //                 title: Text('Error'),
-  //                 content: Text('Failed to add teacher:'),
-  //                 actions: [
-  //                   TextButton(
-  //                     onPressed: () {
-  //                       Navigator.of(context).pop();
-  //                     },
-  //                     child: Text('OK'),
-  //                   ),
-  //                 ],
-  //               );
-  //             },
-  //           );
-  //         }
-  //       } else {
-  //         showDialog(
-  //           context: context,
-  //           builder: (BuildContext context) {
-  //             return AlertDialog(
-  //               title: Text('Error'),
-  //               content: Text('Failed to add teacher:'),
-  //               actions: [
-  //                 TextButton(
-  //                   onPressed: () {
-  //                     Navigator.of(context).pop();
-  //                   },
-  //                   child: Text('OK'),
-  //                 ),
-  //               ],
-  //             );
-  //           },
-  //         );
-  //       }
-  //     } else {
-  //       throw Exception('Failed to add teacher');
-  //     }
-  //   } catch (e) {
-  //     // Show error popup
-  //     // print(e);
-  //     showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: Text('Error'),
-  //           content: Text('Failed to add teacher: $e'),
-  //           actions: [
-  //             TextButton(
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //               },
-  //               child: Text('OK'),
-  //             ),
-  //           ],
-  //         );
-  //       },
-  //     );
-  //   } finally {
-  //     setState(() {
-  //       _isLoading = false;
-  //     });
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -436,12 +305,17 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
         lowerCase.hasMatch(password);
   }
 
+  bool _validatePhone(String phone) {
+    return phone.length == 10;
+  }
+
 // Inside _AddStudentPageState class
   bool _validateFields(BuildContext context) {
     if (firstNameController.text.isEmpty ||
         lastNameController.text.isEmpty ||
         emailController.text.isEmpty ||
         passwordController.text.isEmpty ||
+        !_validatePhone(phoneController.text) ||
         selectedType == "Not Selected" ||
         !_validateEmail(emailController.text) ||
         !_validatePassword(passwordController.text)) {
@@ -485,40 +359,6 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
       );
       return false; // Validation failed
     }
-    // showDialog(
-    //   context: context,
-    //   builder: (BuildContext context) {
-    //     return AlertDialog(
-    //       backgroundColor: MyTheme.background,
-    //       title: Text('Submitted Data',
-    //           style: TextStyle(color: MyTheme.mainbuttontext)),
-    //       content: Column(
-    //         mainAxisSize: MainAxisSize.min,
-    //         crossAxisAlignment: CrossAxisAlignment.start,
-    //         children: [
-    //           Text('First Name: ${firstNameController.text}',
-    //               style: TextStyle(color: MyTheme.textcolor)),
-    //           Text('Last Name: ${lastNameController.text}',
-    //               style: TextStyle(color: MyTheme.textcolor)),
-    //           Text('Email: ${emailController.text}',
-    //               style: TextStyle(color: MyTheme.textcolor)),
-    //           Text('Password: ${passwordController.text}',
-    //               style: TextStyle(color: MyTheme.textcolor)),
-    //           Text('Selected Course: $selectedType',
-    //               style: TextStyle(color: MyTheme.textcolor)),
-    //         ],
-    //       ),
-    //       actions: [
-    //         TextButton(
-    //           onPressed: () {
-    //             Navigator.of(context).pop();
-    //           },
-    //           child: Text('OK'),
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // );
     return true; // Validation passed
   }
 }

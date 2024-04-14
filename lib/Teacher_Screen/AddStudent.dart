@@ -1,8 +1,13 @@
 // ignore_for_file: unnecessary_null_comparison, unused_element
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:smartclassmate/tools/apiconst.dart';
 import 'package:smartclassmate/tools/helper.dart';
+import 'package:smartclassmate/tools/mailSender.dart';
 import 'package:smartclassmate/tools/theme.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class AddStudentPage extends StatefulWidget {
   const AddStudentPage({Key? key}) : super(key: key);
@@ -16,17 +21,244 @@ class _AddStudentPageState extends State<AddStudentPage> {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  String selectedCourse = 'Not Selected';
-  String selectedShift = 'Not Selected';
+  TextEditingController phoneController = TextEditingController();
+  String? selectedCourse;
+  String? selectedShift;
 
-  final List<String> courses = [
-    'Not Selected',
-    'Course A',
-    'Course B',
-    'Course C',
-    'Course D',
+  bool _isLoading = false;
+
+  // final List<String> courses = [
+  //   'Not Selected',
+  //   'Course A',
+  //   'Course B',
+  //   'Course C',
+  //   'Course D',
+  // ];
+  List<Map<String, dynamic>> shifts = [
+    {"id": 0, "name": "Not Selected"}
   ];
-  final List<String> shifts = ['Not Selected', 'Shift 1', 'Shift 2'];
+
+  List<Map<String, dynamic>> courses = [
+    {"id": 0, "name": "Not Selected"}
+  ];
+
+  Future<void> fetchShifts() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      final response = await http.get(Uri.parse(Apiconst.listallShift));
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        if (data.containsKey('data')) {
+          final List<dynamic> shiftsData = data['data'];
+          shifts = shiftsData.map((shift) {
+            return {
+              'id': shift['id'],
+              'name': shift['shiftName'].toString(),
+            };
+          }).toList();
+          setState(() {});
+          print(shifts);
+        } else {
+          throw Exception('Data key not found in API response');
+        }
+      } else {
+        throw Exception('Failed to fetch shifts');
+      }
+    } catch (e) {
+      print('Error: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> fetchCourses() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      final response = await http.get(Uri.parse(Apiconst.listallCourses));
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        if (data.containsKey('data')) {
+          final List<dynamic> courseData = data['data'];
+          courses = courseData.map((course) {
+            return {
+              'id': course['id'],
+              'name': course['course_name'].toString(),
+            };
+          }).toList();
+          setState(() {});
+          print(shifts);
+        } else {
+          throw Exception('Data key not found in API response');
+        }
+      } else {
+        throw Exception('Failed to fetch Courses');
+      }
+    } catch (e) {
+      print('Error: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchShifts();
+    fetchCourses();
+  }
+
+  int? getIdFromName(String? name, List<Map<String, dynamic>> mylist) {
+    // Iterate through the courses list
+    for (var myitem in mylist) {
+      if (myitem['name'] == name) {
+        return myitem['id'];
+      }
+    }
+    // Return null if no matching name is found
+    return null;
+  }
+
+  Future<void> addStudent(String firstName, String lastName, String password,
+      String email, int? shiftid, int? courseid, String phone) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      String username = generateUsername(firstName, lastName);
+      // print(username);
+      int loginid = await addLogin(username, password, "student");
+      // print(id);
+      int studentid = await addStudentData(
+          firstName, lastName, email, phone, loginid, shiftid);
+      print(studentid);
+      EmailService emailService = EmailService();
+      String mailStatus = await emailService.sendEmail(
+          "student", email, (firstName + " " + lastName), username, password);
+      String dialogMessage = mailStatus == 'Email sent successfully'
+          ? 'Student added successfully.Email sent successfully'
+          : 'Failed to send email. Please try again later.';
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Status'),
+            content: Text(dialogMessage),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      setState(() {
+        firstNameController.text = '';
+        lastNameController.text = '';
+        passwordController.text = '';
+        emailController.text = '';
+        phoneController.text = '';
+        // selectedCourse = '0';
+        // selectedShift = '0';
+      });
+    } catch (e) {
+      // Show error popup
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to add Student: $e'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  String generateUsername(String firstName, String lastName) {
+    String formattedDate = DateFormat('ddMMyy').format(DateTime.now());
+    return '${firstName.toLowerCase()}${lastName.toLowerCase()}$formattedDate';
+  }
+
+  Future<int> addLogin(
+      String username, String password, String selectedType) async {
+    Map<String, dynamic> body = {
+      "username": username,
+      "password": password,
+      "type": selectedType,
+      "isActive": true
+    };
+
+    final response = await http.post(
+      Uri.parse(Apiconst.addLogindata),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(body),
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> body2 = {"username": username};
+      final response2 = await http.post(
+        Uri.parse(Apiconst.giveuserlogin),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(body2),
+      );
+      if (response2.statusCode == 200) {
+        Map<String, dynamic> jsonData = jsonDecode(response2.body);
+        // Get the 'id' from the 'data' object
+        return jsonData['data']['id'];
+      } else {
+        throw Exception('Failed to add Student');
+      }
+    } else {
+      throw Exception('Failed to add Student or Username already exists');
+    }
+  }
+
+  Future<int> addStudentData(String firstName, String lastName, String email,
+      String phone, int loginid, int? shiftid) async {
+    Map<String, dynamic> addStudentdata = {
+      "full_name": '$firstName $lastName',
+      "email": email,
+      "mobile_number": phone,
+      "logindatumId": loginid,
+      "shiftdatumId": shiftid
+    };
+    final studentResponse = await http.post(
+      Uri.parse(Apiconst.addStudent),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(addStudentdata),
+    );
+    if (studentResponse.statusCode == 200) {
+      Map<String, dynamic> jsonData = jsonDecode(studentResponse.body);
+      // Get the 'id' from the 'data' object
+      return jsonData['data']['id'];
+    } else {
+      throw Exception('Failed to add student');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,82 +281,99 @@ class _AddStudentPageState extends State<AddStudentPage> {
         title: Text('Add Student', style: TextStyle(color: MyTheme.textcolor)),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              buildMyTextField("First Name", firstNameController, width,
-                  "String", 20, context),
-              buildMyTextField("Last Name", lastNameController, width, "String",
-                  20, context),
-              buildMyTextField(
-                  "Email ID", emailController, width, "String", 255, context),
-              buildMyTextField(
-                  "Password", passwordController, width, "String", 8, context),
-              const SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Text(
-                  "Select Course",
-                  style: TextStyle(color: MyTheme.textcolor, fontSize: 20),
-                ),
-              ),
-              buildmainDropdown(selectedCourse, (value) {
-                setState(() {
-                  selectedCourse = value!;
-                });
-              }, context, courses),
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Text(
-                  "Select Shift",
-                  style: TextStyle(color: MyTheme.textcolor, fontSize: 20),
-                ),
-              ),
-              buildmainDropdown(selectedShift, (value) {
-                setState(() {
-                  selectedShift = value!;
-                });
-              }, context, shifts),
-              Padding(
-                padding: const EdgeInsets.only(top: 50),
-                child: InkWell(
-                  onTap: () {
-                    _validateFields(context);
-                  },
-                  child: Container(
-                    height: getHeight(context, 0.05),
-                    width: getWidth(context, 0.38),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: MyTheme.mainbutton,
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Text(
-                      'Add Student',
-                      style: TextStyle(
-                        color: MyTheme.mainbuttontext,
-                        fontWeight: FontWeight.w600,
-                        fontSize: width * 0.06,
+        child: _isLoading
+            ? Center(child: CircularProgressIndicator())
+            : Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    buildMyTextField("First Name", firstNameController, width,
+                        "String", 20, context),
+                    buildMyTextField("Last Name", lastNameController, width,
+                        "String", 20, context),
+                    buildMyTextField("Email ID", emailController, width,
+                        "String", 255, context),
+                    buildMyTextField("Mobile No", phoneController, width,
+                        "Number", 10, context),
+                    buildMyTextField("Password", passwordController, width,
+                        "String", 20, context),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Text(
+                        "Select Course",
+                        style:
+                            TextStyle(color: MyTheme.textcolor, fontSize: 20),
                       ),
                     ),
-                  ),
+                    buildmainDropdown(selectedCourse, (value) {
+                      setState(() {
+                        selectedCourse = value!;
+                      });
+                    }, context, courses),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Text(
+                        "Select Shift",
+                        style:
+                            TextStyle(color: MyTheme.textcolor, fontSize: 20),
+                      ),
+                    ),
+                    buildmainDropdown(selectedShift, (value) {
+                      setState(() {
+                        selectedShift = value!;
+                      });
+                    }, context, shifts),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 50),
+                      child: InkWell(
+                        onTap: () {
+                          _validateFields(context);
+                          if (_validateFields(context)) {
+                            // print(selectedShift);
+                            addStudent(
+                                firstNameController.text,
+                                lastNameController.text,
+                                passwordController.text,
+                                emailController.text,
+                                int.parse(selectedShift!),
+                                int.parse(selectedCourse!),
+                                phoneController.text);
+                          }
+                        },
+                        child: Container(
+                          height: getHeight(context, 0.05),
+                          width: getWidth(context, 0.38),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              color: MyTheme.mainbutton,
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Text(
+                            'Add Student',
+                            style: TextStyle(
+                              color: MyTheme.mainbuttontext,
+                              fontWeight: FontWeight.w600,
+                              fontSize: width * 0.06,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: getHeight(context, 0.02),
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(
-                height: getHeight(context, 0.02),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
 
-  Widget buildmainDropdown(String selectedValue, Function(String?) onChanged,
-      context, List<String> types) {
+  Widget buildmainDropdown(String? selectedValue, Function(String?) onChanged,
+      context, List<Map<String, dynamic>> types) {
     double height = MediaQuery.of(context).size.height;
     return Padding(
       padding: EdgeInsets.all(height * 0.011),
@@ -142,12 +391,18 @@ class _AddStudentPageState extends State<AddStudentPage> {
           isExpanded: true,
           underline: const SizedBox(),
           style: TextStyle(color: MyTheme.textcolor, fontSize: height * 0.018),
-          items: types.map((unit) {
-            return DropdownMenuItem(
-              value: unit,
-              child: Text(unit),
-            );
-          }).toList(),
+          items: [
+            DropdownMenuItem(
+              value: null,
+              child: Text('Not Selected'),
+            ),
+            ...types.map((unit) {
+              return DropdownMenuItem(
+                value: unit["id"].toString(),
+                child: Text(unit["name"].toString()),
+              );
+            }).toList(),
+          ],
           onChanged: onChanged,
         ),
       ),
@@ -161,7 +416,20 @@ class _AddStudentPageState extends State<AddStudentPage> {
   }
 
   bool _validatePassword(String password) {
-    return password.length >= 8;
+    // Regular expressions for password validation
+    RegExp specialChar = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+    RegExp upperCase = RegExp(r'[A-Z]');
+    RegExp lowerCase = RegExp(r'[a-z]');
+
+    // Check if password meets all criteria
+    return password.length >= 8 &&
+        specialChar.hasMatch(password) &&
+        upperCase.hasMatch(password) &&
+        lowerCase.hasMatch(password);
+  }
+
+  bool _validatePhone(String phone) {
+    return phone.length == 10;
   }
 
 // Inside _AddStudentPageState class
@@ -170,6 +438,7 @@ class _AddStudentPageState extends State<AddStudentPage> {
         lastNameController.text.isEmpty ||
         emailController.text.isEmpty ||
         passwordController.text.isEmpty ||
+        !_validatePhone(phoneController.text) ||
         selectedCourse == "Not Selected" ||
         selectedShift == "Not Selected" ||
         !_validateEmail(emailController.text) ||
@@ -188,17 +457,10 @@ class _AddStudentPageState extends State<AddStudentPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('First Name: ${firstNameController.text}',
+                Text('Mail should be in Proper format.',
                     style: TextStyle(color: MyTheme.textcolor)),
-                Text('Last Name: ${lastNameController.text}',
-                    style: TextStyle(color: MyTheme.textcolor)),
-                Text('Email: ${emailController.text}',
-                    style: TextStyle(color: MyTheme.textcolor)),
-                Text('Password: ${passwordController.text}',
-                    style: TextStyle(color: MyTheme.textcolor)),
-                Text('Selected Course: $selectedCourse',
-                    style: TextStyle(color: MyTheme.textcolor)),
-                Text('Selected Shift: $selectedShift',
+                Text(
+                    'Password must contain At least 8 characters and password must contain 1 small and 1 special character.',
                     style: TextStyle(color: MyTheme.textcolor)),
               ],
             ),
@@ -215,42 +477,6 @@ class _AddStudentPageState extends State<AddStudentPage> {
       );
       return false; // Validation failed
     }
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: MyTheme.background,
-          title: Text('Submitted Data',
-              style: TextStyle(color: MyTheme.mainbuttontext)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('First Name: ${firstNameController.text}',
-                  style: TextStyle(color: MyTheme.textcolor)),
-              Text('Last Name: ${lastNameController.text}',
-                  style: TextStyle(color: MyTheme.textcolor)),
-              Text('Email: ${emailController.text}',
-                  style: TextStyle(color: MyTheme.textcolor)),
-              Text('Password: ${passwordController.text}',
-                  style: TextStyle(color: MyTheme.textcolor)),
-              Text('Selected Course: $selectedCourse',
-                  style: TextStyle(color: MyTheme.textcolor)),
-              Text('Selected Shift: $selectedShift',
-                  style: TextStyle(color: MyTheme.textcolor)),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
     return true; // Validation passed
   }
 }

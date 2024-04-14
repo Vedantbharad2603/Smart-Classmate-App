@@ -12,11 +12,11 @@ class EmailService {
       ..from = Address(username, 'LORETO') // Your name
       ..recipients.add(email) // Recipient's email address
       ..subject = 'App Credentials';
-    if (type != 'student') {
+    if (type == 'student') {
       message.html = '''
-      <h3><p>Dear $name,</p></h3>
-      <h5><p>Welcome to LORETO! We're thrilled to have you join us.</p></h5>
-      <h5><p>Your login credentials:</p></h5>
+      <h2><p>Dear $name,</p></h2>
+      <h4><p>Welcome to LORETO! We're thrilled to have you join us.</p></h4>
+      <h4><p>Your login credentials:</p></h4>
       <p><strong>Username:</strong> $usernamein</p>
       <p><strong>Password:</strong> $passwordin</p>
       <p>We hope you have a great learning experience with us.</p>
@@ -24,9 +24,9 @@ class EmailService {
       ''';
     } else {
       message.html = '''
-      <h3><p>Dear $name,</p></h3>
-      <h5><p>Welcome to LORETO! We're excited to have you on board as a $type.</p></h5>
-      <h5><p>Your login credentials:</p></h5>
+      <h2><p>Dear $name,</p></h2>
+      <h4><p>Welcome to LORETO! We're excited to have you on board as a $type.</p></h4>
+      <h4><p>Your login credentials:</p></h4>
       <p><strong>Username:</strong> $usernamein</p>
       <p><strong>Password:</strong> $passwordin</p>
       <p>We look forward to working with you and hope you have a rewarding experience teaching at LORETO.</p>

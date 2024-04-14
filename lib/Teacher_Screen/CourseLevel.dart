@@ -20,6 +20,7 @@ class CourseLevel extends StatefulWidget {
 }
 
 class _CourseLevelState extends State<CourseLevel> {
+  TextEditingController _levelNameController = TextEditingController();
   List<Map<String, dynamic>> courselevellist = [];
 
   String searchText = '';
@@ -61,6 +62,70 @@ class _CourseLevelState extends State<CourseLevel> {
     } finally {
       setState(() {
         _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> addCourselevel(String lName) async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      Map<String, dynamic> body = {
+        "level_name": lName,
+        "courseId": widget.courseid
+      };
+      final response = await http.post(
+        Uri.parse(Apiconst.addCourseLevels),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(body),
+      );
+      if (response.statusCode == 200) {
+        // Show success popup
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Success'),
+              content: Text('Course level added successfully'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        throw Exception('Failed to add Course level');
+      }
+    } catch (e) {
+      // Show error popup
+      print(e);
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to add Course level: $e'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+        fetchCourses(widget.courseid);
       });
     }
   }
@@ -287,7 +352,64 @@ class _CourseLevelState extends State<CourseLevel> {
                   ),
                 ),
               ),
+              floatingActionButton: FloatingActionButton(
+                backgroundColor: MyTheme.mainbutton,
+                onPressed: () {
+                  _showAddConceptDialog(context);
+                },
+                child: Icon(Icons.add, color: MyTheme.mainbuttontext),
+              ),
             ),
+    );
+  }
+
+  void _showAddConceptDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: MyTheme.background,
+          title: Text(
+            "Add Level",
+            style: TextStyle(color: MyTheme.textcolor),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                style: TextStyle(color: MyTheme.textcolor),
+                controller: _levelNameController,
+                decoration: InputDecoration(
+                    labelText: 'Course Level Name',
+                    labelStyle: TextStyle(color: MyTheme.textcolor)),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                "Cancel",
+                style: TextStyle(color: MyTheme.button2),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                addCourselevel(_levelNameController.text);
+                _levelNameController.text = "";
+                // Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                "Add",
+                style: TextStyle(color: MyTheme.button1),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
