@@ -47,15 +47,33 @@ class _LoginPageState extends State<LoginPage> {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
-        if (data['message'] == 'Error' &&
-            data['data'] == 'incorrect password') {
+        if (data['message'] == 'Error' && data['data'] == 'no login found') {
           // Show a popup for incorrect password
           showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Text('Error'),
-                content: Text('Incorrect password. Please try again.'),
+                content: Text('Username not found'),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('OK'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        } else if (data['message'] == 'Error' &&
+            data['data'] == 'incorrect password') {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text('Incorrect Password'),
                 actions: <Widget>[
                   TextButton(
                     child: Text('OK'),

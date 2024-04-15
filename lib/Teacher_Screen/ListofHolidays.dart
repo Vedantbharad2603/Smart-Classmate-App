@@ -48,7 +48,7 @@ class _ListofHolidaysState extends State<ListofHolidays> {
     // selected = List.generate(holidayDataList.length, (index) => false);
   }
 
-  Future<List<HolidayData>> fetchHolidays() async {
+  Future<void> fetchHolidays() async {
     final response = await http.get(
       Uri.parse(
           'https://calendarific.com/api/v2/holidays?&api_key=RiOlrpYvgp0a5J5T8Z8iUza6kjGILmC7&country=IN&year=2024'),
@@ -64,7 +64,9 @@ class _ListofHolidaysState extends State<ListofHolidays> {
               ))
           .toList();
       addholiday(holidayDataList);
-      return holidayDataList;
+      setState(() {
+        _futureHolidays = getholiday();
+      });
     } else {
       throw Exception('Failed to load holidays');
     }
@@ -191,9 +193,7 @@ class _ListofHolidaysState extends State<ListofHolidays> {
               color: MyTheme.button1,
             ),
             onPressed: () {
-              setState(() {
-                _futureHolidays = fetchHolidays();
-              });
+              fetchHolidays();
             },
           ),
         ],

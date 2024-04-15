@@ -115,17 +115,6 @@ class _AddStudentPageState extends State<AddStudentPage> {
     fetchCourses();
   }
 
-  int? getIdFromName(String? name, List<Map<String, dynamic>> mylist) {
-    // Iterate through the courses list
-    for (var myitem in mylist) {
-      if (myitem['name'] == name) {
-        return myitem['id'];
-      }
-    }
-    // Return null if no matching name is found
-    return null;
-  }
-
   Future<void> addStudent(String firstName, String lastName, String password,
       String email, int? shiftid, int? courseid, String phone) async {
     setState(() {

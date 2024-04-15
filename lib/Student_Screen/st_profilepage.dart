@@ -94,285 +94,305 @@ class _ProfilePageState extends State<STProfilePage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: MyTheme.mainbackground,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(getSize(context, 1)),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(getSize(context, 1)),
-                    color: MyTheme.background,
-                    boxShadow: [
-                      BoxShadow(
-                        color: MyTheme.boxshadow,
-                        spreadRadius: getSize(context, 0.5),
-                        blurRadius: getSize(context, 0.8),
-                        offset: Offset(0, getSize(context, 0.3)),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(getSize(context, 0.7)),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(getSize(context, 2)),
-                          child: Row(
+      child: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Scaffold(
+              backgroundColor: MyTheme.mainbackground,
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(getSize(context, 1)),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(getSize(context, 1)),
+                          color: MyTheme.background,
+                          boxShadow: [
+                            BoxShadow(
+                              color: MyTheme.boxshadow,
+                              spreadRadius: getSize(context, 0.5),
+                              blurRadius: getSize(context, 0.8),
+                              offset: Offset(0, getSize(context, 0.3)),
+                            ),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(getSize(context, 0.7)),
+                          child: Column(
                             children: [
-                              InkWell(
-                                onTap: () {
-                                  giveuserinfo('Username: $username_d',
-                                      'Password: $password_d', context);
-                                },
-                                child: CircleAvatar(
-                                  backgroundColor: MyTheme.highlightcolor,
-                                  radius: getSize(context, 4.2),
-                                  child: Text(
-                                    full_name_d.substring(0, 1).toUpperCase(),
-                                    overflow: TextOverflow.fade,
-                                    style: TextStyle(
-                                        fontSize: getSize(context, 4.1),
-                                        color: Colors.black),
-                                  ),
-                                ),
-                              ),
                               Padding(
-                                padding:
-                                    EdgeInsets.only(left: getSize(context, 3)),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                padding: EdgeInsets.all(getSize(context, 2)),
+                                child: Row(
                                   children: [
-                                    SizedBox(
-                                      width: getWidth(context, 0.6),
-                                      child: Expanded(
+                                    InkWell(
+                                      onTap: () {
+                                        giveuserinfo('Username: $username_d',
+                                            'Password: $password_d', context);
+                                      },
+                                      child: CircleAvatar(
+                                        backgroundColor: MyTheme.highlightcolor,
+                                        radius: getSize(context, 4.2),
                                         child: Text(
-                                          "$full_name_d",
-                                          overflow: TextOverflow.ellipsis,
+                                          full_name_d
+                                              .substring(0, 1)
+                                              .toUpperCase(),
+                                          overflow: TextOverflow.fade,
                                           style: TextStyle(
-                                              color: MyTheme.textcolor,
-                                              fontSize: getSize(context, 3.1),
-                                              fontWeight: FontWeight.bold),
+                                              fontSize: getSize(context, 4.1),
+                                              color: Colors.black),
                                         ),
                                       ),
                                     ),
-                                    SizedBox(
-                                      height: getHeight(context, 0.01),
-                                    ),
-                                    SizedBox(
-                                      width: getWidth(context, 0.6),
-                                      child: Expanded(
-                                        child: Text(
-                                          "@$username_d",
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              color: MyTheme.textcolor
-                                                  .withOpacity(0.7),
-                                              fontSize: getSize(context, 1.7),
-                                              fontWeight: FontWeight.bold),
-                                        ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: getSize(context, 3)),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: getWidth(context, 0.6),
+                                            child: Expanded(
+                                              child: Text(
+                                                "$full_name_d",
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    color: MyTheme.textcolor,
+                                                    fontSize:
+                                                        getSize(context, 3.1),
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: getHeight(context, 0.01),
+                                          ),
+                                          SizedBox(
+                                            width: getWidth(context, 0.6),
+                                            child: Expanded(
+                                              child: Text(
+                                                "@$username_d",
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    color: MyTheme.textcolor
+                                                        .withOpacity(0.7),
+                                                    fontSize:
+                                                        getSize(context, 1.7),
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Loreto",
+                                                overflow: TextOverflow.fade,
+                                                style: TextStyle(
+                                                    color: MyTheme.textcolor
+                                                        .withOpacity(0.7),
+                                                    fontSize:
+                                                        getSize(context, 1.7),
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Icon(
+                                                Icons.arrow_right_rounded,
+                                                size: 30,
+                                                color: MyTheme.textcolor,
+                                              ),
+                                              Text(
+                                                "$role",
+                                                overflow: TextOverflow.fade,
+                                                style: TextStyle(
+                                                    color: MyTheme.textcolor
+                                                        .withOpacity(0.7),
+                                                    fontSize:
+                                                        getSize(context, 1.7),
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Loreto",
-                                          overflow: TextOverflow.fade,
-                                          style: TextStyle(
-                                              color: MyTheme.textcolor
-                                                  .withOpacity(0.7),
-                                              fontSize: getSize(context, 1.7),
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Icon(
-                                          Icons.arrow_right_rounded,
-                                          size: 30,
-                                          color: MyTheme.textcolor,
-                                        ),
-                                        Text(
-                                          "$role",
-                                          overflow: TextOverflow.fade,
-                                          style: TextStyle(
-                                              color: MyTheme.textcolor
-                                                  .withOpacity(0.7),
-                                              fontSize: getSize(context, 1.7),
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
-                                    ),
+                                    )
                                   ],
                                 ),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  // myinfobox(
+                                  //     "Shift", getShiftNameById(shift_d, shifts)),
+                                  myinfobox(
+                                      "Shift",
+                                      getShiftNameById(
+                                          int.parse(shift_d), shifts)),
+                                  myinfobox("Course", "advance"),
+                                  myinfobox("Last Month", "4/2024"),
+                                ],
                               )
                             ],
                           ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            // myinfobox(
-                            //     "Shift", getShiftNameById(shift_d, shifts)),
-                            myinfobox("Shift",
-                                getShiftNameById(int.parse(shift_d), shifts)),
-                            myinfobox("Course", "advance"),
-                            myinfobox("Last Month", "4/2024"),
-                          ],
-                        )
-                      ],
+                      ),
                     ),
-                  ),
+                    // showAttendance("Your Attendance", context, dateIntList),
+                    Padding(
+                      padding: EdgeInsets.all(getSize(context, 1)),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(getSize(context, 1)),
+                          color: MyTheme.background,
+                          boxShadow: [
+                            BoxShadow(
+                              color: MyTheme.boxshadow,
+                              spreadRadius: getSize(context, 1),
+                              blurRadius: getSize(context, 1),
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: getHeight(context, 0.02),
+                            ),
+                            Row(
+                              children: [
+                                Icon(Icons.arrow_right_outlined,
+                                    size: getSize(context, 4),
+                                    color: MyTheme.mainbuttontext),
+                                SizedBox(
+                                  width: getWidth(context, 0.7),
+                                  child: Expanded(
+                                    child: Text(
+                                      "Content",
+                                      overflow: TextOverflow.fade,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: getSize(context, 2.7),
+                                          color: MyTheme.textcolor),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            customContainerWithInkWell("My Courses", () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const StMyCourses(),
+                                ),
+                              );
+                            }, Icons.library_books_outlined),
+                            customContainerWithInkWell("Downloads", () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const StDownloads(),
+                                ),
+                              );
+                            }, Icons.download),
+                            SizedBox(
+                              height: getHeight(context, 0.018),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(getSize(context, 1)),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: MyTheme.background,
+                          boxShadow: [
+                            BoxShadow(
+                              color: MyTheme.boxshadow,
+                              spreadRadius: getSize(context, 1),
+                              blurRadius: getSize(context, 1),
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: getHeight(context, 0.02),
+                            ),
+                            Row(
+                              children: [
+                                Icon(Icons.arrow_right_outlined,
+                                    size: getSize(context, 4),
+                                    color: MyTheme.mainbuttontext),
+                                SizedBox(
+                                  width: getWidth(context, 0.7),
+                                  child: Expanded(
+                                    child: Text(
+                                      "Rreferences",
+                                      overflow: TextOverflow.fade,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: getSize(context, 2.7),
+                                          color: MyTheme.textcolor),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            customContainerWithInkWell("Edit Profile", () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const StEditProfile(),
+                                ),
+                              );
+                            }, Icons.person_outline_sharp),
+                            customContainerWithInkWell("About Us", () {
+                              // print("Downloads tapped!");
+                            }, Icons.info_outline_rounded),
+                            customContainerWithInkWell("Settings", () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => StSettings(
+                                      onThemeToggleMaster:
+                                          widget.onThemeToggleMaster,
+                                      onThemeToggleProfile: () =>
+                                          setState(() {})),
+                                ),
+                              );
+                            }, Icons.settings),
+                            customContainerWithInkWell("Logout", () async {
+                              final storage = GetStorage();
+                              await storage.remove('login_data');
+                              await storage.write('logedin', false);
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoginPage(),
+                                ),
+                              );
+                            }, Icons.logout_outlined),
+                            SizedBox(
+                              height: getHeight(context, 0.02),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
-              // showAttendance("Your Attendance", context, dateIntList),
-              Padding(
-                padding: EdgeInsets.all(getSize(context, 1)),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(getSize(context, 1)),
-                    color: MyTheme.background,
-                    boxShadow: [
-                      BoxShadow(
-                        color: MyTheme.boxshadow,
-                        spreadRadius: getSize(context, 1),
-                        blurRadius: getSize(context, 1),
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: getHeight(context, 0.02),
-                      ),
-                      Row(
-                        children: [
-                          Icon(Icons.arrow_right_outlined,
-                              size: getSize(context, 4),
-                              color: MyTheme.mainbuttontext),
-                          SizedBox(
-                            width: getWidth(context, 0.7),
-                            child: Expanded(
-                              child: Text(
-                                "Content",
-                                overflow: TextOverflow.fade,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: getSize(context, 2.7),
-                                    color: MyTheme.textcolor),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      customContainerWithInkWell("My Courses", () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const StMyCourses(),
-                          ),
-                        );
-                      }, Icons.library_books_outlined),
-                      customContainerWithInkWell("Downloads", () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const StDownloads(),
-                          ),
-                        );
-                      }, Icons.download),
-                      SizedBox(
-                        height: getHeight(context, 0.018),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(getSize(context, 1)),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: MyTheme.background,
-                    boxShadow: [
-                      BoxShadow(
-                        color: MyTheme.boxshadow,
-                        spreadRadius: getSize(context, 1),
-                        blurRadius: getSize(context, 1),
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: getHeight(context, 0.02),
-                      ),
-                      Row(
-                        children: [
-                          Icon(Icons.arrow_right_outlined,
-                              size: getSize(context, 4),
-                              color: MyTheme.mainbuttontext),
-                          SizedBox(
-                            width: getWidth(context, 0.7),
-                            child: Expanded(
-                              child: Text(
-                                "Rreferences",
-                                overflow: TextOverflow.fade,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: getSize(context, 2.7),
-                                    color: MyTheme.textcolor),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      customContainerWithInkWell("Edit Profile", () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const StEditProfile(),
-                          ),
-                        );
-                      }, Icons.person_outline_sharp),
-                      customContainerWithInkWell("About Us", () {
-                        // print("Downloads tapped!");
-                      }, Icons.info_outline_rounded),
-                      customContainerWithInkWell("Settings", () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => StSettings(
-                                onThemeToggleMaster: widget.onThemeToggleMaster,
-                                onThemeToggleProfile: () => setState(() {})),
-                          ),
-                        );
-                      }, Icons.settings),
-                      customContainerWithInkWell("Logout", () async {
-                        final storage = GetStorage();
-                        await storage.remove('login_data');
-                        await storage.write('logedin', false);
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LoginPage(),
-                          ),
-                        );
-                      }, Icons.logout_outlined),
-                      SizedBox(
-                        height: getHeight(context, 0.02),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 

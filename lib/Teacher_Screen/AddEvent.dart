@@ -162,6 +162,7 @@ class _AddEventPageState extends State<AddEventPage> {
     } finally {
       setState(() {
         _isLoading = false;
+        fetchEvents();
       });
     }
   }

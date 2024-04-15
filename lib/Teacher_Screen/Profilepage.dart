@@ -156,57 +156,58 @@ class _ProfilePageState extends State<Profilepage> {
                   ),
                 ),
               ),
-              // showAttendance("Your Attendance", context, dateIntList),
-              Padding(
-                padding: EdgeInsets.all(getSize(context, 1)),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(getSize(context, 1)),
-                    color: MyTheme.background,
-                    boxShadow: [
-                      BoxShadow(
-                        color: MyTheme.boxshadow,
-                        spreadRadius: getSize(context, 1),
-                        blurRadius: getSize(context, 1),
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: getHeight(context, 0.02),
-                      ),
-                      Row(
-                        children: [
-                          Icon(Icons.arrow_right_outlined,
-                              size: getSize(context, 4),
-                              color: MyTheme.mainbuttontext),
-                          Text(
-                            "Content",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: getSize(context, 2.7),
-                                color: MyTheme.textcolor),
-                          ),
-                        ],
-                      ),
-                      customContainerWithInkWell("Upload", () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => UploadEbook(),
-                          ),
-                        );
-                      }, Icons.upload),
-                      SizedBox(
-                        height: getHeight(context, 0.018),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              //--------------------------------
+              // Padding(
+              //   padding: EdgeInsets.all(getSize(context, 1)),
+              //   child: Container(
+              //     decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(getSize(context, 1)),
+              //       color: MyTheme.background,
+              //       boxShadow: [
+              //         BoxShadow(
+              //           color: MyTheme.boxshadow,
+              //           spreadRadius: getSize(context, 1),
+              //           blurRadius: getSize(context, 1),
+              //           offset: const Offset(0, 3),
+              //         ),
+              //       ],
+              //     ),
+              //     child: Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         SizedBox(
+              //           height: getHeight(context, 0.02),
+              //         ),
+              //         Row(
+              //           children: [
+              //             Icon(Icons.arrow_right_outlined,
+              //                 size: getSize(context, 4),
+              //                 color: MyTheme.mainbuttontext),
+              //             Text(
+              //               "Content",
+              //               style: TextStyle(
+              //                   fontWeight: FontWeight.bold,
+              //                   fontSize: getSize(context, 2.7),
+              //                   color: MyTheme.textcolor),
+              //             ),
+              //           ],
+              //         ),
+              //         customContainerWithInkWell("Upload", () {
+              //           Navigator.push(
+              //             context,
+              //             MaterialPageRoute(
+              //               builder: (context) => UploadEbook(),
+              //             ),
+              //           );
+              //         }, Icons.upload),
+              //         SizedBox(
+              //           height: getHeight(context, 0.018),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+              //--------------------------------
               Column(
                 children: [
                   ...chackrole(role),

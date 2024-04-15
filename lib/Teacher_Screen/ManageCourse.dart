@@ -261,7 +261,7 @@ class _ManageCourseState extends State<ManageCourse> {
                                     children: [
                                       Padding(
                                         padding:
-                                            EdgeInsets.all(getSize(context, 1)),
+                                            EdgeInsets.all(getSize(context, 2)),
                                         child: Row(
                                           children: [
                                             Padding(
@@ -285,76 +285,76 @@ class _ManageCourseState extends State<ManageCourse> {
                                               ),
                                             ),
                                             const Spacer(),
-                                            PopupMenuButton(
-                                              color: MyTheme.background2,
-                                              icon: Icon(Icons.more_vert,
-                                                  color: MyTheme.textcolor),
-                                              itemBuilder:
-                                                  (BuildContext context) {
-                                                return [
-                                                  PopupMenuItem(
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        // Handle Give Work action
-                                                      },
-                                                      child: Row(
-                                                        children: [
-                                                          GestureDetector(
-                                                            onTap: () {},
-                                                            child: Container(
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                border:
-                                                                    Border.all(
-                                                                  color: MyTheme
-                                                                      .highlightcolor
-                                                                      .withOpacity(
-                                                                          0.6),
-                                                                  width: getWidth(
-                                                                      context,
-                                                                      0.008),
-                                                                ),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            15),
-                                                                color: MyTheme
-                                                                    .highlightcolor
-                                                                    .withOpacity(
-                                                                        0.2),
-                                                              ),
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .symmetric(
-                                                                      vertical:
-                                                                          10,
-                                                                      horizontal:
-                                                                          10),
-                                                              child: Text(
-                                                                "Edit Course",
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: MyTheme
-                                                                      .textcolor,
-                                                                  fontSize:
-                                                                      getSize(
-                                                                          context,
-                                                                          1.8),
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  //add active course and deactive course button
-                                                ];
-                                              },
-                                            ),
+                                            // PopupMenuButton(
+                                            //   color: MyTheme.background2,
+                                            //   icon: Icon(Icons.more_vert,
+                                            //       color: MyTheme.textcolor),
+                                            //   itemBuilder:
+                                            //       (BuildContext context) {
+                                            //     return [
+                                            //       PopupMenuItem(
+                                            //         child: InkWell(
+                                            //           onTap: () {
+                                            //             // Handle Give Work action
+                                            //           },
+                                            //           child: Row(
+                                            //             children: [
+                                            //               GestureDetector(
+                                            //                 onTap: () {},
+                                            //                 child: Container(
+                                            //                   decoration:
+                                            //                       BoxDecoration(
+                                            //                     border:
+                                            //                         Border.all(
+                                            //                       color: MyTheme
+                                            //                           .highlightcolor
+                                            //                           .withOpacity(
+                                            //                               0.6),
+                                            //                       width: getWidth(
+                                            //                           context,
+                                            //                           0.008),
+                                            //                     ),
+                                            //                     borderRadius:
+                                            //                         BorderRadius
+                                            //                             .circular(
+                                            //                                 15),
+                                            //                     color: MyTheme
+                                            //                         .highlightcolor
+                                            //                         .withOpacity(
+                                            //                             0.2),
+                                            //                   ),
+                                            //                   padding:
+                                            //                       const EdgeInsets
+                                            //                           .symmetric(
+                                            //                           vertical:
+                                            //                               10,
+                                            //                           horizontal:
+                                            //                               10),
+                                            //                   child: Text(
+                                            //                     "Edit Course",
+                                            //                     style:
+                                            //                         TextStyle(
+                                            //                       color: MyTheme
+                                            //                           .textcolor,
+                                            //                       fontSize:
+                                            //                           getSize(
+                                            //                               context,
+                                            //                               1.8),
+                                            //                       fontWeight:
+                                            //                           FontWeight
+                                            //                               .bold,
+                                            //                     ),
+                                            //                   ),
+                                            //                 ),
+                                            //               ),
+                                            //             ],
+                                            //           ),
+                                            //         ),
+                                            //       ),
+                                            //       //add active course and deactive course button
+                                            //     ];
+                                            //   },
+                                            // ),
                                           ],
                                         ),
                                       ),

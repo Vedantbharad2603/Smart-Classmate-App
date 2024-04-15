@@ -15,54 +15,6 @@ void main() async {
   runApp(const MainApp());
 }
 
-// class MainApp extends StatelessWidget {
-//   const MainApp({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return FutureBuilder<ConnectivityResult>(
-//       future: Connectivity().checkConnectivity(),
-//       builder: (context, snapshot) {
-//         if (snapshot.hasData) {
-//           final connectivityResult = snapshot.data!;
-//           if (connectivityResult == ConnectivityResult.none) {
-//             WidgetsBinding.instance?.addPostFrameCallback((_) {
-//               showDialog(
-//                 context: context,
-//                 builder: (BuildContext context) {
-//                   return AlertDialog(
-//                     title: const Text('No Internet Connection'),
-//                     content: const Text('Please connect to the internet.'),
-//                     actions: <Widget>[
-//                       TextButton(
-//                         onPressed: () => Navigator.of(context).pop(),
-//                         child: const Text('OK'),
-//                       ),
-//                     ],
-//                   );
-//                 },
-//               );
-//             });
-//           }
-//           return MaterialApp(
-//             debugShowCheckedModeBanner: false,
-//             home: Mynavigator(),
-//             // theme: ThemeData(brightness: Brightness.dark),
-//           );
-//         } else {
-//           return const MaterialApp(
-//             debugShowCheckedModeBanner: false,
-//             home: Scaffold(
-//               body: Center(
-//                 child: CircularProgressIndicator(),
-//               ),
-//             ),
-//           );
-//         }
-//       },
-//     );
-//   }
-// }
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 

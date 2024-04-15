@@ -39,9 +39,7 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
 
     try {
       String username = generateUsername(firstName, lastName);
-      // print(username);
       int id = await addLogin(username, password, selectedType);
-      print(id);
       await addTeacherData(firstName, lastName, email, phone, id);
 
       EmailService emailService = EmailService();
@@ -162,26 +160,27 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      backgroundColor: MyTheme.mainbackground,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: MyTheme.button1,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Text('Add Teacher', style: TextStyle(color: MyTheme.textcolor)),
-      ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
+    return _isLoading
+        ? Center(child: CircularProgressIndicator())
+        : Scaffold(
+            backgroundColor: MyTheme.mainbackground,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              centerTitle: true,
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: MyTheme.button1,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              title: Text('Add Teacher',
+                  style: TextStyle(color: MyTheme.textcolor)),
+            ),
+            body: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -252,7 +251,7 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
                 ),
               ),
             ),
-    );
+          );
   }
 
   Widget buildmainDropdown(String selectedValue, Function(String?) onChanged,
