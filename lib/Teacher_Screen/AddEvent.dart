@@ -182,284 +182,297 @@ class _AddEventPageState extends State<AddEventPage> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      backgroundColor: MyTheme.mainbackground,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: MyTheme.button1,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title:
-            Text('Events Manage', style: TextStyle(color: MyTheme.textcolor)),
-      ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    TableCalendar(
-                      headerStyle: HeaderStyle(
-                        formatButtonShowsNext: false,
-                        rightChevronIcon: Icon(
-                          Icons.arrow_right,
-                          size: 30,
-                          color: MyTheme.textcolor,
-                        ),
-                        leftChevronIcon: Icon(
-                          Icons.arrow_left,
-                          size: 30,
-                          color: MyTheme.textcolor,
-                        ),
-                        titleTextStyle: TextStyle(color: MyTheme.button1),
-                        formatButtonTextStyle:
-                            TextStyle(color: MyTheme.button1),
-                        formatButtonDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(
-                            color: MyTheme.button1.withOpacity(0.5),
+    return SafeArea(
+      child: _isLoading
+          ? Container(
+              color: MyTheme.background,
+              child: Center(
+                child: CircularProgressIndicator(
+                  // strokeAlign: 1,
+                  color: MyTheme.button1,
+                  backgroundColor: MyTheme.background,
+                ),
+              ),
+            )
+          : Scaffold(
+              backgroundColor: MyTheme.mainbackground,
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                centerTitle: true,
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    color: MyTheme.button1,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                title: Text('Events Manage',
+                    style: TextStyle(color: MyTheme.textcolor)),
+              ),
+              body: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TableCalendar(
+                        headerStyle: HeaderStyle(
+                          formatButtonShowsNext: false,
+                          rightChevronIcon: Icon(
+                            Icons.arrow_right,
+                            size: 30,
+                            color: MyTheme.textcolor,
                           ),
-                        ),
-                      ),
-                      daysOfWeekStyle: DaysOfWeekStyle(
-                        weekdayStyle: TextStyle(
-                            color: MyTheme
-                                .mainbuttontext), // Change weekday text color
-                        weekendStyle: TextStyle(
-                            color: MyTheme.button2
-                                .withOpacity(0.7)), // Change weekend text color
-                      ),
-                      firstDay: DateTime.utc(2020, 1, 1),
-                      lastDay: DateTime.utc(2030, 12, 31),
-                      focusedDay: _focusedDay,
-                      calendarFormat: _calendarFormat,
-                      onFormatChanged: (format) {
-                        setState(() {
-                          _calendarFormat = format;
-                        });
-                      },
-                      onDaySelected: (selectedDay, focusedDay) {
-                        setState(() {
-                          _selectedDay = selectedDay;
-                          _focusedDay = focusedDay;
-                        });
-                      },
-                      calendarStyle: CalendarStyle(
-                        markerSize: 8,
-                        markerDecoration: BoxDecoration(
-                            color: MyTheme.mainbuttontext.withOpacity(0.8),
-                            borderRadius: BorderRadius.circular(20)),
-                        defaultTextStyle: TextStyle(color: MyTheme.textcolor),
-                        todayTextStyle: TextStyle(
-                            color: MyTheme.background2,
-                            fontWeight: FontWeight.bold),
-                        weekendTextStyle: TextStyle(
-                            color: MyTheme.textcolor.withOpacity(0.3),
-                            fontWeight: FontWeight.bold),
-                        todayDecoration: BoxDecoration(
-                          color: MyTheme.highlightcolor,
-                          shape: BoxShape.circle,
-                        ),
-                        selectedDecoration: BoxDecoration(
-                          color: MyTheme.button1.withOpacity(0.4),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      selectedDayPredicate: (day) {
-                        return isSameDay(_selectedDay, day);
-                      },
-                      eventLoader: (day) {
-                        return _events[day] ?? [];
-                      },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 50),
-                      child: InkWell(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              String eventDescription = '';
-                              return AlertDialog(
-                                backgroundColor: MyTheme.background2,
-                                scrollable: true,
-                                title: Text(
-                                  'Add Event Description',
-                                  style: TextStyle(color: MyTheme.textcolor),
-                                ),
-                                content: Column(
-                                  children: [
-                                    TextField(
-                                      style:
-                                          TextStyle(color: MyTheme.textcolor),
-                                      onChanged: (value) {
-                                        eventDescription = value;
-                                      },
-                                      decoration: InputDecoration(
-                                          hintText: 'Enter event description',
-                                          hintStyle: TextStyle(
-                                              color: MyTheme.textcolor
-                                                  .withOpacity(0.7))),
-                                    ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    Text(
-                                      'Select Shift',
-                                      style:
-                                          TextStyle(color: MyTheme.textcolor),
-                                    ),
-                                    Obx(
-                                      () => buildmainDropdown(
-                                          selectedShift.value, (value) {
-                                        setState(() {
-                                          selectedShift.value = value!;
-                                        });
-                                      }, context, shifts),
-                                    )
-                                  ],
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text(
-                                      'Cancel',
-                                      style: TextStyle(color: MyTheme.button2),
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      // Handle adding event for _selectedDay
-                                      // print(eventDescription +
-                                      //     " " +
-                                      //     _focusedDay.toString() +
-                                      //     " " +
-                                      //     selectedShift.value);
-                                      addEvent(eventDescription, _focusedDay,
-                                          int.parse(selectedShift.value));
-                                      setState(() {
-                                        fetchEvents();
-                                      });
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text(
-                                      'Add',
-                                      style: TextStyle(
-                                          color: MyTheme.mainbuttontext),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        child: Container(
-                          height: getHeight(context, 0.05),
-                          width: getWidth(context, 0.38),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: MyTheme.mainbutton,
-                            borderRadius: BorderRadius.circular(20),
+                          leftChevronIcon: Icon(
+                            Icons.arrow_left,
+                            size: 30,
+                            color: MyTheme.textcolor,
                           ),
-                          child: Text(
-                            'Add Event',
-                            style: TextStyle(
-                              color: MyTheme.mainbuttontext,
-                              fontWeight: FontWeight.w600,
-                              fontSize: width * 0.06,
+                          titleTextStyle: TextStyle(color: MyTheme.button1),
+                          formatButtonTextStyle:
+                              TextStyle(color: MyTheme.button1),
+                          formatButtonDecoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: MyTheme.button1.withOpacity(0.5),
                             ),
                           ),
                         ),
+                        daysOfWeekStyle: DaysOfWeekStyle(
+                          weekdayStyle: TextStyle(
+                              color: MyTheme
+                                  .mainbuttontext), // Change weekday text color
+                          weekendStyle: TextStyle(
+                              color: MyTheme.button2.withOpacity(
+                                  0.7)), // Change weekend text color
+                        ),
+                        firstDay: DateTime.utc(2020, 1, 1),
+                        lastDay: DateTime.utc(2030, 12, 31),
+                        focusedDay: _focusedDay,
+                        calendarFormat: _calendarFormat,
+                        onFormatChanged: (format) {
+                          setState(() {
+                            _calendarFormat = format;
+                          });
+                        },
+                        onDaySelected: (selectedDay, focusedDay) {
+                          setState(() {
+                            _selectedDay = selectedDay;
+                            _focusedDay = focusedDay;
+                          });
+                        },
+                        calendarStyle: CalendarStyle(
+                          markerSize: 8,
+                          markerDecoration: BoxDecoration(
+                              color: MyTheme.mainbuttontext.withOpacity(0.8),
+                              borderRadius: BorderRadius.circular(20)),
+                          defaultTextStyle: TextStyle(color: MyTheme.textcolor),
+                          todayTextStyle: TextStyle(
+                              color: MyTheme.background2,
+                              fontWeight: FontWeight.bold),
+                          weekendTextStyle: TextStyle(
+                              color: MyTheme.textcolor.withOpacity(0.3),
+                              fontWeight: FontWeight.bold),
+                          todayDecoration: BoxDecoration(
+                            color: MyTheme.highlightcolor,
+                            shape: BoxShape.circle,
+                          ),
+                          selectedDecoration: BoxDecoration(
+                            color: MyTheme.button1.withOpacity(0.4),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        selectedDayPredicate: (day) {
+                          return isSameDay(_selectedDay, day);
+                        },
+                        eventLoader: (day) {
+                          return _events[day] ?? [];
+                        },
                       ),
-                    ),
-                    SizedBox(
-                      height: getHeight(context, 0.02),
-                    ),
-                    SizedBox(
-                      height: getHeight(context, 0.3),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount: events.length,
-                              itemBuilder: (context, index) {
-                                EventData event = events[index];
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Date: ${event.event_date.substring(0, 10)}",
-                                      // .toIso8601String().substring(0, 10)
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: MyTheme.textcolor,
+                      Padding(
+                        padding: const EdgeInsets.only(top: 50),
+                        child: InkWell(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                String eventDescription = '';
+                                return AlertDialog(
+                                  backgroundColor: MyTheme.background2,
+                                  scrollable: true,
+                                  title: Text(
+                                    'Add Event Description',
+                                    style: TextStyle(color: MyTheme.textcolor),
+                                  ),
+                                  content: Column(
+                                    children: [
+                                      TextField(
+                                        style:
+                                            TextStyle(color: MyTheme.textcolor),
+                                        onChanged: (value) {
+                                          eventDescription = value;
+                                        },
+                                        decoration: InputDecoration(
+                                            hintText: 'Enter event description',
+                                            hintStyle: TextStyle(
+                                                color: MyTheme.textcolor
+                                                    .withOpacity(0.7))),
+                                      ),
+                                      const SizedBox(
+                                        height: 15,
+                                      ),
+                                      Text(
+                                        'Select Shift',
+                                        style:
+                                            TextStyle(color: MyTheme.textcolor),
+                                      ),
+                                      Obx(
+                                        () => buildmainDropdown(
+                                            selectedShift.value, (value) {
+                                          setState(() {
+                                            selectedShift.value = value!;
+                                          });
+                                        }, context, shifts),
+                                      )
+                                    ],
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                        'Cancel',
+                                        style:
+                                            TextStyle(color: MyTheme.button2),
                                       ),
                                     ),
-                                    ListTile(
-                                      title: RichText(
-                                        text: TextSpan(
-                                          text: 'Event: ',
-                                          style: TextStyle(
-                                            fontSize: getSize(context, 2),
-                                            color: MyTheme.button1,
-                                            // rgba(201, 208, 103, 1)
-                                          ),
-                                          children: <TextSpan>[
-                                            TextSpan(
-                                              text: event.event_description,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: MyTheme.textcolor,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      subtitle: RichText(
-                                        text: TextSpan(
-                                          text: 'Shift: ',
-                                          style: TextStyle(
-                                            fontSize: getSize(context, 1.7),
-                                            color: MyTheme.mainbuttontext,
-                                            // rgba(201, 208, 103, 1)
-                                          ),
-                                          children: <TextSpan>[
-                                            TextSpan(
-                                              text: getShiftNameById(
-                                                  event.shiftdatumId, shifts),
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: MyTheme.textcolor,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                    TextButton(
+                                      onPressed: () {
+                                        // Handle adding event for _selectedDay
+                                        // print(eventDescription +
+                                        //     " " +
+                                        //     _focusedDay.toString() +
+                                        //     " " +
+                                        //     selectedShift.value);
+                                        addEvent(eventDescription, _focusedDay,
+                                            int.parse(selectedShift.value));
+                                        setState(() {
+                                          fetchEvents();
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                        'Add',
+                                        style: TextStyle(
+                                            color: MyTheme.mainbuttontext),
                                       ),
                                     ),
                                   ],
                                 );
                               },
+                            );
+                          },
+                          child: Container(
+                            height: getHeight(context, 0.05),
+                            width: getWidth(context, 0.38),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: MyTheme.mainbutton,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              'Add Event',
+                              style: TextStyle(
+                                color: MyTheme.mainbuttontext,
+                                fontWeight: FontWeight.w600,
+                                fontSize: width * 0.06,
+                              ),
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    )
-                  ],
+                      SizedBox(
+                        height: getHeight(context, 0.02),
+                      ),
+                      SizedBox(
+                        height: getHeight(context, 0.3),
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: events.length,
+                                itemBuilder: (context, index) {
+                                  EventData event = events[index];
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Date: ${event.event_date.substring(0, 10)}",
+                                        // .toIso8601String().substring(0, 10)
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: MyTheme.textcolor,
+                                        ),
+                                      ),
+                                      ListTile(
+                                        title: RichText(
+                                          text: TextSpan(
+                                            text: 'Event: ',
+                                            style: TextStyle(
+                                              fontSize: getSize(context, 2),
+                                              color: MyTheme.button1,
+                                              // rgba(201, 208, 103, 1)
+                                            ),
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                text: event.event_description,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: MyTheme.textcolor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        subtitle: RichText(
+                                          text: TextSpan(
+                                            text: 'Shift: ',
+                                            style: TextStyle(
+                                              fontSize: getSize(context, 1.7),
+                                              color: MyTheme.mainbuttontext,
+                                              // rgba(201, 208, 103, 1)
+                                            ),
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                text: getShiftNameById(
+                                                    event.shiftdatumId, shifts),
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: MyTheme.textcolor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

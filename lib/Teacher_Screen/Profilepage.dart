@@ -7,6 +7,7 @@ import 'package:smartclassmate/Start_Screen/login.dart';
 import 'package:smartclassmate/Teacher_Screen/AddEvent.dart';
 import 'package:smartclassmate/Teacher_Screen/AddStudent.dart';
 import 'package:smartclassmate/Teacher_Screen/AddTeacher.dart';
+import 'package:smartclassmate/Teacher_Screen/CheckHomework.dart';
 import 'package:smartclassmate/Teacher_Screen/EditProfile.dart';
 import 'package:smartclassmate/Teacher_Screen/ListofHolidays.dart';
 import 'package:smartclassmate/Teacher_Screen/ManageCourse.dart';
@@ -157,56 +158,64 @@ class _ProfilePageState extends State<Profilepage> {
                 ),
               ),
               //--------------------------------
-              // Padding(
-              //   padding: EdgeInsets.all(getSize(context, 1)),
-              //   child: Container(
-              //     decoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(getSize(context, 1)),
-              //       color: MyTheme.background,
-              //       boxShadow: [
-              //         BoxShadow(
-              //           color: MyTheme.boxshadow,
-              //           spreadRadius: getSize(context, 1),
-              //           blurRadius: getSize(context, 1),
-              //           offset: const Offset(0, 3),
-              //         ),
-              //       ],
-              //     ),
-              //     child: Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [
-              //         SizedBox(
-              //           height: getHeight(context, 0.02),
-              //         ),
-              //         Row(
-              //           children: [
-              //             Icon(Icons.arrow_right_outlined,
-              //                 size: getSize(context, 4),
-              //                 color: MyTheme.mainbuttontext),
-              //             Text(
-              //               "Content",
-              //               style: TextStyle(
-              //                   fontWeight: FontWeight.bold,
-              //                   fontSize: getSize(context, 2.7),
-              //                   color: MyTheme.textcolor),
-              //             ),
-              //           ],
-              //         ),
-              //         customContainerWithInkWell("Upload", () {
-              //           Navigator.push(
-              //             context,
-              //             MaterialPageRoute(
-              //               builder: (context) => UploadEbook(),
-              //             ),
-              //           );
-              //         }, Icons.upload),
-              //         SizedBox(
-              //           height: getHeight(context, 0.018),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
+              Padding(
+                padding: EdgeInsets.all(getSize(context, 1)),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(getSize(context, 1)),
+                    color: MyTheme.background,
+                    boxShadow: [
+                      BoxShadow(
+                        color: MyTheme.boxshadow,
+                        spreadRadius: getSize(context, 1),
+                        blurRadius: getSize(context, 1),
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: getHeight(context, 0.02),
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.arrow_right_outlined,
+                              size: getSize(context, 4),
+                              color: MyTheme.mainbuttontext),
+                          Text(
+                            "Content",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: getSize(context, 2.7),
+                                color: MyTheme.textcolor),
+                          ),
+                        ],
+                      ),
+                      customContainerWithInkWell("Check Homework", () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CheckHomework(),
+                          ),
+                        );
+                      }, Icons.menu_book),
+                      // customContainerWithInkWell("Upload", () {
+                      //   Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //       builder: (context) => UploadEbook(),
+                      //     ),
+                      //   );
+                      // }, Icons.upload),
+                      SizedBox(
+                        height: getHeight(context, 0.018),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               //--------------------------------
               Column(
                 children: [

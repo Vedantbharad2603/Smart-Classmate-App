@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
@@ -18,6 +19,19 @@ class Message {
 }
 
 class _STMessageState extends State<STMessage> {
+  String username_d = "";
+  String password_d = "";
+  @override
+  void initState() {
+    super.initState();
+    GetStorage storage = GetStorage();
+    final mydata = storage.read('login_data');
+    if (mydata != null) {
+      username_d = mydata['data']['login']['username'] ?? "";
+      password_d = mydata['data']['login']['password'] ?? "";
+    }
+  }
+
   List<Message> updates = [
     Message(
       datetime: '2024-02-01 11:30:26.953530',
@@ -75,7 +89,7 @@ class _STMessageState extends State<STMessage> {
             InkWell(
               onTap: () {
                 giveuserinfo(
-                    'Username: Vedant Bharad', 'Password: Ved@nt123', context);
+                    'Username: $username_d', 'Password: $password_d', context);
               },
               child: Padding(
                 padding: EdgeInsets.only(

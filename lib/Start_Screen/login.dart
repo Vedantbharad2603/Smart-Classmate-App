@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields
+// ignore_for_file: prefer_final_fields, use_build_context_synchronously
 
 import 'dart:developer';
 
@@ -53,11 +53,11 @@ class _LoginPageState extends State<LoginPage> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Error'),
-                content: Text('Username not found'),
+                title: const Text('Error'),
+                content: const Text('Username not found'),
                 actions: <Widget>[
                   TextButton(
-                    child: Text('OK'),
+                    child: const Text('OK'),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -72,11 +72,11 @@ class _LoginPageState extends State<LoginPage> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Error'),
-                content: Text('Incorrect Password'),
+                title: const Text('Error'),
+                content: const Text('Incorrect Password'),
                 actions: <Widget>[
                   TextButton(
-                    child: Text('OK'),
+                    child: const Text('OK'),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -117,9 +117,25 @@ class _LoginPageState extends State<LoginPage> {
         // Handle unsuccessful login response
         print('Login failed: ${response.statusCode}');
       }
-    } catch (e) {
-      // Handle any errors
-      print('Error: $e');
+    } catch (socketException) {
+      // Handle SocketException
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text('No Internet Connection'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     } finally {
       setState(() {
         _isLoading = false;
@@ -356,7 +372,7 @@ class _LoginPageState extends State<LoginPage> {
             if (_isLoading)
               Container(
                 color: Colors.black.withOpacity(0.5),
-                child: Center(
+                child: const Center(
                   child: CircularProgressIndicator(),
                 ),
               ),

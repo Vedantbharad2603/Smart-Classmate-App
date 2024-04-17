@@ -1,6 +1,6 @@
 class Apiconst {
   static String get baseurl => "https://smart-classmate-server.onrender.com/";
-  //live api baseurl "https://smart-classmate-server.onrender.com/
+  //live api baseurl "https://smart-classmate-server.onrender.com/"
   //Emulator baseurl "http://10.0.2.2:3000/"
   // static String get baseurl => "http://laptopip:3000/"
   static String logincheck = '${baseurl}login/check';
@@ -12,20 +12,29 @@ class Apiconst {
   static String addTeacher = '${baseurl}teacher';
   static String updateTeacher = '${baseurl}teacher/update';
   static String addStudent = '${baseurl}student';
+  static String getStudent = '${baseurl}student/getstud';
   static String getCourses = '${baseurl}courses';
   static String addCourses = '${baseurl}courses';
   static String listallCourses = '${baseurl}courses';
+  static String getCourseinfo = '${baseurl}courses/find';
   static String addCourseLevels = '${baseurl}courselevels';
   static String getCourseLevels = '${baseurl}courselevels/getlevels';
   static String addCourseConcepts = '${baseurl}courseconcepts';
   static String getConcepts = '${baseurl}courseconcepts/getconcepts';
   static String updateConcepts = '${baseurl}courseconcepts/update';
+  static String addEnrollment = '${baseurl}courseenrollment';
   static String addholidays = '${baseurl}holidays';
   static String getholidays = '${baseurl}holidays';
   static String upcomingholiday = '${baseurl}holidays/upcoming';
   static String updateHoliday = '${baseurl}holidays/update';
+
+  static String addHomeWork = '${baseurl}homework';
+  static String getStudentAllWork = '${baseurl}homework/studentall';
+  static String listworkTeacher = '${baseurl}homework/checkwork';
+  static String updateWork = '${baseurl}homework/update';
+
   static String findShift = '${baseurl}shift/find';
   static String listallShift = '${baseurl}shift';
-  static String listallEvents = '${baseurl}events';
+  static String listallEvents = '${baseurl}events/upcoming';
   static String addEvent = '${baseurl}events';
 }

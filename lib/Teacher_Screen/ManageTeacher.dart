@@ -273,7 +273,16 @@ class _ManageTeacherState extends State<ManageTeacher> {
           ),
         ),
         body: _isLoading
-            ? Center(child: CircularProgressIndicator())
+            ? Container(
+                color: MyTheme.background,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    // strokeAlign: 1,
+                    color: MyTheme.button1,
+                    backgroundColor: MyTheme.background,
+                  ),
+                ),
+              )
             : SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),

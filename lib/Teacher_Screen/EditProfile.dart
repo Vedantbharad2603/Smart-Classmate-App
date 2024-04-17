@@ -1,6 +1,5 @@
-// ignore_for_file: unused_local_variable, avoid_unnecessary_containers
+// ignore_for_file: unused_local_variable, avoid_unnecessary_containers, use_build_context_synchronously
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:smartclassmate/tools/helper.dart';
@@ -75,14 +74,14 @@ class _EditProfileState extends State<EditProfile> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('Updated successful'),
-              content: Text("Advice to Re-login"),
+              title: const Text('Updated successful'),
+              content: const Text("Advice to Re-login"),
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('OK'),
+                  child: const Text('OK'),
                 ),
               ],
             );
@@ -94,14 +93,14 @@ class _EditProfileState extends State<EditProfile> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('Fail'),
-              content: Text("Somthing wrong while updating"),
+              title: const Text('Fail'),
+              content: const Text("Somthing wrong while updating"),
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('OK'),
+                  child: const Text('OK'),
                 ),
               ],
             );
@@ -114,14 +113,14 @@ class _EditProfileState extends State<EditProfile> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Fail'),
-            content: Text("Somthing wrong while updating"),
+            title: const Text('Fail'),
+            content: const Text("Somthing wrong while updating"),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );
@@ -139,7 +138,16 @@ class _EditProfileState extends State<EditProfile> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return _isLoading
-        ? Center(child: CircularProgressIndicator())
+        ? Container(
+            color: MyTheme.background,
+            child: Center(
+              child: CircularProgressIndicator(
+                // strokeAlign: 1,
+                color: MyTheme.button1,
+                backgroundColor: MyTheme.background,
+              ),
+            ),
+          )
         : Scaffold(
             backgroundColor: MyTheme.mainbackground,
             appBar: AppBar(

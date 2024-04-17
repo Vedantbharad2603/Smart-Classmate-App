@@ -1,4 +1,6 @@
-// ignore_for_file: unnecessary_null_comparison, unused_element
+// ignore_for_file: unnecessary_null_comparison, unused_element, use_build_context_synchronously
+
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -59,7 +61,6 @@ class _AddStudentPageState extends State<AddStudentPage> {
             };
           }).toList();
           setState(() {});
-          print(shifts);
         } else {
           throw Exception('Data key not found in API response');
         }
@@ -92,7 +93,6 @@ class _AddStudentPageState extends State<AddStudentPage> {
             };
           }).toList();
           setState(() {});
-          print(shifts);
         } else {
           throw Exception('Data key not found in API response');
         }
@@ -100,7 +100,7 @@ class _AddStudentPageState extends State<AddStudentPage> {
         throw Exception('Failed to fetch Courses');
       }
     } catch (e) {
-      print('Error: $e');
+      throw Exception('Error: $e');
     } finally {
       setState(() {
         _isLoading = false;
@@ -113,6 +113,33 @@ class _AddStudentPageState extends State<AddStudentPage> {
     super.initState();
     fetchShifts();
     fetchCourses();
+  }
+
+  Future<Map<String, dynamic>> fetchCourse(int cid) async {
+    try {
+      Map<String, dynamic> body = {"id": cid};
+
+      final response = await http.post(
+        Uri.parse(Apiconst.getCourseinfo),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(body),
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        if (data.containsKey('data')) {
+          return {
+            'timeDuration': data['data']['timeDuration'],
+            'has_levels': data['data']['has_levels']
+          };
+        } else {
+          throw Exception('Data key not found in API response');
+        }
+      } else {
+        throw Exception('Failed to fetch shifts');
+      }
+    } catch (e) {
+      throw Exception("Error: $e");
+    }
   }
 
   Future<void> addStudent(String firstName, String lastName, String password,
@@ -128,10 +155,12 @@ class _AddStudentPageState extends State<AddStudentPage> {
       // print(id);
       int studentid = await addStudentData(
           firstName, lastName, email, phone, loginid, shiftid);
-      print(studentid);
+
+      await addEnrollment(studentid, courseid!);
+      // print(studentid);
       EmailService emailService = EmailService();
       String mailStatus = await emailService.sendEmail(
-          "student", email, (firstName + " " + lastName), username, password);
+          "student", email, ("$firstName $lastName"), username, password);
       String dialogMessage = mailStatus == 'Email sent successfully'
           ? 'Student added successfully.Email sent successfully'
           : 'Failed to send email. Please try again later.';
@@ -139,14 +168,14 @@ class _AddStudentPageState extends State<AddStudentPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Status'),
+            title: const Text('Status'),
             content: Text(dialogMessage),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );
@@ -167,14 +196,14 @@ class _AddStudentPageState extends State<AddStudentPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error'),
+            title: const Text('Error'),
             content: Text('Failed to add Student: $e'),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );
@@ -185,11 +214,6 @@ class _AddStudentPageState extends State<AddStudentPage> {
         _isLoading = false;
       });
     }
-  }
-
-  String generateUsername(String firstName, String lastName) {
-    String formattedDate = DateFormat('ddMMyy').format(DateTime.now());
-    return '${firstName.toLowerCase()}${lastName.toLowerCase()}$formattedDate';
   }
 
   Future<int> addLogin(
@@ -222,7 +246,48 @@ class _AddStudentPageState extends State<AddStudentPage> {
         throw Exception('Failed to add Student');
       }
     } else {
-      throw Exception('Failed to add Student or Username already exists');
+      throw Exception(
+          'Failed to add Student or Username already exists 1111111');
+    }
+  }
+
+  String generateUsername(String firstName, String lastName) {
+    String formattedDate = DateFormat('ddMMyy').format(DateTime.now());
+    return '${firstName.toLowerCase()}${lastName.toLowerCase()}$formattedDate';
+  }
+
+  String findLastMonth(int months) {
+    DateTime today = DateTime.now();
+    DateTime lastMonth = today.add(Duration(days: months * 30));
+    return DateFormat('yyyy-MM-dd').format(lastMonth);
+  }
+
+  Future<void> addEnrollment(int studid, int courseid) async {
+    Map<String, dynamic> courseInfo = await fetchCourse(courseid);
+    int temp = courseInfo['timeDuration'];
+    bool hasLevels = courseInfo['has_levels'];
+
+    String lastMon = findLastMonth(temp);
+
+    Map<String, dynamic> body = {
+      "enrollment_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
+      "is_current_course": 1,
+      "last_month": lastMon,
+      "course_status": 1,
+      "studentdatumId": studid,
+      "courseId": courseid,
+      "courseLevelId": hasLevels ? 1 : null
+    };
+
+    final response = await http.post(
+      Uri.parse(Apiconst.addEnrollment),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(body),
+    );
+
+    if (response.statusCode == 200) {
+    } else {
+      throw Exception('Failed to add Student in course enrollment');
     }
   }
 
@@ -252,112 +317,124 @@ class _AddStudentPageState extends State<AddStudentPage> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      backgroundColor: MyTheme.mainbackground,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: MyTheme.button1,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Text('Add Student', style: TextStyle(color: MyTheme.textcolor)),
-      ),
-      body: SingleChildScrollView(
-        child: _isLoading
-            ? Center(child: CircularProgressIndicator())
-            : Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    buildMyTextField("First Name", firstNameController, width,
-                        "String", 20, context),
-                    buildMyTextField("Last Name", lastNameController, width,
-                        "String", 20, context),
-                    buildMyTextField("Email ID", emailController, width,
-                        "String", 255, context),
-                    buildMyTextField("Mobile No", phoneController, width,
-                        "Number", 10, context),
-                    buildMyTextField("Password", passwordController, width,
-                        "String", 20, context),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Text(
-                        "Select Course",
-                        style:
-                            TextStyle(color: MyTheme.textcolor, fontSize: 20),
+    return SafeArea(
+      child: _isLoading
+          ? Container(
+              color: MyTheme.background,
+              child: Center(
+                child: CircularProgressIndicator(
+                  // strokeAlign: 1,
+                  color: MyTheme.button1,
+                  backgroundColor: MyTheme.background,
+                ),
+              ),
+            )
+          : Scaffold(
+              backgroundColor: MyTheme.mainbackground,
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                centerTitle: true,
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    color: MyTheme.button1,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                title: Text('Add Student',
+                    style: TextStyle(color: MyTheme.textcolor)),
+              ),
+              body: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      buildMyTextField("First Name", firstNameController, width,
+                          "String", 20, context),
+                      buildMyTextField("Last Name", lastNameController, width,
+                          "String", 20, context),
+                      buildMyTextField("Email ID", emailController, width,
+                          "String", 255, context),
+                      buildMyTextField("Mobile No", phoneController, width,
+                          "Number", 10, context),
+                      buildMyTextField("Password", passwordController, width,
+                          "String", 20, context),
+                      const SizedBox(
+                        height: 10,
                       ),
-                    ),
-                    buildmainDropdown(selectedCourse, (value) {
-                      setState(() {
-                        selectedCourse = value!;
-                      });
-                    }, context, courses),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Text(
-                        "Select Shift",
-                        style:
-                            TextStyle(color: MyTheme.textcolor, fontSize: 20),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Text(
+                          "Select Course",
+                          style:
+                              TextStyle(color: MyTheme.textcolor, fontSize: 20),
+                        ),
                       ),
-                    ),
-                    buildmainDropdown(selectedShift, (value) {
-                      setState(() {
-                        selectedShift = value!;
-                      });
-                    }, context, shifts),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 50),
-                      child: InkWell(
-                        onTap: () {
-                          _validateFields(context);
-                          if (_validateFields(context)) {
-                            // print(selectedShift);
-                            addStudent(
-                                firstNameController.text,
-                                lastNameController.text,
-                                passwordController.text,
-                                emailController.text,
-                                int.parse(selectedShift!),
-                                int.parse(selectedCourse!),
-                                phoneController.text);
-                          }
-                        },
-                        child: Container(
-                          height: getHeight(context, 0.05),
-                          width: getWidth(context, 0.38),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              color: MyTheme.mainbutton,
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Text(
-                            'Add Student',
-                            style: TextStyle(
-                              color: MyTheme.mainbuttontext,
-                              fontWeight: FontWeight.w600,
-                              fontSize: width * 0.06,
+                      buildmainDropdown(selectedCourse, (value) {
+                        setState(() {
+                          selectedCourse = value!;
+                        });
+                      }, context, courses),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Text(
+                          "Select Shift",
+                          style:
+                              TextStyle(color: MyTheme.textcolor, fontSize: 20),
+                        ),
+                      ),
+                      buildmainDropdown(selectedShift, (value) {
+                        setState(() {
+                          selectedShift = value!;
+                        });
+                      }, context, shifts),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 50),
+                        child: InkWell(
+                          onTap: () {
+                            _validateFields(context);
+                            if (_validateFields(context)) {
+                              // print(selectedShift);
+                              addStudent(
+                                  firstNameController.text,
+                                  lastNameController.text,
+                                  passwordController.text,
+                                  emailController.text,
+                                  int.parse(selectedShift!),
+                                  int.parse(selectedCourse!),
+                                  phoneController.text);
+                            }
+                          },
+                          child: Container(
+                            height: getHeight(context, 0.05),
+                            width: getWidth(context, 0.38),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                color: MyTheme.mainbutton,
+                                borderRadius: BorderRadius.circular(20)),
+                            child: Text(
+                              'Add Student',
+                              style: TextStyle(
+                                color: MyTheme.mainbuttontext,
+                                fontWeight: FontWeight.w600,
+                                fontSize: width * 0.06,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: getHeight(context, 0.02),
-                    ),
-                  ],
+                      SizedBox(
+                        height: getHeight(context, 0.02),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-      ),
+            ),
     );
   }
 
@@ -381,7 +458,7 @@ class _AddStudentPageState extends State<AddStudentPage> {
           underline: const SizedBox(),
           style: TextStyle(color: MyTheme.textcolor, fontSize: height * 0.018),
           items: [
-            DropdownMenuItem(
+            const DropdownMenuItem(
               value: null,
               child: Text('Not Selected'),
             ),
@@ -458,7 +535,7 @@ class _AddStudentPageState extends State<AddStudentPage> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );

@@ -36,6 +36,7 @@ class ListofHolidays extends StatefulWidget {
 
 class _ListofHolidaysState extends State<ListofHolidays> {
   List<HolidayData> holidayDataList = []; // Store fetched holiday data
+  bool _isLoading = false;
   // List<bool> selected = []; // Track selected holidays
   // List<bool> selected = List.generate(holidayDataList.length, (index) => false);
 
@@ -135,6 +136,9 @@ class _ListofHolidaysState extends State<ListofHolidays> {
 
   Future<bool> updateHolidays(
       int id, String name, String date, bool consider) async {
+    setState(() {
+      _isLoading = true;
+    });
     Map<String, dynamic> body = {
       "id": id,
       "holiday_name": name,
@@ -160,6 +164,10 @@ class _ListofHolidaysState extends State<ListofHolidays> {
     } catch (e) {
       // Handle any errors
       return false;
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -170,142 +178,158 @@ class _ListofHolidaysState extends State<ListofHolidays> {
 
     // Check if the current month is January (month number is 1)
     final isJanuary = currentMonth == DateTime.january;
-    return Scaffold(
-      backgroundColor: MyTheme.mainbackground,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: MyTheme.button1,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          // if (isJanuary)
-          IconButton(
-            icon: Icon(
-              Icons.refresh,
-              color: MyTheme.button1,
-            ),
-            onPressed: () {
-              fetchHolidays();
-            },
-          ),
-        ],
-        title:
-            Text('Manage Holidays', style: TextStyle(color: MyTheme.textcolor)),
-      ),
-      body: FutureBuilder<List<HolidayData>>(
-        future: _futureHolidays,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(
-                child: Text(
-              'Error: ${snapshot.error}',
-              style: const TextStyle(color: Colors.white),
-            ));
-          } else if (snapshot.data == null) {
-            return const Center(
-                child: Text(
-              "Could not find holidays data",
-              style: TextStyle(color: Colors.white),
-            ));
-          } else {
-            List<HolidayData> fetchedHolidays = snapshot.data!;
-            holidayDataList =
-                fetchedHolidays; // Assign fetchedHolidays to holidayDataList
-            return ListView.builder(
-              itemCount: fetchedHolidays.length,
-              itemBuilder: (context, index) {
-                var holiday = fetchedHolidays[index];
-                return ListTile(
-                  title: Text(
-                    holiday.name,
-                    style: TextStyle(color: MyTheme.textcolor),
+    return SafeArea(
+      child: _isLoading
+          ? Container(
+              color: MyTheme.background,
+              child: Center(
+                child: CircularProgressIndicator(
+                  // strokeAlign: 1,
+                  color: MyTheme.button1,
+                  backgroundColor: MyTheme.background,
+                ),
+              ),
+            )
+          : Scaffold(
+              backgroundColor: MyTheme.mainbackground,
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                centerTitle: true,
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    color: MyTheme.button1,
                   ),
-                  subtitle: Text(holiday.date,
-                      style:
-                          TextStyle(color: MyTheme.textcolor.withOpacity(0.6))),
-                  trailing: Checkbox(
-                    activeColor: MyTheme.mainbuttontext,
-                    checkColor: MyTheme.mainbutton,
-                    value: holiday.consider,
-                    onChanged: (bool? value) async {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return const AlertDialog(
-                            title: Text("Updating Holidays"),
-                            content: CircularProgressIndicator(),
-                          );
-                        },
-                        barrierDismissible: false,
-                      );
-                      bool success = await updateHolidays(
-                        holiday.id,
-                        holiday.name,
-                        holiday.date,
-                        !holiday.consider,
-                      );
-                      Navigator.pop(context); // Close the loading dialog
-                      if (success) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text("Success"),
-                              content:
-                                  const Text("Holidays updated successfully."),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text("OK"),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                        setState(() {
-                          holiday.consider = value ?? false;
-                        });
-                      } else {
-                        // Show error dialog if update failed
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text("Error"),
-                              content: const Text("Failed to update holidays."),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text("OK"),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                actions: [
+                  // if (isJanuary)
+                  IconButton(
+                    icon: Icon(
+                      Icons.refresh,
+                      color: MyTheme.button1,
+                    ),
+                    onPressed: () {
+                      fetchHolidays();
                     },
-                    side: BorderSide(color: MyTheme.textcolor, width: 2),
                   ),
-                );
-              },
-            );
-          }
-        },
-      ),
+                ],
+                title: Text('Manage Holidays',
+                    style: TextStyle(color: MyTheme.textcolor)),
+              ),
+              body: FutureBuilder<List<HolidayData>>(
+                future: _futureHolidays,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(
+                        child: Text(
+                      'Error: ${snapshot.error}',
+                      style: const TextStyle(color: Colors.white),
+                    ));
+                  } else if (snapshot.data == null) {
+                    return const Center(
+                        child: Text(
+                      "Could not find holidays data",
+                      style: TextStyle(color: Colors.white),
+                    ));
+                  } else {
+                    List<HolidayData> fetchedHolidays = snapshot.data!;
+                    holidayDataList =
+                        fetchedHolidays; // Assign fetchedHolidays to holidayDataList
+                    return ListView.builder(
+                      itemCount: fetchedHolidays.length,
+                      itemBuilder: (context, index) {
+                        var holiday = fetchedHolidays[index];
+                        return ListTile(
+                          title: Text(
+                            holiday.name,
+                            style: TextStyle(color: MyTheme.textcolor),
+                          ),
+                          subtitle: Text(holiday.date,
+                              style: TextStyle(
+                                  color: MyTheme.textcolor.withOpacity(0.6))),
+                          trailing: Checkbox(
+                            activeColor: MyTheme.mainbuttontext,
+                            checkColor: MyTheme.mainbutton,
+                            value: holiday.consider,
+                            onChanged: (bool? value) async {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return const AlertDialog(
+                                    title: Text("Updating Holidays"),
+                                    content: CircularProgressIndicator(),
+                                  );
+                                },
+                                barrierDismissible: false,
+                              );
+                              bool success = await updateHolidays(
+                                holiday.id,
+                                holiday.name,
+                                holiday.date,
+                                !holiday.consider,
+                              );
+                              Navigator.pop(
+                                  context); // Close the loading dialog
+                              if (success) {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text("Success"),
+                                      content: const Text(
+                                          "Holidays updated successfully."),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text("OK"),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                                setState(() {
+                                  holiday.consider = value ?? false;
+                                });
+                              } else {
+                                // Show error dialog if update failed
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text("Error"),
+                                      content: const Text(
+                                          "Failed to update holidays."),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text("OK"),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                            side:
+                                BorderSide(color: MyTheme.textcolor, width: 2),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
+            ),
     );
   }
 }

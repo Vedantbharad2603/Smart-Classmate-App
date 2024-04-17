@@ -26,6 +26,11 @@ class _ProfilePageState extends State<STProfilePage> {
   String username_d = "";
   String password_d = "";
   String shift_d = "";
+  String coursename = "";
+  String lastmon = "";
+  int s_courseId = 0;
+  int s_courseLevelId = 0;
+  int s_courseStatus = 0;
   List<Map<String, dynamic>> shifts = [];
   bool _isLoading = false;
 
@@ -42,6 +47,12 @@ class _ProfilePageState extends State<STProfilePage> {
       username_d = mydata['data']['login']['username'] ?? "";
       password_d = mydata['data']['login']['password'] ?? "";
       shift_d = mydata['data']['userdata']['shiftdatumId'].toString() ?? "";
+      coursename = mydata['data']['courseinfo']['course_name'] ?? "";
+      lastmon = mydata['data']['courseinfo']['last_month'] ?? "";
+
+      s_courseId = mydata['data']['courseinfo']['courseId'] ?? 0;
+      s_courseLevelId = mydata['data']['courseinfo']['courseLevelId'] ?? 0;
+      s_courseStatus = mydata['data']['courseinfo']['course_status'] ?? 0;
     }
   }
 
@@ -62,7 +73,6 @@ class _ProfilePageState extends State<STProfilePage> {
             };
           }).toList();
           setState(() {});
-          print(shifts);
         } else {
           throw Exception('Data key not found in API response');
         }
@@ -95,7 +105,16 @@ class _ProfilePageState extends State<STProfilePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? Container(
+              color: MyTheme.background,
+              child: Center(
+                child: CircularProgressIndicator(
+                  // strokeAlign: 1,
+                  color: MyTheme.button1,
+                  backgroundColor: MyTheme.background,
+                ),
+              ),
+            )
           : Scaffold(
               backgroundColor: MyTheme.mainbackground,
               body: SingleChildScrollView(
@@ -232,8 +251,8 @@ class _ProfilePageState extends State<STProfilePage> {
                                       "Shift",
                                       getShiftNameById(
                                           int.parse(shift_d), shifts)),
-                                  myinfobox("Course", "advance"),
-                                  myinfobox("Last Month", "4/2024"),
+                                  myinfobox("Course", coursename),
+                                  myinfobox("Last Date", lastmon),
                                 ],
                               )
                             ],
@@ -288,18 +307,21 @@ class _ProfilePageState extends State<STProfilePage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const StMyCourses(),
+                                  builder: (context) => StMyCourses(
+                                      courseid: s_courseId,
+                                      levelid: s_courseLevelId,
+                                      cstatus: s_courseStatus),
                                 ),
                               );
                             }, Icons.library_books_outlined),
-                            customContainerWithInkWell("Downloads", () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const StDownloads(),
-                                ),
-                              );
-                            }, Icons.download),
+                            // customContainerWithInkWell("Downloads", () {
+                            //   Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //       builder: (context) => const StDownloads(),
+                            //     ),
+                            //   );
+                            // }, Icons.download),
                             SizedBox(
                               height: getHeight(context, 0.018),
                             ),

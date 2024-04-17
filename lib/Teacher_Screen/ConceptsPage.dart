@@ -115,6 +115,7 @@ class _ConceptsPageState extends State<ConceptsPage> {
     } finally {
       setState(() {
         _isLoading = false;
+        _conceptController.text = "";
         fetchCourses();
       });
     }
@@ -179,24 +180,6 @@ class _ConceptsPageState extends State<ConceptsPage> {
         body: json.encode(body),
       );
       if (response.statusCode == 200) {
-        // Show success popup
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Success'),
-              content: const Text('Course Concept added successfully'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
       } else {
         throw Exception('Failed to add Course level');
       }
@@ -221,7 +204,8 @@ class _ConceptsPageState extends State<ConceptsPage> {
     } finally {
       setState(() {
         _isLoading = false;
-        // fetchCourses(widget.courseid);
+        _conceptController.text = "";
+        fetchCourses();
       });
     }
   }
@@ -230,7 +214,16 @@ class _ConceptsPageState extends State<ConceptsPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? Container(
+              color: MyTheme.background,
+              child: Center(
+                child: CircularProgressIndicator(
+                  // strokeAlign: 1,
+                  color: MyTheme.button1,
+                  backgroundColor: MyTheme.background,
+                ),
+              ),
+            )
           : Scaffold(
               backgroundColor: MyTheme.mainbackground,
               appBar: AppBar(

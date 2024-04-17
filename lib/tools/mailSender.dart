@@ -11,7 +11,7 @@ class EmailService {
     final message = Message()
       ..from = Address(username, 'LORETO') // Your name
       ..recipients.add(email) // Recipient's email address
-      ..subject = 'App Credentials';
+      ..subject = 'Welcome to LORETO!';
     if (type == 'student') {
       message.html = '''
       <h2><p>Dear $name,</p></h2>

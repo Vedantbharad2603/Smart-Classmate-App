@@ -161,7 +161,16 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return _isLoading
-        ? Center(child: CircularProgressIndicator())
+        ? Container(
+            color: MyTheme.background,
+            child: Center(
+              child: CircularProgressIndicator(
+                // strokeAlign: 1,
+                color: MyTheme.button1,
+                backgroundColor: MyTheme.background,
+              ),
+            ),
+          )
         : Scaffold(
             backgroundColor: MyTheme.mainbackground,
             appBar: AppBar(

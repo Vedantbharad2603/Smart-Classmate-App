@@ -198,12 +198,12 @@ class _ProfilePageState extends State<StudentInfo> {
                         ],
                       ),
                       customContainerWithInkWell("View Courses", () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const StMyCourses(),
-                          ),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => const StMyCourses(),
+                        //   ),
+                        // );
                       }, Icons.library_books_outlined),
                       SizedBox(
                         height: getHeight(context, 0.018),

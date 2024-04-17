@@ -1,7 +1,11 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:smartclassmate/tools/apiconst.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class STWork extends StatefulWidget {
   const STWork({Key? key}) : super(key: key);
@@ -10,99 +14,152 @@ class STWork extends StatefulWidget {
   State<STWork> createState() => _STWorkState();
 }
 
-List<Map<String, dynamic>> yourwork = [
-  {
-    'date': '2/2/24',
-    'description':
-        'Complete 30 Wh questions, 30 affirmative sentences, and 30 negative sentences Complete 30 Wh questions, 30 affirmative sentences, and 30 negative sentences',
-    'Submited': true,
-  },
-  {
-    'date': '6/2/24',
-    'description':
-        'Complete 30 Wh questions, 30 affirmative sentences, and 30 negative sentences Complete 30 Wh questions, 30 affirmative sentences, and 30 negative sentences',
-    'Submited': false,
-  },
-  {
-    'date': '12/2/24',
-    'description':
-        'Complete 30 Wh questions, 30 affirmative sentences, and 30 negative sentences Complete 30 Wh questions, 30 affirmative sentences, and 30 negative sentences',
-    'Submited': true,
-  },
-];
-
 class _STWorkState extends State<STWork> {
+  late int studentid;
+  String username_d = "";
+  String password_d = "";
+  List<Map<String, dynamic>> work = [];
+  bool _isLoading = false;
+  @override
+  void initState() {
+    super.initState();
+    GetStorage storage = GetStorage();
+    final mydata = storage.read('login_data');
+    if (mydata != null) {
+      studentid = mydata['data']['userdata']['id'] ?? 0;
+      username_d = mydata['data']['login']['username'] ?? "";
+      password_d = mydata['data']['login']['password'] ?? "";
+    }
+    fetchWork(studentid);
+  }
+
+  Future<void> fetchWork(int studid) async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      Map<String, dynamic> body = {"studid": studid};
+      final response = await http.post(
+        Uri.parse(Apiconst.getStudentAllWork),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(body),
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        if (responseData.containsKey('data')) {
+          final List<dynamic> data = responseData['data'];
+          List<Map<String, dynamic>> tempwork = [];
+          for (var item in data) {
+            tempwork.add({
+              'id': item['id'],
+              'homework_details': item['homework_details'],
+              'is_submited': item['is_submited'],
+              'homework_date': item['homework_date'],
+              'remark': item['remark'],
+              'teachername': item['teachername'],
+              'checkerTeacher': item['checkerTeacher']
+            });
+          }
+          setState(() {
+            work = tempwork; // Update the events list
+          });
+        } else {
+          throw Exception('Data key not found in API response');
+        }
+      } else {
+        throw Exception('Failed to fetch events');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch events: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2, // Two tabs: Submited and Not Submited
       child: SafeArea(
-        child: Scaffold(
-          backgroundColor: MyTheme.mainbackground,
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            shadowColor: Colors.transparent,
-            title: Text(
-              overflow: TextOverflow.fade,
-              "Your Work",
-              style: TextStyle(
-                  color: MyTheme.textcolor,
-                  fontSize: getSize(context, 2.7),
-                  fontWeight: FontWeight.bold),
-            ),
-            actions: [
-              InkWell(
-                onTap: () {
-                  giveuserinfo('Username: Vedant Bharad', 'Password: Ved@nt123',
-                      context);
-                },
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      right: getSize(context, 1),
-                      top: getHeight(context, 0.007),
-                      bottom: getHeight(context, 0.007)),
-                  child: CircleAvatar(
-                    radius: getSize(context, 3),
-                    backgroundColor: MyTheme.highlightcolor,
-                    child: Icon(Icons.person,
-                        color: Colors.black, size: getSize(context, 3.6)),
+        child: _isLoading
+            ? Container(
+                color: MyTheme.background,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    // strokeAlign: 1,
+                    color: MyTheme.button1,
+                    backgroundColor: MyTheme.background,
                   ),
                 ),
               )
-            ],
-            bottom: TabBar(
-              tabs: [
-                Tab(
-                  child: Text(
-                    "Not Submited",
+            : Scaffold(
+                backgroundColor: MyTheme.mainbackground,
+                appBar: AppBar(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  title: Text(
                     overflow: TextOverflow.fade,
-                    style: TextStyle(color: MyTheme.textcolor),
+                    "Your Work",
+                    style: TextStyle(
+                        color: MyTheme.textcolor,
+                        fontSize: getSize(context, 2.7),
+                        fontWeight: FontWeight.bold),
+                  ),
+                  actions: [
+                    InkWell(
+                      onTap: () {
+                        giveuserinfo('Username: $username_d',
+                            'Password: $password_d', context);
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            right: getSize(context, 1),
+                            top: getHeight(context, 0.007),
+                            bottom: getHeight(context, 0.007)),
+                        child: CircleAvatar(
+                          radius: getSize(context, 3),
+                          backgroundColor: MyTheme.highlightcolor,
+                          child: Icon(Icons.person,
+                              color: Colors.black, size: getSize(context, 3.6)),
+                        ),
+                      ),
+                    )
+                  ],
+                  bottom: TabBar(
+                    tabs: [
+                      Tab(
+                        child: Text(
+                          "Not Submited",
+                          overflow: TextOverflow.fade,
+                          style: TextStyle(color: MyTheme.textcolor),
+                        ),
+                      ),
+                      Tab(
+                        child: Text(
+                          "Submited",
+                          overflow: TextOverflow.fade,
+                          style: TextStyle(color: MyTheme.textcolor),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Tab(
-                  child: Text(
-                    "Submited",
-                    overflow: TextOverflow.fade,
-                    style: TextStyle(color: MyTheme.textcolor),
-                  ),
+                body: TabBarView(
+                  children: [
+                    buildTabView(false), // Not Submited Tab View
+                    buildTabView(true), // Submited Tab View
+                  ],
                 ),
-              ],
-            ),
-          ),
-          body: TabBarView(
-            children: [
-              buildTabView(false), // Not Submited Tab View
-              buildTabView(true), // Submited Tab View
-            ],
-          ),
-        ),
+              ),
       ),
     );
   }
 
   Widget buildTabView(bool Submited) {
     List<Map<String, dynamic>> filteredList =
-        yourwork.where((work) => work['Submited'] == Submited).toList();
+        work.where((work) => work['is_submited'] == Submited).toList();
 
     return SingleChildScrollView(
       child: Column(
@@ -123,6 +180,8 @@ class _STWorkState extends State<STWork> {
   }
 
   Widget buildWorkItem(BuildContext context, Map<String, dynamic> work) {
+    String workinfo = "${work['teachername']}: ${work['homework_details']}";
+    String remarkinfo = "${work['checkerTeacher']}: ${work['remark']}";
     return SizedBox(
       width: getWidth(context, 0.8),
       child: Padding(
@@ -133,7 +192,8 @@ class _STWorkState extends State<STWork> {
           children: [
             InkWell(
               onTap: () {
-                showFullDescriptionDialog("Work", work['description'], context);
+                showFullDescriptionDialog(
+                    "Work", work['homework_details'], context);
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -159,7 +219,7 @@ class _STWorkState extends State<STWork> {
                         children: [
                           Container(
                             // color: MyTheme.button1,
-                            width: getWidth(context, 0.9),
+                            width: getWidth(context, 0.4),
                             height: getHeight(context, 0.03),
                             child: Row(
                               children: [
@@ -174,7 +234,7 @@ class _STWorkState extends State<STWork> {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    work['date'],
+                                    work['homework_date'],
                                     // truncateDescription(
                                     //   studentname,
                                     //   1,
@@ -297,16 +357,27 @@ class _STWorkState extends State<STWork> {
                         height: getHeight(context, 0.02),
                       ),
                       Text(
-                        truncateDescription(work['description'], 10),
+                        workinfo,
                         overflow: TextOverflow.fade,
                         style: TextStyle(
-                          color: MyTheme.textcolor,
-                          fontSize: getSize(context, 2),
-                          decoration: work['Submited']
-                              ? TextDecoration.lineThrough
-                              : null,
-                        ),
+                            color: work['is_submited']
+                                ? MyTheme.textcolor.withOpacity(0.5)
+                                : MyTheme.textcolor,
+                            fontSize: getSize(context, 2),
+                            decoration: work['is_submited']
+                                ? TextDecoration.lineThrough
+                                : null,
+                            decorationColor: MyTheme.textcolor),
                       ),
+                      if (work['is_submited'])
+                        Text(
+                          remarkinfo,
+                          overflow: TextOverflow.fade,
+                          style: TextStyle(
+                            color: MyTheme.textcolor,
+                            fontSize: getSize(context, 2),
+                          ),
+                        )
                     ],
                   ),
                 ),
@@ -318,14 +389,14 @@ class _STWorkState extends State<STWork> {
     );
   }
 
-  String truncateDescription(String description, int maxWords) {
-    List<String> words = description.split(' ');
-    if (words.length > maxWords) {
-      return '${words.sublist(0, maxWords).join(' ')}...';
-    } else {
-      return description;
-    }
-  }
+  // String truncateDescription(String description, int maxWords) {
+  //   List<String> words = description.split(' ');
+  //   if (words.length > maxWords) {
+  //     return '${words.sublist(0, maxWords).join(' ')}...';
+  //   } else {
+  //     return description;
+  //   }
+  // }
 
   // void showFullDescriptionDialog(String fullDescription, BuildContext context) {
   //   showDialog(
