@@ -13,6 +13,7 @@ class Apiconst {
   static String updateTeacher = '${baseurl}teacher/update';
   static String addStudent = '${baseurl}student';
   static String getStudent = '${baseurl}student/getstud';
+  static String updateStudent = '${baseurl}student/update';
   static String getCourses = '${baseurl}courses';
   static String addCourses = '${baseurl}courses';
   static String listallCourses = '${baseurl}courses';

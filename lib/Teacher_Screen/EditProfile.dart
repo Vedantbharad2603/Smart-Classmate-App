@@ -1,7 +1,8 @@
-// ignore_for_file: unused_local_variable, avoid_unnecessary_containers, use_build_context_synchronously
+// ignore_for_file: file_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:smartclassmate/Start_Screen/login.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -18,7 +19,7 @@ class EditProfile extends StatefulWidget {
 class _EditProfileState extends State<EditProfile> {
   late int id;
   bool _isLoading = false;
-  TextEditingController TeacherNameController = TextEditingController();
+  TextEditingController teacherNameController = TextEditingController();
   TextEditingController mobileNumberController = TextEditingController();
   TextEditingController blockController = TextEditingController();
   TextEditingController streetController = TextEditingController();
@@ -35,7 +36,7 @@ class _EditProfileState extends State<EditProfile> {
 
     if (mydata != null) {
       id = mydata['data']['userdata']['id'];
-      TeacherNameController.text =
+      teacherNameController.text =
           mydata['data']['userdata']['full_name'] ?? "";
       mobileNumberController.text =
           mydata['data']['userdata']['mobile_number'] ?? "";
@@ -53,7 +54,7 @@ class _EditProfileState extends State<EditProfile> {
     });
     Map<String, dynamic> body = {
       "id": id,
-      "full_name": TeacherNameController.text,
+      "full_name": teacherNameController.text,
       "mobile_number": mobileNumberController.text,
       "block_number": blockController.text,
       "street_name": streetController.text,
@@ -75,11 +76,19 @@ class _EditProfileState extends State<EditProfile> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text('Updated successful'),
-              content: const Text("Advice to Re-login"),
+              content: const Text("Going back to login"),
               actions: [
                 TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
+                  onPressed: () async {
+                    final storage = GetStorage();
+                    await storage.remove('login_data');
+                    await storage.write('logedin', false);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginPage(),
+                      ),
+                    );
                   },
                   child: const Text('OK'),
                 ),
@@ -175,7 +184,7 @@ class _EditProfileState extends State<EditProfile> {
               child: SafeArea(
                 child: Column(
                   children: [
-                    buildMyTextField("Teacher Name", TeacherNameController,
+                    buildMyTextField("Teacher Name", teacherNameController,
                         width, "String", 255, context),
                     buildMyTextField("Mobile Number", mobileNumberController,
                         width, "Number", 10, context),
@@ -210,23 +219,62 @@ class _EditProfileState extends State<EditProfile> {
                       padding: const EdgeInsets.only(top: 50),
                       child: InkWell(
                         onTap: () async {
-                          if (await updateDetails()) {
-                            GetStorage storage = GetStorage();
-                            storage.write('login_data', {
-                              'data': {
-                                'userdata': {
-                                  'id': id,
-                                  'full_name': TeacherNameController.text,
-                                  'mobile_number': mobileNumberController.text,
-                                  'block_number': blockController.text,
-                                  'street_name': streetController.text,
-                                  'city': cityController.text,
-                                  'state': stateController.text,
-                                  'pin_code': pinCodeController.text,
+                          if (areAllFieldsFilled()) {
+                            if (await updateDetails()) {
+                              GetStorage storage = GetStorage();
+                              storage.write('login_data', {
+                                'data': {
+                                  'userdata': {
+                                    'id': id,
+                                    'full_name': teacherNameController.text,
+                                    'mobile_number':
+                                        mobileNumberController.text,
+                                    'block_number': blockController.text,
+                                    'street_name': streetController.text,
+                                    'city': cityController.text,
+                                    'state': stateController.text,
+                                    'pin_code': pinCodeController.text,
+                                  }
                                 }
-                              }
-                            });
-                            setState(() {});
+                              });
+                              setState(() {});
+                            }
+                          } else {
+                            String message =
+                                "Please fill in all required fields.";
+                            if (mobileNumberController.text.isEmpty) {
+                              message += "\n- Mobile number is required.";
+                            } else if (mobileNumberController.text.length !=
+                                10) {
+                              message +=
+                                  "\n- Mobile number must be 10 digits long.";
+                            }
+                            if (pinCodeController.text.isEmpty) {
+                              message += "\n- Pin code is required.";
+                            } else if (pinCodeController.text.length != 6) {
+                              message += "\n- Pin code must be 6 digits long.";
+                            }
+                            // Add similar checks for other fields if needed
+
+                            // Show popup with the message
+                            // Example of showing a dialog:
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text("Incomplete Details"),
+                                  content: Text(message),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text("OK"),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           }
                         },
                         child: Container(
@@ -258,12 +306,14 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   bool areAllFieldsFilled() {
-    return TeacherNameController.text.isNotEmpty &&
+    return teacherNameController.text.isNotEmpty &&
         mobileNumberController.text.isNotEmpty &&
+        mobileNumberController.text.length == 10 &&
         blockController.text.isNotEmpty &&
         streetController.text.isNotEmpty &&
         cityController.text.isNotEmpty &&
         stateController.text.isNotEmpty &&
-        pinCodeController.text.isNotEmpty;
+        pinCodeController.text.isNotEmpty &&
+        pinCodeController.text.length == 6;
   }
 }
