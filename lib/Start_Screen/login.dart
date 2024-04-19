@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:smartclassmate/Start_Screen/loginOTP.dart';
 import 'package:smartclassmate/masterpage/studentmaster.dart';
 import 'package:smartclassmate/masterpage/teachermaster.dart';
 import 'package:smartclassmate/tools/apiconst.dart';
@@ -242,7 +243,7 @@ class _LoginPageState extends State<LoginPage> {
                                 width: getWidth(context, 0.8),
                                 child: Expanded(
                                   child: Text(
-                                    "Login or Sign up",
+                                    "Login",
                                     style: TextStyle(
                                       color: MyTheme.textcolor,
                                       fontSize: getSize(context, 2.8),
@@ -256,7 +257,7 @@ class _LoginPageState extends State<LoginPage> {
                                 controller: _usernameController,
                                 style: TextStyle(color: MyTheme.textcolor),
                                 decoration: InputDecoration(
-                                  labelText: 'Username',
+                                  labelText: 'Username or Email',
                                   labelStyle: TextStyle(
                                       color:
                                           MyTheme.textcolor.withOpacity(0.6)),
@@ -325,9 +326,16 @@ class _LoginPageState extends State<LoginPage> {
                               Align(
                                 alignment: Alignment.centerRight,
                                 child: InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const LoginOTP(),
+                                      ),
+                                    );
+                                  },
                                   child: Text(
-                                    'Forgot Password?',
+                                    'Login using OTP',
                                     style: TextStyle(
                                         color: MyTheme.mainbuttontext,
                                         fontSize: getSize(context, 1.9)),

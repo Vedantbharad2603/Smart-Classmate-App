@@ -308,45 +308,51 @@ class _STHomepageState extends State<STHomepage> {
                               ),
                             ],
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                "Upcoming Holidays",
-                                style: TextStyle(
-                                  fontSize: getSize(context, 1.5),
-                                  color: MyTheme.textcolor,
-                                ),
-                              ),
-                              SizedBox(
-                                width: getWidth(context, 0.25),
-                                child: Expanded(
-                                  child: Text(
-                                    textAlign: TextAlign.end,
-                                    holidayName,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: getSize(context, 1.8),
-                                        color: MyTheme.textcolor,
-                                        fontWeight: FontWeight.bold),
+                          InkWell(
+                            onTap: () {
+                              showFullDescriptionDialog("Upcoming Holidays",
+                                  "$holidayDate - $holidayName", context);
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  "Upcoming Holidays",
+                                  style: TextStyle(
+                                    fontSize: getSize(context, 1.5),
+                                    color: MyTheme.textcolor,
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: getWidth(context, 0.25),
-                                child: Expanded(
-                                  child: Text(
-                                    holidayDate,
-                                    textAlign: TextAlign.end,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: getSize(context, 1.8),
-                                        color: MyTheme.textcolor,
-                                        fontWeight: FontWeight.bold),
+                                SizedBox(
+                                  width: getWidth(context, 0.25),
+                                  child: Expanded(
+                                    child: Text(
+                                      textAlign: TextAlign.end,
+                                      holidayName,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontSize: getSize(context, 1.8),
+                                          color: MyTheme.textcolor,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                                SizedBox(
+                                  width: getWidth(context, 0.25),
+                                  child: Expanded(
+                                    child: Text(
+                                      holidayDate,
+                                      textAlign: TextAlign.end,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontSize: getSize(context, 1.8),
+                                          color: MyTheme.textcolor,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           )
                         ],
                       ),
@@ -623,8 +629,8 @@ class _STHomepageState extends State<STHomepage> {
                                     padding: EdgeInsets.only(
                                         left: getWidth(context, 0.02),
                                         right: getWidth(context, 0.02),
-                                        top: getHeight(context, 0.008),
-                                        bottom: getHeight(context, 0.008)),
+                                        top: 7,
+                                        bottom: 7),
                                     child: Text(
                                       "More info",
                                       overflow: TextOverflow.fade,
@@ -641,7 +647,7 @@ class _STHomepageState extends State<STHomepage> {
                       ),
                     ),
                     Container(
-                      height: getHeight(context, 0.14),
+                      height: 120,
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         children: List.generate(
@@ -660,7 +666,6 @@ class _STHomepageState extends State<STHomepage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
-                                      // height: getHeight(context, 0.1),
                                       decoration: BoxDecoration(
                                         boxShadow: [
                                           BoxShadow(

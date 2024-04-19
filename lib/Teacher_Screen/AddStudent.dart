@@ -151,10 +151,10 @@ class _AddStudentPageState extends State<AddStudentPage> {
     try {
       String username = generateUsername(firstName, lastName);
       // print(username);
-      int loginid = await addLogin(username, password, "student");
-      // print(id);
-      int studentid = await addStudentData(
-          firstName, lastName, email, phone, loginid, shiftid);
+      int loginid = await addLogin(username, password, "student", email);
+      print(loginid);
+      int studentid =
+          await addStudentData(firstName, lastName, phone, loginid, shiftid);
 
       await addEnrollment(studentid, courseid!);
       // print(studentid);
@@ -216,38 +216,46 @@ class _AddStudentPageState extends State<AddStudentPage> {
     }
   }
 
-  Future<int> addLogin(
-      String username, String password, String selectedType) async {
-    Map<String, dynamic> body = {
-      "username": username,
-      "password": password,
-      "type": selectedType,
-      "isActive": true
-    };
+  Future<int> addLogin(String username, String password, String selectedType,
+      String email) async {
+    try {
+      Map<String, dynamic> body = {
+        "username": username,
+        "password": password,
+        "email": email,
+        "type": selectedType,
+        "isActive": true
+      };
+      // print(body);
 
-    final response = await http.post(
-      Uri.parse(Apiconst.addLogindata),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(body),
-    );
-
-    if (response.statusCode == 200) {
-      Map<String, dynamic> body2 = {"username": username};
-      final response2 = await http.post(
-        Uri.parse(Apiconst.giveuserlogin),
+      final response = await http.post(
+        Uri.parse(Apiconst.addLogindata),
         headers: {'Content-Type': 'application/json'},
-        body: json.encode(body2),
+        body: json.encode(body),
       );
-      if (response2.statusCode == 200) {
-        Map<String, dynamic> jsonData = jsonDecode(response2.body);
-        // Get the 'id' from the 'data' object
-        return jsonData['data']['id'];
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> body2 = {"username": username};
+        final response2 = await http.post(
+          Uri.parse(Apiconst.giveuserlogin),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(body2),
+        );
+        if (response2.statusCode == 200) {
+          Map<String, dynamic> jsonData = jsonDecode(response2.body);
+          // Get the 'id' from the 'data' object
+          return jsonData['data']['id'];
+        } else {
+          throw Exception('Failed to add Student');
+        }
+      } else if (response.statusCode == 409) {
+        throw Exception('Student or Email already exists');
       } else {
-        throw Exception('Failed to add Student');
+        throw Exception('Failed to add Student or Username already exists');
       }
-    } else {
-      throw Exception(
-          'Failed to add Student or Username already exists 1111111');
+      // return 1;
+    } catch (e) {
+      throw Exception('Error $e');
     }
   }
 
@@ -268,49 +276,55 @@ class _AddStudentPageState extends State<AddStudentPage> {
     bool hasLevels = courseInfo['has_levels'];
 
     String lastMon = findLastMonth(temp);
+    try {
+      Map<String, dynamic> body = {
+        "enrollment_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        "is_current_course": 1,
+        "last_month": lastMon,
+        "course_status": 1,
+        "studentdatumId": studid,
+        "courseId": courseid,
+        "courseLevelId": hasLevels ? 1 : null
+      };
 
-    Map<String, dynamic> body = {
-      "enrollment_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
-      "is_current_course": 1,
-      "last_month": lastMon,
-      "course_status": 1,
-      "studentdatumId": studid,
-      "courseId": courseid,
-      "courseLevelId": hasLevels ? 1 : null
-    };
+      final response = await http.post(
+        Uri.parse(Apiconst.addEnrollment),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(body),
+      );
 
-    final response = await http.post(
-      Uri.parse(Apiconst.addEnrollment),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(body),
-    );
-
-    if (response.statusCode == 200) {
-    } else {
-      throw Exception('Failed to add Student in course enrollment');
+      if (response.statusCode == 200) {
+      } else {
+        throw Exception('Failed to add Student in course enrollment');
+      }
+    } catch (socketException) {
+      throw Exception('No Internet Connection Time out');
     }
   }
 
-  Future<int> addStudentData(String firstName, String lastName, String email,
-      String phone, int loginid, int? shiftid) async {
-    Map<String, dynamic> addStudentdata = {
-      "full_name": '$firstName $lastName',
-      "email": email,
-      "mobile_number": phone,
-      "logindatumId": loginid,
-      "shiftdatumId": shiftid
-    };
-    final studentResponse = await http.post(
-      Uri.parse(Apiconst.addStudent),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(addStudentdata),
-    );
-    if (studentResponse.statusCode == 200) {
-      Map<String, dynamic> jsonData = jsonDecode(studentResponse.body);
-      // Get the 'id' from the 'data' object
-      return jsonData['data']['id'];
-    } else {
-      throw Exception('Failed to add student');
+  Future<int> addStudentData(String firstName, String lastName, String phone,
+      int loginid, int? shiftid) async {
+    try {
+      Map<String, dynamic> addStudentdata = {
+        "full_name": '$firstName $lastName',
+        "mobile_number": phone,
+        "logindatumId": loginid,
+        "shiftdatumId": shiftid
+      };
+      final studentResponse = await http.post(
+        Uri.parse(Apiconst.addStudent),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(addStudentdata),
+      );
+      if (studentResponse.statusCode == 200) {
+        Map<String, dynamic> jsonData = jsonDecode(studentResponse.body);
+        // Get the 'id' from the 'data' object
+        return jsonData['data']['id'];
+      } else {
+        throw Exception('Failed to add student');
+      }
+    } catch (socketException) {
+      throw Exception('No Internet Connection Time out');
     }
   }
 

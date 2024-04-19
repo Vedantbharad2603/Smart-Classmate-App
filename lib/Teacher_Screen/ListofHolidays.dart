@@ -50,9 +50,11 @@ class _ListofHolidaysState extends State<ListofHolidays> {
   }
 
   Future<void> fetchHolidays() async {
+    int currentYear = DateTime.now().year;
+
     final response = await http.get(
       Uri.parse(
-          'https://calendarific.com/api/v2/holidays?&api_key=RiOlrpYvgp0a5J5T8Z8iUza6kjGILmC7&country=IN&year=2024'),
+          'https://calendarific.com/api/v2/holidays?&api_key=RiOlrpYvgp0a5J5T8Z8iUza6kjGILmC7&country=IN&year=$currentYear'),
     );
 
     if (response.statusCode == 200) {
@@ -206,16 +208,16 @@ class _ListofHolidaysState extends State<ListofHolidays> {
                   },
                 ),
                 actions: [
-                  // if (isJanuary)
-                  IconButton(
-                    icon: Icon(
-                      Icons.refresh,
-                      color: MyTheme.button1,
+                  if (isJanuary)
+                    IconButton(
+                      icon: Icon(
+                        Icons.refresh,
+                        color: MyTheme.button1,
+                      ),
+                      onPressed: () {
+                        fetchHolidays();
+                      },
                     ),
-                    onPressed: () {
-                      fetchHolidays();
-                    },
-                  ),
                 ],
                 title: Text('Manage Holidays',
                     style: TextStyle(color: MyTheme.textcolor)),
@@ -258,45 +260,16 @@ class _ListofHolidaysState extends State<ListofHolidays> {
                             checkColor: MyTheme.mainbutton,
                             value: holiday.consider,
                             onChanged: (bool? value) async {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return const AlertDialog(
-                                    title: Text("Updating Holidays"),
-                                    content: CircularProgressIndicator(),
-                                  );
-                                },
-                                barrierDismissible: false,
-                              );
                               bool success = await updateHolidays(
                                 holiday.id,
                                 holiday.name,
                                 holiday.date,
                                 !holiday.consider,
                               );
-                              Navigator.pop(
-                                  context); // Close the loading dialog
                               if (success) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text("Success"),
-                                      content: const Text(
-                                          "Holidays updated successfully."),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text("OK"),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
                                 setState(() {
                                   holiday.consider = value ?? false;
+                                  // getholiday();
                                 });
                               } else {
                                 // Show error dialog if update failed

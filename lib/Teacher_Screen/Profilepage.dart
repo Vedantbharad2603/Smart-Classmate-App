@@ -201,14 +201,14 @@ class _ProfilePageState extends State<Profilepage> {
                           ),
                         );
                       }, Icons.menu_book),
-                      // customContainerWithInkWell("Upload", () {
-                      //   Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //       builder: (context) => UploadEbook(),
-                      //     ),
-                      //   );
-                      // }, Icons.upload),
+                      customContainerWithInkWell("Upload", () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => UploadEbook(),
+                          ),
+                        );
+                      }, Icons.upload),
                       SizedBox(
                         height: getHeight(context, 0.018),
                       ),
@@ -450,14 +450,14 @@ class _ProfilePageState extends State<Profilepage> {
                     ),
                   );
                 }, Icons.manage_accounts),
-                customContainerWithInkWell("Registration Pending", () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PendingRegistration(),
-                    ),
-                  );
-                }, LineIcons.userClock),
+                // customContainerWithInkWell("Registration Pending", () {
+                //   Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) => PendingRegistration(),
+                //     ),
+                //   );
+                // }, LineIcons.userClock),
                 SizedBox(
                   height: getHeight(context, 0.02),
                 ),

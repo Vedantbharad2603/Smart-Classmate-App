@@ -25,7 +25,7 @@ class _StudentMasterPageState extends State<StudentMasterPage> {
     List<Widget> _widgetOptions = <Widget>[
       const STHomepage(),
       const STWork(),
-      const STMessage(),
+      const STMessages(),
       STProfilePage(onThemeToggleMaster: () => setState(() {})),
     ];
     return Scaffold(

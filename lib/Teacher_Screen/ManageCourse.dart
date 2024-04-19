@@ -20,6 +20,7 @@ class _ManageCourseState extends State<ManageCourse> {
   TextEditingController _courseController = TextEditingController();
   TextEditingController _monthController = TextEditingController();
   Rx<bool> _hasLevels = true.obs;
+  TextEditingController _editcourseController = TextEditingController();
   bool _isLoading = false;
   List<Map<String, dynamic>> CourseData = [];
 
@@ -127,6 +128,92 @@ class _ManageCourseState extends State<ManageCourse> {
     }
   }
 
+  Future<bool> updateDetails(
+      int idin, String cName, bool hasLevelstemp, int duration) async {
+    setState(() {
+      _isLoading = true;
+    });
+    Map<String, dynamic> body = {
+      "id": idin,
+      "course_name": cName,
+      "has_levels": hasLevelstemp,
+      "timeDuration": duration,
+    };
+    try {
+      http.Response response = await http.put(
+        Uri.parse(
+            Apiconst.updateCourse), // Use the correct endpoint for updating
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(body),
+      );
+
+      if (response.statusCode == 200) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Success'),
+              content: const Text("Details updated"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+        return true;
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Fail'),
+              content: const Text("Somthing wrong while updating"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+        return false;
+      }
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Fail'),
+            content: const Text("Somthing wrong while updating"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      return false;
+    } finally {
+      setState(() {
+        _isLoading = false;
+        _editcourseController.text = "";
+        fetchCourses();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Map<String, dynamic>> filteredcouress = CourseData.where((coures) =>
@@ -223,27 +310,6 @@ class _ManageCourseState extends State<ManageCourse> {
                                       builder: (context) => ConceptsPage(
                                           courseid: coures['id'],
                                           courseName: courseName),
-                                      //   concepts: const [
-                                      //     "Writing-CP_SM",
-                                      //     "Writing-Address",
-                                      //     "Vocab",
-                                      //     "Noun",
-                                      //     "Capital letters",
-                                      //     "C/U",
-                                      //     "Sin/Plu",
-                                      //     "Possessive",
-                                      //     "Test",
-                                      //     "Opp",
-                                      //     "Adj",
-                                      //     "c.ofAdj",
-                                      //     "Gender",
-                                      //     "Pronouns",
-                                      //     "Articles",
-                                      //     "There is/are",
-                                      //     "Test sec-2",
-                                      //     "File given & Spiral"
-                                      //   ],
-                                      // ),
                                     ),
                                   );
                                 }
@@ -270,7 +336,7 @@ class _ManageCourseState extends State<ManageCourse> {
                                     children: [
                                       Padding(
                                         padding:
-                                            EdgeInsets.all(getSize(context, 2)),
+                                            EdgeInsets.all(getSize(context, 1)),
                                         child: Row(
                                           children: [
                                             Padding(
@@ -294,76 +360,19 @@ class _ManageCourseState extends State<ManageCourse> {
                                               ),
                                             ),
                                             const Spacer(),
-                                            // PopupMenuButton(
-                                            //   color: MyTheme.background2,
-                                            //   icon: Icon(Icons.more_vert,
-                                            //       color: MyTheme.textcolor),
-                                            //   itemBuilder:
-                                            //       (BuildContext context) {
-                                            //     return [
-                                            //       PopupMenuItem(
-                                            //         child: InkWell(
-                                            //           onTap: () {
-                                            //             // Handle Give Work action
-                                            //           },
-                                            //           child: Row(
-                                            //             children: [
-                                            //               GestureDetector(
-                                            //                 onTap: () {},
-                                            //                 child: Container(
-                                            //                   decoration:
-                                            //                       BoxDecoration(
-                                            //                     border:
-                                            //                         Border.all(
-                                            //                       color: MyTheme
-                                            //                           .highlightcolor
-                                            //                           .withOpacity(
-                                            //                               0.6),
-                                            //                       width: getWidth(
-                                            //                           context,
-                                            //                           0.008),
-                                            //                     ),
-                                            //                     borderRadius:
-                                            //                         BorderRadius
-                                            //                             .circular(
-                                            //                                 15),
-                                            //                     color: MyTheme
-                                            //                         .highlightcolor
-                                            //                         .withOpacity(
-                                            //                             0.2),
-                                            //                   ),
-                                            //                   padding:
-                                            //                       const EdgeInsets
-                                            //                           .symmetric(
-                                            //                           vertical:
-                                            //                               10,
-                                            //                           horizontal:
-                                            //                               10),
-                                            //                   child: Text(
-                                            //                     "Edit Course",
-                                            //                     style:
-                                            //                         TextStyle(
-                                            //                       color: MyTheme
-                                            //                           .textcolor,
-                                            //                       fontSize:
-                                            //                           getSize(
-                                            //                               context,
-                                            //                               1.8),
-                                            //                       fontWeight:
-                                            //                           FontWeight
-                                            //                               .bold,
-                                            //                     ),
-                                            //                   ),
-                                            //                 ),
-                                            //               ),
-                                            //             ],
-                                            //           ),
-                                            //         ),
-                                            //       ),
-                                            //       //add active course and deactive course button
-                                            //     ];
-                                            //   },
-                                            // ),
+                                            IconButton(
+                                                onPressed: () {
+                                                  _showEditConceptDialog(
+                                                      context,
+                                                      coures['course_name'],
+                                                      coures['id'],
+                                                      coures['timeDuration'],
+                                                      coures['has_levels']);
+                                                },
+                                                icon: Icon(
+                                                  Icons.edit,
+                                                  color: MyTheme.button1,
+                                                ))
                                           ],
                                         ),
                                       ),
@@ -495,6 +504,124 @@ class _ManageCourseState extends State<ManageCourse> {
               },
               child: Text(
                 "Add",
+                style: TextStyle(color: MyTheme.button1),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showEditConceptDialog(BuildContext context, String mycourse,
+      int courseid, int timeDuration, bool haslevelsin) {
+    _courseController.text = mycourse;
+    _monthController.text = timeDuration.toString();
+    _hasLevels.value = haslevelsin;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: MyTheme.background,
+          title: Text(
+            "Add Course",
+            style: TextStyle(color: MyTheme.textcolor),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                style: TextStyle(color: MyTheme.textcolor),
+                controller: _courseController,
+                decoration: InputDecoration(
+                    labelText: 'Course Name',
+                    labelStyle: TextStyle(color: MyTheme.textcolor)),
+              ),
+              TextField(
+                style: TextStyle(color: MyTheme.textcolor),
+                controller: _monthController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                    labelText: 'Duration (Months)',
+                    labelStyle: TextStyle(color: MyTheme.textcolor)),
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Has Levels:',
+                    style: TextStyle(color: MyTheme.textcolor),
+                  ),
+                  Obx(
+                    () => Radio(
+                      value: true,
+                      groupValue: _hasLevels.value,
+                      onChanged: (value) {
+                        setState(() {
+                          _hasLevels.value = true;
+                        });
+                      },
+                    ),
+                  ),
+                  Text(
+                    'Yes',
+                    style: TextStyle(color: MyTheme.textcolor),
+                  ),
+                  Obx(
+                    () => Radio(
+                      value: false,
+                      groupValue: _hasLevels.value,
+                      onChanged: (value) {
+                        setState(() {
+                          _hasLevels.value = false;
+                        });
+                      },
+                    ),
+                  ),
+                  Text(
+                    'No',
+                    style: TextStyle(color: MyTheme.textcolor),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                "Cancel",
+                style: TextStyle(color: MyTheme.button2),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                String courseName = _courseController.text;
+                String monthText = _monthController.text;
+                int duration = int.tryParse(monthText) ?? 0;
+
+                if (courseName.isNotEmpty && monthText.isNotEmpty) {
+                  bool hasLevelstemp = _hasLevels.value;
+                  updateDetails(courseid, courseName, hasLevelstemp, duration);
+                  setState(() {
+                    fetchCourses();
+                  });
+                  Navigator.of(context).pop();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Please fill in all fields.',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
+              child: Text(
+                "Update",
                 style: TextStyle(color: MyTheme.button1),
               ),
             ),

@@ -39,8 +39,8 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
 
     try {
       String username = generateUsername(firstName, lastName);
-      int id = await addLogin(username, password, selectedType);
-      await addTeacherData(firstName, lastName, email, phone, id);
+      int id = await addLogin(username, password, selectedType, email);
+      await addTeacherData(firstName, lastName, phone, id);
 
       EmailService emailService = EmailService();
       String mailStatus = await emailService.sendEmail(selectedType, email,
@@ -104,10 +104,11 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
     return '${firstName.toLowerCase()}${lastName.toLowerCase()}$formattedDate';
   }
 
-  Future<int> addLogin(
-      String username, String password, String selectedType) async {
+  Future<int> addLogin(String username, String password, String selectedType,
+      String email) async {
     Map<String, dynamic> body = {
       "username": username,
+      "email": email,
       "password": password,
       "type": selectedType,
       "isActive": true
@@ -138,11 +139,10 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
     }
   }
 
-  Future<void> addTeacherData(String firstName, String lastName, String email,
-      String phone, int id) async {
+  Future<void> addTeacherData(
+      String firstName, String lastName, String phone, int id) async {
     Map<String, dynamic> addteacherdata = {
       "full_name": '$firstName $lastName',
-      "email": email,
       "mobile_number": phone,
       "logindatumId": id
     };

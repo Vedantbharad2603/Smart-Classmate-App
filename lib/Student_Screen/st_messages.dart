@@ -1,58 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
 
-class STMessage extends StatefulWidget {
-  const STMessage({Key? key}) : super(key: key);
+class STMessages extends StatefulWidget {
+  const STMessages({Key? key}) : super(key: key);
 
   @override
-  State<STMessage> createState() => _STMessageState();
+  State<STMessages> createState() => _STMessagesState();
 }
 
 class Message {
+  final String messageId; // Add messageId field
   final String datetime;
   final String description;
 
-  Message({required this.datetime, required this.description});
+  Message({
+    this.messageId = '',
+    required this.datetime,
+    required this.description,
+  });
 }
 
-class _STMessageState extends State<STMessage> {
-  String username_d = "";
-  String password_d = "";
-  @override
-  void initState() {
-    super.initState();
-    GetStorage storage = GetStorage();
-    final mydata = storage.read('login_data');
-    if (mydata != null) {
-      username_d = mydata['data']['login']['username'] ?? "";
-      password_d = mydata['data']['login']['password'] ?? "";
-    }
-  }
-
-  List<Message> updates = [
-    Message(
-      datetime: '2024-02-01 11:30:26.953530',
-      description: 'Tomorrow we have a conversation',
-    ),
-    Message(
-      datetime: '2024-02-01 11:35:26.953530',
-      description: 'Jhanvi and her group have GD',
-    ),
-    Message(
-      datetime: '2024-02-01 11:28:26.953530',
-      description: 'All the group members have to report to me before 4:30.',
-    ),
-  ];
-  Future<void> _handleRefresh() async {
-    // Simulate reloading data (replace this with your actual refresh logic)
-    await Future.delayed(const Duration(seconds: 1));
-    setState(() {
-      updates = updates;
-    });
-  }
+class _STMessagesState extends State<STMessages> {
+  List<Message> updates = [];
+  bool _shouldScrollToBottom = false;
 
   final ScrollController _scrollController = ScrollController();
 
@@ -69,6 +43,40 @@ class _STMessageState extends State<STMessage> {
         currentDate.year != previousDate.year;
   }
 
+  void scrolldown() {
+    _shouldScrollToBottom = true;
+  }
+
+  Future<void> _handleRefresh() async {
+    // Simulate reloading data (replace this with your actual refresh logic)
+    await Future.delayed(const Duration(seconds: 1));
+    setState(() {
+      updates = updates;
+    });
+  }
+
+  String username_d = "";
+  String password_d = "";
+  @override
+  void initState() {
+    super.initState();
+    super.initState();
+    GetStorage storage = GetStorage();
+    final mydata = storage.read('login_data');
+    if (mydata != null) {
+      username_d = mydata['data']['login']['username'] ?? "";
+      password_d = mydata['data']['login']['password'] ?? "";
+    }
+    // studentData.sort((a, b) => a['full_name'].compareTo(b['full_name']));
+  }
+
+  void sortMessagesByTimestamp() {
+    updates.sort((a, b) =>
+        DateTime.parse(a.datetime).compareTo(DateTime.parse(b.datetime)));
+
+    scrolldown();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -78,12 +86,12 @@ class _STMessageState extends State<STMessage> {
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
           title: Text(
-            "Update",
-            overflow: TextOverflow.fade,
+            "Updates",
             style: TextStyle(
-                color: MyTheme.textcolor,
-                fontSize: getSize(context, 2.7),
-                fontWeight: FontWeight.bold),
+              color: MyTheme.textcolor,
+              fontSize: getSize(context, 2.7),
+              fontWeight: FontWeight.bold,
+            ),
           ),
           actions: [
             InkWell(
@@ -93,9 +101,10 @@ class _STMessageState extends State<STMessage> {
               },
               child: Padding(
                 padding: EdgeInsets.only(
-                    right: getSize(context, 1),
-                    top: getHeight(context, 0.007),
-                    bottom: getHeight(context, 0.007)),
+                  right: getSize(context, 1),
+                  top: getHeight(context, 0.007),
+                  bottom: getHeight(context, 0.007),
+                ),
                 child: CircleAvatar(
                   radius: getSize(context, 3),
                   backgroundColor: MyTheme.highlightcolor,
@@ -106,53 +115,88 @@ class _STMessageState extends State<STMessage> {
             )
           ],
         ),
-        body: RefreshIndicator(
-          onRefresh: _handleRefresh,
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: updates.length,
-                  itemBuilder: (context, index) {
-                    bool showDateHeader = _shouldShowDateHeader(index);
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (showDateHeader)
-                          Center(
-                            child: Container(
-                              height: 30,
-                              width: getWidth(context, 0.50),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: MyTheme.background,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  DateFormat('MMMM d, yyyy').format(
-                                    DateTime.parse(updates[index].datetime),
+        body: Column(
+          children: [
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: _handleRefresh,
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('messages')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    updates.clear();
+                    snapshot.data!.docs.forEach((doc) {
+                      updates.add(Message(
+                        messageId: doc
+                            .id, // Assuming 'id' is the messageId in Firestore
+                        datetime: doc['timestamp'],
+                        description: doc['message'],
+                      ));
+                    });
+                    sortMessagesByTimestamp();
+                    WidgetsBinding.instance!.addPostFrameCallback((_) {
+                      if (_shouldScrollToBottom) {
+                        _scrollController.animateTo(
+                          _scrollController.position.maxScrollExtent,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeOut,
+                        );
+                        _shouldScrollToBottom =
+                            false; // Reset the flag after scrolling
+                      }
+                    });
+                    return ListView.builder(
+                      controller: _scrollController,
+                      itemCount: updates.length,
+                      itemBuilder: (context, index) {
+                        bool showDateHeader = _shouldShowDateHeader(index);
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (showDateHeader)
+                              Center(
+                                child: Container(
+                                  height: 30,
+                                  width: getWidth(context, 0.50),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: MyTheme.background,
                                   ),
-                                  style: TextStyle(
-                                    color: MyTheme.textcolor.withOpacity(0.7),
-                                    fontWeight: FontWeight.bold,
+                                  child: Center(
+                                    child: Text(
+                                      DateFormat('MMMM d, yyyy').format(
+                                        DateTime.parse(updates[index].datetime),
+                                      ),
+                                      style: TextStyle(
+                                        color:
+                                            MyTheme.textcolor.withOpacity(0.7),
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
+                            ChatBubble(
+                              messageId: updates[index].messageId,
+                              message: updates[index].description,
+                              dateTime: updates[index].datetime,
+                              index: index,
                             ),
-                          ),
-                        ChatBubble(
-                          message: updates[index].description,
-                          dateTime: updates[index].datetime,
-                          onDelete: () => {},
-                        ),
-                      ],
+                          ],
+                        );
+                      },
                     );
                   },
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -160,15 +204,18 @@ class _STMessageState extends State<STMessage> {
 }
 
 class ChatBubble extends StatelessWidget {
+  final String messageId;
   final String message;
   final String dateTime;
-  final VoidCallback onDelete;
+  final int index; // Add the index parameter
 
   const ChatBubble({
     Key? key,
+    required this.messageId,
     required this.message,
     required this.dateTime,
-    required this.onDelete,
+    required this.index, // Include the index parameter in the constructor
+    // required this.onDelete,
   }) : super(key: key);
 
   @override
@@ -177,7 +224,6 @@ class ChatBubble extends StatelessWidget {
     String formattedDateTime = DateFormat('hh:mm a').format(parsedDateTime);
 
     return GestureDetector(
-      onLongPress: onDelete,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Align(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
 
@@ -11,28 +13,20 @@ class Messages extends StatefulWidget {
 }
 
 class Message {
+  final String messageId; // Add messageId field
   final String datetime;
   final String description;
 
-  Message({required this.datetime, required this.description});
+  Message({
+    this.messageId = '',
+    required this.datetime,
+    required this.description,
+  });
 }
 
 class _MessagesState extends State<Messages> {
   final TextEditingController _messageController = TextEditingController();
-  List<Message> updates = [
-    Message(
-      datetime: '2024-02-01 11:30:26.953530',
-      description: 'Tomorrow we have a conversation',
-    ),
-    Message(
-      datetime: '2024-02-01 11:35:26.953530',
-      description: 'Jhanvi and her group have GD',
-    ),
-    Message(
-      datetime: '2024-02-01 11:28:26.953530',
-      description: 'All the group members have to report to me before 4:30.',
-    ),
-  ];
+  List<Message> updates = [];
 
   final ScrollController _scrollController = ScrollController();
 
@@ -57,6 +51,24 @@ class _MessagesState extends State<Messages> {
     });
   }
 
+  late int senderid;
+  @override
+  void initState() {
+    super.initState();
+    GetStorage storage = GetStorage();
+    final mydata = storage.read('login_data');
+
+    if (mydata != null) {
+      senderid = mydata['data']['userdata']['id'] ?? 0;
+    }
+    // studentData.sort((a, b) => a['full_name'].compareTo(b['full_name']));
+  }
+
+  void sortMessagesByTimestamp() {
+    updates.sort((a, b) =>
+        DateTime.parse(a.datetime).compareTo(DateTime.parse(b.datetime)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -66,7 +78,7 @@ class _MessagesState extends State<Messages> {
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
           title: Text(
-            "Messages",
+            "Updates",
             style: TextStyle(
               color: MyTheme.textcolor,
               fontSize: getSize(context, 2.7),
@@ -100,42 +112,66 @@ class _MessagesState extends State<Messages> {
             Expanded(
               child: RefreshIndicator(
                 onRefresh: _handleRefresh,
-                child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: updates.length,
-                  itemBuilder: (context, index) {
-                    bool showDateHeader = _shouldShowDateHeader(index);
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (showDateHeader)
-                          Center(
-                            child: Container(
-                              height: 30,
-                              width: getWidth(context, 0.50),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: MyTheme.background,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  DateFormat('MMMM d, yyyy').format(
-                                    DateTime.parse(updates[index].datetime),
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('messages')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    updates.clear();
+                    snapshot.data!.docs.forEach((doc) {
+                      updates.add(Message(
+                        messageId: doc.id,
+                        datetime: doc['timestamp'],
+                        description: doc['message'],
+                      ));
+                    });
+                    sortMessagesByTimestamp();
+                    return ListView.builder(
+                      controller: _scrollController,
+                      itemCount: updates.length,
+                      itemBuilder: (context, index) {
+                        bool showDateHeader = _shouldShowDateHeader(index);
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (showDateHeader)
+                              Center(
+                                child: Container(
+                                  height: 30,
+                                  width: getWidth(context, 0.50),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: MyTheme.background,
                                   ),
-                                  style: TextStyle(
-                                    color: MyTheme.textcolor.withOpacity(0.7),
-                                    fontWeight: FontWeight.bold,
+                                  child: Center(
+                                    child: Text(
+                                      DateFormat('MMMM d, yyyy').format(
+                                        DateTime.parse(updates[index].datetime),
+                                      ),
+                                      style: TextStyle(
+                                        color:
+                                            MyTheme.textcolor.withOpacity(0.7),
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
+                            ChatBubble(
+                              messageId: updates[index].messageId,
+                              message: updates[index].description,
+                              dateTime: updates[index].datetime,
+                              index: index, // Pass the index here
+                              onDelete: _deleteMessage,
                             ),
-                          ),
-                        ChatBubble(
-                          message: updates[index].description,
-                          dateTime: updates[index].datetime,
-                          onDelete: () => _deleteMessage(index),
-                        ),
-                      ],
+                          ],
+                        );
+                      },
                     );
                   },
                 ),
@@ -198,31 +234,46 @@ class _MessagesState extends State<Messages> {
     );
   }
 
-  void _addNewMessage() {
+  void _addNewMessage() async {
     if (_messageController.text.isNotEmpty) {
       DateTime now = DateTime.now();
       String formattedDateTime =
           DateFormat('yyyy-MM-dd HH:mm:ss.SSSSSS').format(now);
 
-      setState(() {
-        updates.add(
-          Message(
-            datetime: formattedDateTime,
-            description: _messageController.text,
+      try {
+        await FirebaseFirestore.instance.collection('messages').add({
+          'timestamp': formattedDateTime,
+          'message': _messageController.text,
+        });
+
+        setState(() {
+          updates.add(
+            Message(
+              datetime: formattedDateTime,
+              description: _messageController.text,
+            ),
+          );
+          _messageController.clear();
+          // Scroll to the bottom after adding a new message
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        });
+      } catch (e) {
+        // Handle the error, for example, show a snackbar with the error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to send message. Please try again.'),
+            duration: const Duration(seconds: 2),
           ),
         );
-        _messageController.clear();
-        // Scroll to the bottom after adding a new message
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      });
+      }
     }
   }
 
-  void _deleteMessage(int index) {
+  void _deleteMessage(String messageId, int index) {
     showDialog(
       context: context,
       builder: (context) {
@@ -248,7 +299,11 @@ class _MessagesState extends State<Messages> {
                   ),
                 ),
               ),
-              onPressed: () {
+              onPressed: () async {
+                await FirebaseFirestore.instance
+                    .collection('messages')
+                    .doc(messageId)
+                    .delete();
                 setState(() {
                   updates.removeAt(index);
                 });
@@ -286,14 +341,19 @@ class _MessagesState extends State<Messages> {
 }
 
 class ChatBubble extends StatelessWidget {
+  final String messageId;
   final String message;
   final String dateTime;
-  final VoidCallback onDelete;
+  final int index; // Add the index parameter
+
+  final Function(String, int) onDelete; // Update the type of onDelete
 
   const ChatBubble({
     Key? key,
+    required this.messageId,
     required this.message,
     required this.dateTime,
+    required this.index, // Include the index parameter in the constructor
     required this.onDelete,
   }) : super(key: key);
 
@@ -303,7 +363,8 @@ class ChatBubble extends StatelessWidget {
     String formattedDateTime = DateFormat('hh:mm a').format(parsedDateTime);
 
     return GestureDetector(
-      onLongPress: onDelete,
+      onLongPress: () => onDelete(
+          messageId, index), // Pass the messageId and index to onDelete
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Align(

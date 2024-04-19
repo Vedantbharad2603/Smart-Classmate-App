@@ -444,7 +444,7 @@ class _ProfilePageState extends State<STProfilePage> {
                 Row(
                   children: [
                     Container(
-                      height: getHeight(context, 0.045),
+                      height: 40,
                       width: getHeight(context, 0.045),
                       decoration: BoxDecoration(
                         borderRadius:
@@ -498,7 +498,7 @@ class _ProfilePageState extends State<STProfilePage> {
           borderRadius: BorderRadius.circular(15),
           color: Colors.transparent,
         ),
-        height: getHeight(context, 0.065),
+        height: 55,
         width: getWidth(context, 0.25),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

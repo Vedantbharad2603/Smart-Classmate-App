@@ -19,9 +19,9 @@ class Mynavigator extends StatelessWidget {
 
     // If logged in, check user type
     final mydata = storage.read('login_data');
+
     if (mydata != null) {
       String userType = mydata['data']['login']['type'];
-      print(userType);
       if (userType == 'student') {
         return const StudentMasterPage();
       } else {
