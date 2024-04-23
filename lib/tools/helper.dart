@@ -484,9 +484,10 @@ Widget showAttendance(
               colorMode: ColorMode.color,
               datasets: Map.fromEntries(dateIntList),
               colorsets: const {
-                0: Colors.red,
+                -1: Colors.grey,
                 1: Colors.green,
-                2: Colors.orange,
+                2: Colors.red,
+                3: Colors.orange,
               },
               onClick: (value) {
                 // ScaffoldMessenger.of(context).showSnackBar(

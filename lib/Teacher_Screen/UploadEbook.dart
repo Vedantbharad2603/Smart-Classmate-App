@@ -33,13 +33,13 @@ class _UploadEbookState extends State<UploadEbook> {
       allowedExtensions: ['pdf'],
     );
     if (result != null) {
-      if (result.files.single.size! > 5 * 1024 * 1024) {
+      if (result.files.single.size! > 50 * 1024 * 1024) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text(''),
-              content: Text("File Size must be less then 50MB"),
+              content: const Text("File Size must be less then 50MB"),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -176,7 +176,7 @@ class _UploadEbookState extends State<UploadEbook> {
                       backgroundColor: MyTheme.background,
                     );
                   } else if (snapshot.hasError) {
-                    return Center(child: Text("Error loading files"));
+                    return const Center(child: Text("Error loading files"));
                   } else {
                     final files = snapshot.data!;
                     return isListEmpty
@@ -200,7 +200,7 @@ class _UploadEbookState extends State<UploadEbook> {
               floatingActionButton: FloatingActionButton(
                 onPressed: () => uploadFile(),
                 tooltip: 'Upload Ebook',
-                child: Icon(Icons.add),
+                child: const Icon(Icons.add),
                 backgroundColor: MyTheme.highlightcolor,
               ),
             ),
@@ -208,7 +208,6 @@ class _UploadEbookState extends State<UploadEbook> {
   }
 
   Future<void> downloadFile(String url, String fileName) async {
-    log("HEllO form ownloadFile");
     // Get the directory for the Pictures folder
     final String picturesPath = '/storage/emulated/0/Download/';
 
@@ -224,16 +223,49 @@ class _UploadEbookState extends State<UploadEbook> {
 
     try {
       await dio.download(url, filePath);
-      log("Done");
+      // log("Done");
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Success'),
+            content: const Text("File downloaded Successfully"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
       // print("Done");
-      Get.snackbar("Success", "File downloaded Successfully",
-          colorText: Colors.white,
-          backgroundColor: Colors.green,
-          onTap: (snack) => OpenFilex.open(filePath));
+      // Get.snackbar("Success", "File downloaded Successfully",
+      //     colorText: Colors.white,
+      //     backgroundColor: Colors.green,
+      //     onTap: (snack) => OpenFilex.open(filePath));
     } catch (e) {
-      log(":( + $e");
-      Get.snackbar("Error", "Failed to download file",
-          colorText: Colors.white, backgroundColor: Colors.red);
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text("Failed to download file"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      // Get.snackbar("Error", "Failed to download file",
+      //     colorText: Colors.white, backgroundColor: Colors.red);
     }
   }
 

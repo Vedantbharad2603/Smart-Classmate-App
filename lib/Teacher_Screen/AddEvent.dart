@@ -479,26 +479,6 @@ class _AddEventPageState extends State<AddEventPage> {
     );
   }
 
-  // void _addEvent(EventData event) {
-  //   _events.update(_selectedDay, (existingEvents) {
-  //     // ignore: unnecessary_null_comparison
-  //     if (existingEvents != null) {
-  //       existingEvents.add(event);
-  //       return existingEvents;
-  //     } else {
-  //       return [event];
-  //     }
-  //   }, ifAbsent: () => [event]);
-
-  //   // Print the whole list of events in the log
-  //   _events.forEach((key, value) {
-  //     print('Date: $key');
-  //     for (var event in value) {
-  //       print('Event: ${event.title}, Shift: ${event.shift}');
-  //     }
-  //   });
-  // }
-
   Widget buildmainDropdown(
     String selectedValue,
     Function(String?) onChanged,
@@ -520,35 +500,4 @@ class _AddEventPageState extends State<AddEventPage> {
       }).toList(),
     );
   }
-
-  // Widget buildmainDropdown(String selectedValue, Function(String?) onChanged,
-  //     context, List<Map<String, dynamic>> shifts) {
-  //   double height = MediaQuery.of(context).size.height;
-  //   return Padding(
-  //     padding: EdgeInsets.all(height * 0.011),
-  //     child: Container(
-  //       padding: EdgeInsets.only(left: height * 0.016, right: height * 0.016),
-  //       decoration: BoxDecoration(
-  //         color: MyTheme.background,
-  //         borderRadius: BorderRadius.circular(height * 0.02),
-  //       ),
-  //       child: DropdownButton<String>(
-  //         dropdownColor: MyTheme.background,
-  //         value: selectedValue,
-  //         icon: const Icon(Icons.arrow_drop_down_rounded),
-  //         iconSize: height * 0.04,
-  //         isExpanded: true,
-  //         underline: const SizedBox(),
-  //         style: TextStyle(color: MyTheme.textcolor, fontSize: height * 0.018),
-  //         items: shifts.map<DropdownMenuItem<String>>((shift) {
-  //           return DropdownMenuItem<String>(
-  //             value: shift['id'].toString(), // Use unique identifier as value
-  //             child: Text(shift['shiftName']),
-  //           );
-  //         }).toList(),
-  //         onChanged: onChanged,
-  //       ),
-  //     ),
-  //   );
-  // }
 }

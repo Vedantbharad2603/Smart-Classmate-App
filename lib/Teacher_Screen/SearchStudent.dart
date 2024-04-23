@@ -26,6 +26,8 @@ class _SearchStudentState extends State<SearchStudent> {
   String searchText = '';
   bool _isLoading = false;
   late int teacherid;
+  String username_d = "";
+  String password_d = "";
 
   @override
   void initState() {
@@ -35,6 +37,8 @@ class _SearchStudentState extends State<SearchStudent> {
 
     if (mydata != null) {
       teacherid = mydata['data']['userdata']['id'] ?? 0;
+      username_d = mydata['data']['login']['username'] ?? "";
+      password_d = mydata['data']['login']['password'] ?? "";
     }
     fetchStudents();
     studentData.sort((a, b) => a['full_name'].compareTo(b['full_name']));
@@ -182,8 +186,8 @@ class _SearchStudentState extends State<SearchStudent> {
                 actions: [
                   InkWell(
                     onTap: () {
-                      giveuserinfo('Username: Vedant Bharad',
-                          'Password: Ved@nt123', context);
+                      giveuserinfo('Username: $username_d',
+                          'Password: $password_d', context);
                     },
                     child: Padding(
                       padding: EdgeInsets.only(

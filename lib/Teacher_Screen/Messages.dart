@@ -52,6 +52,8 @@ class _MessagesState extends State<Messages> {
   }
 
   late int senderid;
+  String username_d = "";
+  String password_d = "";
   @override
   void initState() {
     super.initState();
@@ -60,6 +62,8 @@ class _MessagesState extends State<Messages> {
 
     if (mydata != null) {
       senderid = mydata['data']['userdata']['id'] ?? 0;
+      username_d = mydata['data']['login']['username'] ?? "";
+      password_d = mydata['data']['login']['password'] ?? "";
     }
     // studentData.sort((a, b) => a['full_name'].compareTo(b['full_name']));
   }
@@ -89,7 +93,7 @@ class _MessagesState extends State<Messages> {
             InkWell(
               onTap: () {
                 giveuserinfo(
-                    'Username: Vedant Bharad', 'Password: Ved@nt123', context);
+                    'Username: $username_d', 'Password: $password_d', context);
               },
               child: Padding(
                 padding: EdgeInsets.only(

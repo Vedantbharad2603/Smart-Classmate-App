@@ -314,14 +314,14 @@ class _ProfilePageState extends State<STProfilePage> {
                                 ),
                               );
                             }, Icons.library_books_outlined),
-                            // customContainerWithInkWell("Downloads", () {
-                            //   Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder: (context) => const StDownloads(),
-                            //     ),
-                            //   );
-                            // }, Icons.download),
+                            customContainerWithInkWell("Downloads", () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const StDownloads(),
+                                ),
+                              );
+                            }, Icons.download),
                             SizedBox(
                               height: getHeight(context, 0.018),
                             ),

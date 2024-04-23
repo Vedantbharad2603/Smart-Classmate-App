@@ -1,6 +1,6 @@
 class Apiconst {
   static String get baseurl =>
-      "https://smart-classmate-server.onrender.com/api/";
+      "http://smart-classmate-server.onrender.com/api/";
   //live api baseurl "https://smart-classmate-server.onrender.com/"
   //Emulator baseurl "http://10.0.2.2:3000/"
   // static String get baseurl => "http://laptopip:3000/"
@@ -28,6 +28,11 @@ class Apiconst {
   static String addCourseLevels = '${baseurl}courselevels';
   static String getCourseLevels = '${baseurl}courselevels/getlevels';
 
+  static String addTodayAttendance = '${baseurl}attendance';
+  static String getTodayAttendance = '${baseurl}attendance/getToday';
+  static String updateAttendance = '${baseurl}attendance/update';
+  static String getStudAttendance = '${baseurl}attendance/student';
+
   static String addCourseConcepts = '${baseurl}courseconcepts';
   static String getConcepts = '${baseurl}courseconcepts/getconcepts';
   static String updateConcepts = '${baseurl}courseconcepts/update';
@@ -46,6 +51,7 @@ class Apiconst {
 
   static String findShift = '${baseurl}shift/find';
   static String listallShift = '${baseurl}shift';
+
   static String listallEvents = '${baseurl}events/upcoming';
   static String addEvent = '${baseurl}events';
 }

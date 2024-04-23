@@ -1,5 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -20,13 +22,13 @@ class STHomepage extends StatefulWidget {
 }
 
 List<MapEntry<DateTime, int>> dateIntList = [
-  MapEntry(DateTime(2024, 4, 1), 0),
-  MapEntry(DateTime(2024, 4, 2), 1),
-  MapEntry(DateTime(2024, 4, 3), 1),
-  MapEntry(DateTime(2024, 4, 4), 1),
-  MapEntry(DateTime(2024, 4, 5), 2),
-  MapEntry(DateTime(2024, 4, 6), 2),
-  MapEntry(DateTime(2024, 4, 7), 2),
+  // MapEntry(DateTime(2024, 4, 1), 1),
+  // MapEntry(DateTime(2024, 4, 2), 2),
+  // MapEntry(DateTime(2024, 4, 3), 3),
+  // MapEntry(DateTime(2024, 4, 4), 1),
+  // MapEntry(DateTime(2024, 4, 5), 3),
+  // MapEntry(DateTime(2024, 4, 6), 3),
+  // MapEntry(DateTime(2024, 4, 7), 3),
 ];
 
 class _STHomepageState extends State<STHomepage> {
@@ -54,8 +56,52 @@ class _STHomepageState extends State<STHomepage> {
       coursename = mydata['data']['courseinfo']['course_name'] ?? "";
     }
     fetchWork(studentid);
-    fetchEvents();
+    // fetchEvents();
     fetchHoliday();
+    fetchAttendance(studentid);
+  }
+
+  int mapStatusToInt(String status) {
+    switch (status) {
+      case 'Present':
+        return 1;
+      case 'Absent':
+        return 2;
+      case 'On Leave':
+        return 3;
+      default:
+        return -1;
+    }
+  }
+
+  void fetchAttendance(int studid) async {
+    try {
+      Map<String, dynamic> body = {"id": studid};
+      final response = await http.post(
+        Uri.parse(Apiconst.getStudAttendance),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(body),
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        if (data.containsKey('data')) {
+          final List<dynamic> attendanceData = data['data'];
+          dateIntList.clear(); // Clear the existing data
+          for (var attendance in attendanceData) {
+            DateTime date = DateTime.parse(attendance['date']).toLocal();
+            int status = mapStatusToInt(attendance['status']);
+            dateIntList.add(MapEntry(date, status));
+          }
+          log(dateIntList.toString());
+        } else {
+          throw Exception('Data key not found in API response');
+        }
+      } else {
+        throw Exception('Failed to fetch events');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch events: $e');
+    }
   }
 
   Future<void> fetchEvents() async {
