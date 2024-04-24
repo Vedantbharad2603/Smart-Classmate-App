@@ -19,10 +19,10 @@ class _TeacherMasterPageState extends State<TeacherMasterPage> {
   int _selectedIndex = 2;
   @override
   Widget build(BuildContext context) {
-    List<Widget> _widgetOptions = <Widget>[
-      Messages(),
-      SearchStudent(),
-      Attendance(),
+    List<Widget> widgetOptions = <Widget>[
+      const Messages(),
+      const SearchStudent(),
+      const Attendance(),
       Profilepage(onThemeToggleMaster: () => setState(() {})),
     ];
     double screenWidth = MediaQuery.of(context).size.width;
@@ -31,7 +31,7 @@ class _TeacherMasterPageState extends State<TeacherMasterPage> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(

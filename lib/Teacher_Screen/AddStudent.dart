@@ -1,6 +1,4 @@
-// ignore_for_file: unnecessary_null_comparison, unused_element, use_build_context_synchronously
-
-import 'dart:developer';
+// ignore_for_file: unnecessary_null_comparison, unused_element, use_build_context_synchronously, file_names
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -152,7 +150,6 @@ class _AddStudentPageState extends State<AddStudentPage> {
       String username = generateUsername(firstName, lastName);
       // print(username);
       int loginid = await addLogin(username, password, "student", email);
-      print(loginid);
       int studentid =
           await addStudentData(firstName, lastName, phone, loginid, shiftid);
 
@@ -489,7 +486,6 @@ class _AddStudentPageState extends State<AddStudentPage> {
     );
   }
 
-  // ignore: unused_element
   bool _validateEmail(String email) {
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     return emailRegex.hasMatch(email);

@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -46,7 +48,7 @@ class _ProfilePageState extends State<STProfilePage> {
       full_name_d = mydata['data']['userdata']['full_name'] ?? "";
       username_d = mydata['data']['login']['username'] ?? "";
       password_d = mydata['data']['login']['password'] ?? "";
-      shift_d = mydata['data']['userdata']['shiftdatumId'].toString() ?? "";
+      shift_d = mydata['data']['userdata']['shiftdatumId'].toString();
       coursename = mydata['data']['courseinfo']['course_name'] ?? "";
       lastmon = mydata['data']['courseinfo']['last_month'] ?? "";
 
@@ -80,7 +82,7 @@ class _ProfilePageState extends State<STProfilePage> {
         throw Exception('Failed to fetch shifts');
       }
     } catch (e) {
-      print('Error: $e');
+      throw Exception('Failed to fetch shifts : $e');
     } finally {
       setState(() {
         _isLoading = false;
@@ -174,7 +176,7 @@ class _ProfilePageState extends State<STProfilePage> {
                                             width: getWidth(context, 0.6),
                                             child: Expanded(
                                               child: Text(
-                                                "$full_name_d",
+                                                full_name_d,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                     color: MyTheme.textcolor,
@@ -223,7 +225,7 @@ class _ProfilePageState extends State<STProfilePage> {
                                                 color: MyTheme.textcolor,
                                               ),
                                               Text(
-                                                "$role",
+                                                role,
                                                 overflow: TextOverflow.fade,
                                                 style: TextStyle(
                                                     color: MyTheme.textcolor

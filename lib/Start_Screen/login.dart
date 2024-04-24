@@ -2,9 +2,7 @@
 
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:smartclassmate/Start_Screen/loginOTP.dart';
 import 'package:smartclassmate/masterpage/studentmaster.dart';
 import 'package:smartclassmate/masterpage/teachermaster.dart';
@@ -92,9 +90,9 @@ class _LoginPageState extends State<LoginPage> {
           await storage.write('login_data', data);
           await storage.write('logedin', true);
           final mydata = storage.read('login_data');
+          print(mydata);
           if (mydata != null) {
             String userType = mydata['data']['login']['type'];
-            log(userType.toString());
             if (userType == 'student') {
               Navigator.pushReplacement(
                 context,

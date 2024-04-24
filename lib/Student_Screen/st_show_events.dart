@@ -1,5 +1,7 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:flutter/material.dart';
-import 'package:smartclassmate/Model/Event.dart';
+import 'package:smartclassmate/Model/EventModel.dart';
 import 'package:smartclassmate/tools/apiconst.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:smartclassmate/tools/helper.dart';
@@ -18,7 +20,7 @@ class _StShowEventsState extends State<StShowEvents> {
   late CalendarFormat _calendarFormat;
   late DateTime _selectedDay;
   late DateTime _focusedDay;
-  List<EventData> events = [];
+  List<EventModel> events = [];
   List<Map<String, dynamic>> shifts = [];
   bool _isLoading = false;
 
@@ -32,25 +34,25 @@ class _StShowEventsState extends State<StShowEvents> {
     _selectedDay = DateTime.now();
     // _events = {
     //   DateTime.utc(2024, 3, 19): [
-    //     EventData(
-    //         'EventData 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1',
+    //     EventModel(
+    //         'EventModel 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1Event 1',
     //         'Shift 1'),
     //   ],
     //   DateTime.utc(2024, 3, 25): [
-    //     EventData('EventData 2', 'Shift 2'),
+    //     EventModel('EventModel 2', 'Shift 2'),
     //   ],
     //   DateTime.utc(2024, 3, 26): [
-    //     EventData('EventData 3', 'Shift 2'),
+    //     EventModel('EventModel 3', 'Shift 2'),
     //   ],
     // };
     // _events = {
     //   DateTime.now(): [
-    //     EventData('EventData 1', 'Shift 1'),
-    //     EventData('EventData 2', 'Shift 2'),
-    //     EventData('EventData 3', 'Shift 1'),
+    //     EventModel('EventModel 1', 'Shift 1'),
+    //     EventModel('EventModel 2', 'Shift 2'),
+    //     EventModel('EventModel 3', 'Shift 1'),
     //   ],
     //   DateTime.now().add(Duration(days: 1)): [
-    //     EventData('EventData 4', 'Shift 2'),
+    //     EventModel('EventModel 4', 'Shift 2'),
     //   ],
     // };
   }
@@ -72,7 +74,6 @@ class _StShowEventsState extends State<StShowEvents> {
             };
           }).toList();
           setState(() {});
-          print(shifts);
         } else {
           throw Exception('Data key not found in API response');
         }
@@ -80,7 +81,7 @@ class _StShowEventsState extends State<StShowEvents> {
         throw Exception('Failed to fetch shifts');
       }
     } catch (e) {
-      print('Error: $e');
+      throw Exception('Failed to fetch shifts : $e');
     } finally {
       setState(() {
         _isLoading = false;
@@ -98,8 +99,8 @@ class _StShowEventsState extends State<StShowEvents> {
         final Map<String, dynamic> responseData = json.decode(response.body);
         if (responseData.containsKey('data')) {
           final List<dynamic> data = responseData['data'];
-          List<EventData> fetchedEvents =
-              data.map((e) => EventData.fromJson(e)).toList();
+          List<EventModel> fetchedEvents =
+              data.map((e) => EventModel.fromJson(e)).toList();
           setState(() {
             events = fetchedEvents; // Update the events list
           });
@@ -132,7 +133,6 @@ class _StShowEventsState extends State<StShowEvents> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: _isLoading
           ? Container(
@@ -249,7 +249,7 @@ class _StShowEventsState extends State<StShowEvents> {
                               child: ListView.builder(
                                 itemCount: events.length,
                                 itemBuilder: (context, index) {
-                                  EventData event = events[index];
+                                  EventModel event = events[index];
                                   return Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,

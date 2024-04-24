@@ -1,9 +1,11 @@
-class Message {
+// ignore_for_file: file_names
+
+class MessageModel {
   final String messageId;
   final String datetime;
   final String description;
 
-  Message({
+  MessageModel({
     this.messageId = '',
     required this.datetime,
     required this.description,

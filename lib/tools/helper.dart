@@ -214,52 +214,6 @@ Future<void> _showGiveWorkPopup(BuildContext context) async {
   );
 }
 
-Widget studentbutton(
-  VoidCallback onTap,
-  String label,
-  String id,
-  double borderRadius,
-  Color color1,
-  Color color2,
-  BuildContext context,
-) {
-  return GestureDetector(
-    onTap: () {
-      if (label == "Give work") {
-        _showGiveWorkPopup(context);
-      } else if (label == "Show Profile") {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => StudentInfo(),
-          ),
-        );
-      } else if (label == "Give eBook") {
-        _showGiveEBookPopup(context);
-      }
-    },
-    child: Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: color2,
-          width: getWidth(context, 0.008),
-        ),
-        borderRadius: BorderRadius.circular(15),
-        color: color1,
-      ),
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: MyTheme.textcolor,
-          fontSize: getSize(context, 1.8),
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ),
-  );
-}
-
 Future<void> _showGiveEBookPopup(BuildContext context) async {
   FilePickerResult? result = await FilePicker.platform.pickFiles(
     type: FileType.custom,
@@ -474,13 +428,13 @@ Widget showAttendance(
               monthFontSize: getSize(context, 3.7),
               weekTextColor: MyTheme.textcolor,
               textColor: MyTheme.background,
-              iconcolor: MyTheme.button1,
+              iconColor: MyTheme.button1,
               colorTipSize: 0,
               defaultColor: Colors.grey,
               flexible: false,
-              monarrowsize: getSize(context, 3.7),
+              monarrowSize: getSize(context, 4),
               size: getSize(context, 4.8),
-              moncolor: MyTheme.textcolor,
+              monColor: MyTheme.textcolor,
               colorMode: ColorMode.color,
               datasets: Map.fromEntries(dateIntList),
               colorsets: const {

@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, prefer_const_constructors
+// ignore_for_file: must_be_immutable, prefer_const_constructors, file_names, non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -12,7 +12,7 @@ import 'package:smartclassmate/Teacher_Screen/EditProfile.dart';
 import 'package:smartclassmate/Teacher_Screen/ListofHolidays.dart';
 import 'package:smartclassmate/Teacher_Screen/ManageCourse.dart';
 import 'package:smartclassmate/Teacher_Screen/ManageTeacher.dart';
-import 'package:smartclassmate/Teacher_Screen/PendingRegistration.dart';
+// import 'package:smartclassmate/Teacher_Screen/PendingRegistration.dart';
 import 'package:smartclassmate/Teacher_Screen/Settings.dart';
 import 'package:smartclassmate/Teacher_Screen/UploadEbook.dart';
 import 'package:smartclassmate/tools/helper.dart';
@@ -101,7 +101,7 @@ class _ProfilePageState extends State<Profilepage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "$full_name_d",
+                                      full_name_d,
                                       style: TextStyle(
                                           color: MyTheme.textcolor,
                                           fontSize: getSize(context, 3.1),
@@ -111,7 +111,7 @@ class _ProfilePageState extends State<Profilepage> {
                                       height: getHeight(context, 0.01),
                                     ),
                                     Text(
-                                      "@$username_d",
+                                      username_d,
                                       style: TextStyle(
                                           color: MyTheme.textcolor
                                               .withOpacity(0.7),

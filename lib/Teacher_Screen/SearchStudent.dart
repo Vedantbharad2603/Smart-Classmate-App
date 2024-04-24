@@ -1,4 +1,5 @@
-// ignore: file_names
+// ignore_for_file: file_names, non_constant_identifier_names, use_build_context_synchronously
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -99,7 +100,7 @@ class _SearchStudentState extends State<SearchStudent> {
       _isLoading = true;
     });
     try {
-      log(details + " " + studid.toString() + " " + teacherid.toString());
+      log("$details $studid $teacherid");
       DateTime now = DateTime.now();
       String formattedDate = DateFormat('yyyy-MM-dd').format(now);
       Map<String, dynamic> body = {
@@ -462,7 +463,7 @@ class _SearchStudentState extends State<SearchStudent> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => StudentInfo(),
+              builder: (context) => StudentInfo(studid: studid),
             ),
           );
         }

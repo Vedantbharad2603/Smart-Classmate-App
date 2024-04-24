@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:smartclassmate/tools/apiconst.dart';
 import 'package:smartclassmate/tools/helper.dart';
@@ -166,52 +165,65 @@ class _CheckHomeworkState extends State<CheckHomework> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: MyTheme.mainbackground,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        centerTitle: true,
-        title: Text(
-          'Check Homework',
-          style: TextStyle(
-              color: MyTheme.textcolor,
-              fontSize: getSize(context, 2.8),
-              fontWeight: FontWeight.bold),
-        ),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: MyTheme.button1,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: getHeight(context, 0.7),
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: works.length,
-                itemBuilder: (context, index) {
-                  Map<String, dynamic> work = works[index];
-                  return mycards(
-                      work['student_name'],
-                      work['homework_date'],
-                      work['homework_details'],
-                      work['id'],
-                      work['studentdatumId'],
-                      work['teacherdatumId']);
-                },
+    return SafeArea(
+      child: _isLoading
+          ? Container(
+              color: MyTheme.background,
+              child: Center(
+                child: CircularProgressIndicator(
+                  // strokeAlign: 1,
+                  color: MyTheme.button1,
+                  backgroundColor: MyTheme.background,
+                ),
+              ),
+            )
+          : Scaffold(
+              backgroundColor: MyTheme.mainbackground,
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                centerTitle: true,
+                title: Text(
+                  'Check Homework',
+                  style: TextStyle(
+                      color: MyTheme.textcolor,
+                      fontSize: getSize(context, 2.8),
+                      fontWeight: FontWeight.bold),
+                ),
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    color: MyTheme.button1,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: getHeight(context, 0.7),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: works.length,
+                        itemBuilder: (context, index) {
+                          Map<String, dynamic> work = works[index];
+                          return mycards(
+                              work['student_name'],
+                              work['homework_date'],
+                              work['homework_details'],
+                              work['id'],
+                              work['studentdatumId'],
+                              work['teacherdatumId']);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ],
-        ),
-      ),
     );
   }
 

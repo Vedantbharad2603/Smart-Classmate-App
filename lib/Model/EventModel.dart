@@ -1,9 +1,11 @@
-class EventData {
+// ignore_for_file: non_constant_identifier_names, file_names
+
+class EventModel {
   final String event_description;
   final String event_date;
   final int shiftdatumId;
 
-  EventData({
+  EventModel({
     required this.event_description,
     required this.event_date,
     required this.shiftdatumId,
@@ -17,8 +19,8 @@ class EventData {
     };
   }
 
-  factory EventData.fromJson(Map<String, dynamic> json) {
-    return EventData(
+  factory EventModel.fromJson(Map<String, dynamic> json) {
+    return EventModel(
       event_description: json['event_description'],
       event_date: json['event_date'],
       shiftdatumId: json['shiftdatumId'],

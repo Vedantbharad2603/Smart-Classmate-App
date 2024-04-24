@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:smartclassmate/Model/Event.dart';
+import 'package:smartclassmate/Model/EventModel.dart';
 import 'package:smartclassmate/Student_Screen/st_show_events.dart';
 import 'package:smartclassmate/tools/apiconst.dart';
 import 'package:smartclassmate/tools/helper.dart';
@@ -40,7 +40,7 @@ class _STHomepageState extends State<STHomepage> {
   String holidayDate = "";
   String coursename = "";
   bool _isLoading = false;
-  List<EventData> events = [];
+  List<EventModel> events = [];
   List<Map<String, dynamic>> courses = [];
   List<Map<String, dynamic>> work = [];
   @override
@@ -114,8 +114,8 @@ class _STHomepageState extends State<STHomepage> {
         final Map<String, dynamic> responseData = json.decode(response.body);
         if (responseData.containsKey('data')) {
           final List<dynamic> data = responseData['data'];
-          List<EventData> fetchedEvents =
-              data.map((e) => EventData.fromJson(e)).toList();
+          List<EventModel> fetchedEvents =
+              data.map((e) => EventModel.fromJson(e)).toList();
           setState(() {
             events = fetchedEvents; // Update the events list
           });
@@ -298,7 +298,7 @@ class _STHomepageState extends State<STHomepage> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
+                              SizedBox(
                                 // color: MyTheme.button1,
                                 width: getWidth(context, 0.5),
                                 child: Row(
@@ -325,7 +325,7 @@ class _STHomepageState extends State<STHomepage> {
                                   ],
                                 ),
                               ),
-                              Container(
+                              SizedBox(
                                 // color: MyTheme.button1,
                                 width: getWidth(context, 0.5),
                                 child: Row(
@@ -495,7 +495,7 @@ class _STHomepageState extends State<STHomepage> {
                             //     ),
                             //   ),
                             // )
-                            Container(
+                            SizedBox(
                               height: getHeight(context, 0.14),
                               child: work.isEmpty
                                   ? Center(
@@ -560,7 +560,7 @@ class _STHomepageState extends State<STHomepage> {
                                                             CrossAxisAlignment
                                                                 .start,
                                                         children: [
-                                                          Container(
+                                                          SizedBox(
                                                             width: getWidth(
                                                                 context, 0.5),
                                                             child: Row(
@@ -692,7 +692,7 @@ class _STHomepageState extends State<STHomepage> {
                         ),
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       height: 120,
                       child: ListView(
                         scrollDirection: Axis.horizontal,
@@ -734,7 +734,7 @@ class _STHomepageState extends State<STHomepage> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Container(
+                                            SizedBox(
                                               // color: MyTheme.button1,
                                               width: getWidth(context, 0.5),
                                               child: Row(

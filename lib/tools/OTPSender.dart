@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable, file_names
+
 import 'package:get/get.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';

@@ -1,7 +1,10 @@
+// ignore_for_file: file_names, non_constant_identifier_names, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:smartclassmate/Model/MessageModel.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
 
@@ -12,21 +15,9 @@ class Messages extends StatefulWidget {
   State<Messages> createState() => _MessagesState();
 }
 
-class Message {
-  final String messageId; // Add messageId field
-  final String datetime;
-  final String description;
-
-  Message({
-    this.messageId = '',
-    required this.datetime,
-    required this.description,
-  });
-}
-
 class _MessagesState extends State<Messages> {
   final TextEditingController _messageController = TextEditingController();
-  List<Message> updates = [];
+  List<MessageModel> updates = [];
 
   final ScrollController _scrollController = ScrollController();
 
@@ -122,18 +113,18 @@ class _MessagesState extends State<Messages> {
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
-                      return Center(
+                      return const Center(
                         child: CircularProgressIndicator(),
                       );
                     }
                     updates.clear();
-                    snapshot.data!.docs.forEach((doc) {
-                      updates.add(Message(
+                    for (var doc in snapshot.data!.docs) {
+                      updates.add(MessageModel(
                         messageId: doc.id,
                         datetime: doc['timestamp'],
                         description: doc['message'],
                       ));
-                    });
+                    }
                     sortMessagesByTimestamp();
                     return ListView.builder(
                       controller: _scrollController,
@@ -252,7 +243,7 @@ class _MessagesState extends State<Messages> {
 
         setState(() {
           updates.add(
-            Message(
+            MessageModel(
               datetime: formattedDateTime,
               description: _messageController.text,
             ),
@@ -268,9 +259,9 @@ class _MessagesState extends State<Messages> {
       } catch (e) {
         // Handle the error, for example, show a snackbar with the error message
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Failed to send message. Please try again.'),
-            duration: const Duration(seconds: 2),
+            duration: Duration(seconds: 2),
           ),
         );
       }
@@ -284,7 +275,7 @@ class _MessagesState extends State<Messages> {
         return AlertDialog(
           backgroundColor: MyTheme.background,
           title: Text(
-            'Delete Message',
+            'Delete Messagel',
             style: TextStyle(color: MyTheme.textcolor),
           ),
           content: Text(
@@ -396,18 +387,11 @@ class ChatBubble extends StatelessWidget {
                       child: Text(
                         message,
                         style: TextStyle(
-                          color: MyTheme.textcolor,
-                          fontSize: 16,
-                        ),
+                            color: MyTheme.textcolor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w800),
                       ),
                     ),
-                    // IconButton(
-                    //   onPressed: onDelete,
-                    //   icon: Icon(
-                    //     Icons.delete,
-                    //     color: MyTheme.textcolor.withOpacity(0.7),
-                    //   ),
-                    // ),
                   ],
                 ),
                 const SizedBox(height: 4),

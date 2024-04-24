@@ -1,4 +1,5 @@
-// ignore: file_names
+// ignore_for_file: file_names, non_constant_identifier_names, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:smartclassmate/tools/apiconst.dart';
@@ -49,7 +50,7 @@ class _AttendanceState extends State<Attendance> {
         throw Exception('Failed to fetch shifts');
       }
     } catch (e) {
-      print('Error: $e');
+      throw Exception('Failed to fetch shifts $e');
     } finally {
       setState(() {
         _isLoading = false;
@@ -112,7 +113,9 @@ class _AttendanceState extends State<Attendance> {
               content: const Text("Attendance Updated."),
               actions: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                   child: const Text('OK'),
                 ),
               ],
@@ -168,37 +171,39 @@ class _AttendanceState extends State<Attendance> {
       _isLoading = true;
     });
     try {
-      final response = await http.get(Uri.parse(Apiconst.getTodayAttendance));
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        if (data.containsKey('data')) {
-          final List<dynamic> studData = data['data'];
-          setState(() {
-            studentData.clear();
-            for (var student in studData) {
-              int studentdatumId = student['studentdatumId'];
-              String status = student['status'];
-              studentData.add({
-                'id': student['id'],
-                'date': student['date'],
-                'status': mapStatusToInt(status),
-                'createdAt': student['createdAt'],
-                'updatedAt': student['updatedAt'],
-                'studentdatumId': studentdatumId,
-                'full_name': student['full_name'],
-                'shiftdatumId': student['shiftdatumId']
-              });
-            }
-            print(studentData);
-          });
+      final response2 = await http.post(Uri.parse(Apiconst.addTodayAttendance));
+      if (response2.statusCode == 200) {
+        final response = await http.get(Uri.parse(Apiconst.getTodayAttendance));
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> data = json.decode(response.body);
+          if (data.containsKey('data')) {
+            final List<dynamic> studData = data['data'];
+            setState(() {
+              studentData.clear();
+              for (var student in studData) {
+                int studentdatumId = student['studentdatumId'];
+                String status = student['status'];
+                studentData.add({
+                  'id': student['id'],
+                  'date': student['date'],
+                  'status': mapStatusToInt(status),
+                  'createdAt': student['createdAt'],
+                  'updatedAt': student['updatedAt'],
+                  'studentdatumId': studentdatumId,
+                  'full_name': student['full_name'],
+                  'shiftdatumId': student['shiftdatumId']
+                });
+              }
+            });
+          } else {
+            throw Exception('Data key not found in API response');
+          }
         } else {
-          throw Exception('Data key not found in API response');
+          throw Exception('Failed to add Todayattendance');
         }
-      } else {
-        throw Exception('Failed to fetch shifts');
       }
     } catch (e) {
-      print('Error: $e');
+      throw Exception('Failed to add Todayattendance: $e');
     } finally {
       setState(() {
         _isLoading = false;
@@ -221,16 +226,6 @@ class _AttendanceState extends State<Attendance> {
     fetchShifts();
     addAndGetTodayattendance();
     studentData.sort((a, b) => a['name'].compareTo(b['name']));
-    // selectedShift = _getCurrentShift();
-  }
-
-  int _getCurrentShift() {
-    DateTime now = DateTime.now();
-    if (now.hour >= 6 && now.hour < 12) {
-      return 1;
-    } else {
-      return 2;
-    }
   }
 
   @override
@@ -319,7 +314,6 @@ class _AttendanceState extends State<Attendance> {
                               buildmainDropdown(selectedShift, (value) {
                             setState(() {
                               selectedShift = value!;
-                              print(selectedShift);
                             });
                           }, context, shifts),
                           // Text("sdsd"),
@@ -502,6 +496,7 @@ class _AttendanceState extends State<Attendance> {
                   updateAttendance();
                 },
                 backgroundColor: MyTheme.mainbutton,
+                elevation: 0.0,
                 child: Icon(
                   Icons.upload,
                   color: MyTheme.mainbuttontext,

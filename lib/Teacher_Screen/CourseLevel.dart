@@ -1,4 +1,5 @@
-// ignore: file_names
+// ignore_for_file: use_build_context_synchronously, file_names
+
 import 'package:flutter/material.dart';
 import 'package:smartclassmate/Teacher_Screen/ConceptsPage.dart';
 import 'package:smartclassmate/tools/helper.dart';
@@ -20,7 +21,7 @@ class CourseLevel extends StatefulWidget {
 }
 
 class _CourseLevelState extends State<CourseLevel> {
-  TextEditingController _levelNameController = TextEditingController();
+  final TextEditingController _levelNameController = TextEditingController();
   List<Map<String, dynamic>> courselevellist = [];
 
   String searchText = '';
@@ -86,14 +87,14 @@ class _CourseLevelState extends State<CourseLevel> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('Success'),
-              content: Text('Course level added successfully'),
+              title: const Text('Success'),
+              content: const Text('Course level added successfully'),
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('OK'),
+                  child: const Text('OK'),
                 ),
               ],
             );
@@ -103,20 +104,18 @@ class _CourseLevelState extends State<CourseLevel> {
         throw Exception('Failed to add Course level');
       }
     } catch (e) {
-      // Show error popup
-      print(e);
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error'),
+            title: const Text('Error'),
             content: Text('Failed to add Course level: $e'),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );

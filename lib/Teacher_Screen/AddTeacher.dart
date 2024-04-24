@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, non_constant_identifier_names, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smartclassmate/tools/apiconst.dart';
@@ -43,8 +45,8 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
       await addTeacherData(firstName, lastName, phone, id);
 
       EmailService emailService = EmailService();
-      String mailStatus = await emailService.sendEmail(selectedType, email,
-          (firstName + " " + lastName), username, password);
+      String mailStatus = await emailService.sendEmail(
+          selectedType, email, ("$firstName $lastName"), username, password);
       String dialogMessage = mailStatus == 'Email sent successfully'
           ? 'Teacher added successfully.Email sent successfully'
           : 'Failed to send email. Please try again later.';
@@ -52,14 +54,14 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Email Status'),
+            title: const Text('Email Status'),
             content: Text(dialogMessage),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );
@@ -79,14 +81,14 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error'),
+            title: const Text('Error'),
             content: Text('Failed to add teacher: $e'),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );
@@ -359,7 +361,7 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );

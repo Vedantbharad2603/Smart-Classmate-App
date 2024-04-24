@@ -1,5 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
-import 'dart:developer';
+// ignore_for_file: use_build_context_synchronously, file_names
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -7,12 +6,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
-import 'package:open_filex/open_filex.dart';
+// import 'package:open_filex/open_filex.dart';
+import 'package:open_file/open_file.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
-import 'package:path/path.dart' as path;
 
 class UploadEbook extends StatefulWidget {
   const UploadEbook({Key? key}) : super(key: key);
@@ -33,7 +31,7 @@ class _UploadEbookState extends State<UploadEbook> {
       allowedExtensions: ['pdf'],
     );
     if (result != null) {
-      if (result.files.single.size! > 50 * 1024 * 1024) {
+      if (result.files.single.size > 50 * 1024 * 1024) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -54,7 +52,6 @@ class _UploadEbookState extends State<UploadEbook> {
         return;
       }
       File file = File(result.files.single.path!);
-      String ext = path.extension(result.files.single.path!);
       String fileName = result.files.single.name;
       String filePath = 'books/$fileName';
       try {
@@ -200,8 +197,8 @@ class _UploadEbookState extends State<UploadEbook> {
               floatingActionButton: FloatingActionButton(
                 onPressed: () => uploadFile(),
                 tooltip: 'Upload Ebook',
-                child: const Icon(Icons.add),
                 backgroundColor: MyTheme.highlightcolor,
+                child: const Icon(Icons.add),
               ),
             ),
     );
@@ -209,28 +206,25 @@ class _UploadEbookState extends State<UploadEbook> {
 
   Future<void> downloadFile(String url, String fileName) async {
     // Get the directory for the Pictures folder
-    final String picturesPath = '/storage/emulated/0/Download/';
+    const String picturesPath = '/storage/emulated/0/Download/';
 
-    // Create the Pictures folder if it doesn't exist
-    if (!await Directory(picturesPath).exists()) {
-      await Directory(picturesPath).create(recursive: true);
-    }
-    String filePath = "";
-
-    filePath = '$picturesPath$fileName';
-
-    Dio dio = Dio();
-
-    try {
-      await dio.download(url, filePath);
-      // log("Done");
+    String filePath = '$picturesPath$fileName';
+    bool fileExists = File(filePath).existsSync();
+    if (fileExists) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Success'),
-            content: const Text("File downloaded Successfully"),
+            title: const Text('Already Downloaded'),
+            content: const Text("The file is already downloaded"),
             actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  OpenFile.open(filePath);
+                },
+                child: const Text('OPEN'),
+              ),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -241,11 +235,37 @@ class _UploadEbookState extends State<UploadEbook> {
           );
         },
       );
-      // print("Done");
-      // Get.snackbar("Success", "File downloaded Successfully",
-      //     colorText: Colors.white,
-      //     backgroundColor: Colors.green,
-      //     onTap: (snack) => OpenFilex.open(filePath));
+      return; // Exit the function if the file is already downloaded
+    }
+
+    Dio dio = Dio();
+
+    try {
+      await dio.download(url, filePath);
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Success'),
+            content: const Text("File downloaded Successfully"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  OpenFile.open(filePath);
+                },
+                child: const Text('OPEN'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     } catch (e) {
       showDialog(
         context: context,
@@ -264,8 +284,6 @@ class _UploadEbookState extends State<UploadEbook> {
           );
         },
       );
-      // Get.snackbar("Error", "Failed to download file",
-      //     colorText: Colors.white, backgroundColor: Colors.red);
     }
   }
 

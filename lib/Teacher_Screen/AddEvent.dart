@@ -1,7 +1,7 @@
-// ignore_for_file: unused_element, avoid_print
+// ignore_for_file: unused_element, avoid_print, file_names, use_build_context_synchronously, unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
-import 'package:smartclassmate/Model/Event.dart';
+import 'package:smartclassmate/Model/EventModel.dart';
 import 'package:smartclassmate/tools/apiconst.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:smartclassmate/tools/helper.dart';
@@ -21,11 +21,11 @@ class _AddEventPageState extends State<AddEventPage> {
   late CalendarFormat _calendarFormat;
   late DateTime _selectedDay;
   late DateTime _focusedDay;
-  late Map<DateTime, List<EventData>> _events;
+  late Map<DateTime, List<EventModel>> _events;
   Rx<String> selectedShift = ''.obs;
   late String shift;
   List<Map<String, dynamic>> shifts = [];
-  List<EventData> events = [];
+  List<EventModel> events = [];
   bool _isLoading = false;
 
   @override
@@ -49,8 +49,8 @@ class _AddEventPageState extends State<AddEventPage> {
         final Map<String, dynamic> responseData = json.decode(response.body);
         if (responseData.containsKey('data')) {
           final List<dynamic> data = responseData['data'];
-          List<EventData> fetchedEvents =
-              data.map((e) => EventData.fromJson(e)).toList();
+          List<EventModel> fetchedEvents =
+              data.map((e) => EventModel.fromJson(e)).toList();
           setState(() {
             events = fetchedEvents; // Update the events list
           });
@@ -123,14 +123,14 @@ class _AddEventPageState extends State<AddEventPage> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('Success'),
-              content: Text('Event added successfully'),
+              title: const Text('Success'),
+              content: const Text('Event added successfully'),
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('OK'),
+                  child: const Text('OK'),
                 ),
               ],
             );
@@ -146,14 +146,14 @@ class _AddEventPageState extends State<AddEventPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error'),
+            title: const Text('Error'),
             content: Text('Failed to add event: $e'),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );
@@ -409,7 +409,7 @@ class _AddEventPageState extends State<AddEventPage> {
                               child: ListView.builder(
                                 itemCount: events.length,
                                 itemBuilder: (context, index) {
-                                  EventData event = events[index];
+                                  EventModel event = events[index];
                                   return Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -485,7 +485,6 @@ class _AddEventPageState extends State<AddEventPage> {
     context,
     List<Map<String, dynamic>> shifts,
   ) {
-    double height = MediaQuery.of(context).size.height;
     return Column(
       children: shifts.map((shift) {
         return RadioListTile<String>(

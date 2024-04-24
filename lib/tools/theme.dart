@@ -26,49 +26,49 @@ class MyTheme {
   static Color _mainbackground() {
     return (_prefs.getBool("darkMode") ?? true)
         ? const Color.fromARGB(255, 17, 17, 17)
-        : const Color.fromARGB(255, 238, 243, 246);
+        : const Color.fromARGB(255, 253, 253, 255);
   }
 
   static Color _background() {
     return (_prefs.getBool("darkMode") ?? true)
-        ? Color.fromARGB(255, 30, 30, 30)
-        : Color.fromARGB(255, 189, 192, 195);
+        ? const Color.fromARGB(255, 30, 30, 30)
+        : const Color.fromARGB(255, 214, 217, 231);
   }
 
   static Color _background2() {
     return (_prefs.getBool("darkMode") ?? true)
         ? const Color.fromARGB(255, 30, 30, 30)
-        : const Color.fromARGB(255, 207, 207, 207);
+        : Color.fromARGB(255, 230, 230, 230);
   }
 
   static Color _mainbutton() {
     return (_prefs.getBool("darkMode") ?? true)
         ? const Color.fromARGB(255, 43, 51, 44)
-        : const Color.fromARGB(255, 207, 207, 207);
+        : Color.fromARGB(64, 0, 129, 58);
   }
 
   static Color _mainbuttontext() {
     return (_prefs.getBool("darkMode") ?? true)
         ? const Color.fromARGB(255, 0, 141, 64)
-        : const Color.fromARGB(255, 0, 141, 64);
+        : Color.fromARGB(255, 30, 86, 0);
   }
 
   static Color _textcolor() {
     return (_prefs.getBool("darkMode") ?? true)
         ? const Color.fromARGB(255, 253, 254, 255)
-        : const Color.fromARGB(255, 25, 21, 19);
+        : const Color.fromARGB(255, 11, 18, 34);
   }
 
   static Color _button1() {
     return (_prefs.getBool("darkMode") ?? true)
         ? const Color.fromARGB(255, 231, 192, 43)
-        : Color.fromARGB(255, 8, 125, 0);
+        : const Color.fromARGB(255, 94, 39, 213);
   }
 
   static Color _button2() {
     return (_prefs.getBool("darkMode") ?? true)
         ? const Color.fromARGB(255, 234, 56, 41)
-        : const Color.fromARGB(255, 228, 86, 75);
+        : const Color.fromARGB(255, 255, 105, 120);
   }
 
   static Color _boxshadow() {
@@ -81,7 +81,7 @@ class MyTheme {
   static Color _highlightcolor() {
     return (_prefs.getBool("darkMode") ?? true)
         ? const Color.fromARGB(255, 161, 241, 209)
-        : Color.fromARGB(255, 252, 170, 55);
+        : const Color.fromARGB(255, 220, 159, 148);
   }
 
   static bool _isDarkMode() {
@@ -92,6 +92,70 @@ class MyTheme {
     _prefs.setBool('darkMode', !(_prefs.getBool("darkMode") ?? false));
   }
 }
+
+
+// static Color _mainbackground() {
+//     return (_prefs.getBool("darkMode") ?? true)
+//         ? const Color.fromARGB(255, 17, 17, 17)
+//         : const Color.fromARGB(255, 238, 243, 246);
+//   }
+
+//   static Color _background() {
+//     return (_prefs.getBool("darkMode") ?? true)
+//         ? const Color.fromARGB(255, 30, 30, 30)
+//         : const Color.fromARGB(255, 189, 192, 195);
+//   }
+
+//   static Color _background2() {
+//     return (_prefs.getBool("darkMode") ?? true)
+//         ? const Color.fromARGB(255, 30, 30, 30)
+//         : const Color.fromARGB(255, 207, 207, 207);
+//   }
+
+//   static Color _mainbutton() {
+//     return (_prefs.getBool("darkMode") ?? true)
+//         ? const Color.fromARGB(255, 43, 51, 44)
+//         : const Color.fromARGB(255, 207, 207, 207);
+//   }
+
+//   static Color _mainbuttontext() {
+//     return (_prefs.getBool("darkMode") ?? true)
+//         ? const Color.fromARGB(255, 0, 141, 64)
+//         : const Color.fromARGB(255, 0, 141, 64);
+//   }
+
+//   static Color _textcolor() {
+//     return (_prefs.getBool("darkMode") ?? true)
+//         ? const Color.fromARGB(255, 253, 254, 255)
+//         : const Color.fromARGB(255, 25, 21, 19);
+//   }
+
+//   static Color _button1() {
+//     return (_prefs.getBool("darkMode") ?? true)
+//         ? const Color.fromARGB(255, 231, 192, 43)
+//         : const Color.fromARGB(255, 8, 125, 0);
+//   }
+
+//   static Color _button2() {
+//     return (_prefs.getBool("darkMode") ?? true)
+//         ? const Color.fromARGB(255, 234, 56, 41)
+//         : const Color.fromARGB(255, 228, 86, 75);
+//   }
+
+//   static Color _boxshadow() {
+//     return (_prefs.getBool("darkMode") ?? true)
+//         ? Colors.transparent
+//         : Colors.transparent;
+//     // : Colors.grey.withOpacity(0.5);
+//   }
+
+//   static Color _highlightcolor() {
+//     return (_prefs.getBool("darkMode") ?? true)
+//         ? const Color.fromARGB(255, 161, 241, 209)
+//         : const Color.fromARGB(255, 252, 170, 55);
+//   }
+
+
 
 
 

@@ -1,11 +1,7 @@
-// ignore_for_file: prefer_final_fields, use_build_context_synchronously
+// ignore_for_file: prefer_final_fields, use_build_context_synchronously, file_names
 
-import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:smartclassmate/Start_Screen/login.dart';
 import 'package:smartclassmate/masterpage/studentmaster.dart';
 import 'package:smartclassmate/masterpage/teachermaster.dart';
@@ -34,7 +30,7 @@ class _LoginOTPState extends State<LoginOTP> {
   late Map<String, dynamic> data;
   late String myOTP;
   String generateOTP() {
-    Random random = new Random();
+    Random random = Random();
     int otp = random.nextInt(10000);
     return otp.toString().padLeft(4, '0');
   }
@@ -45,7 +41,6 @@ class _LoginOTPState extends State<LoginOTP> {
       await storage.write('login_data', data);
       await storage.write('logedin', true);
       final mydata = storage.read('login_data');
-      print(mydata);
       if (mydata != null) {
         String userType = mydata['data']['login']['type'];
         if (userType == 'student') {
@@ -155,7 +150,23 @@ class _LoginOTPState extends State<LoginOTP> {
         }
       } else {
         // Handle unsuccessful login response
-        print('Login failed: ${response.statusCode}');
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Status'),
+              content: const Text("Login failed"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
       }
     } catch (socketException) {
       // Handle SocketException
@@ -265,7 +276,7 @@ class _LoginOTPState extends State<LoginOTP> {
                                     onTap: () {
                                       String emailid =
                                           _emailController.text.trim();
-                                      if (!emailid.isEmpty) {
+                                      if (emailid.isNotEmpty) {
                                         _login(emailid);
                                       } else {
                                         // Show snackbar for entering email

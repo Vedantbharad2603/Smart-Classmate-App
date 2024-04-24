@@ -1,7 +1,10 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:smartclassmate/Model/MessageModel.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
 
@@ -12,20 +15,8 @@ class STMessages extends StatefulWidget {
   State<STMessages> createState() => _STMessagesState();
 }
 
-class Message {
-  final String messageId; // Add messageId field
-  final String datetime;
-  final String description;
-
-  Message({
-    this.messageId = '',
-    required this.datetime,
-    required this.description,
-  });
-}
-
 class _STMessagesState extends State<STMessages> {
-  List<Message> updates = [];
+  List<MessageModel> updates = [];
   bool _shouldScrollToBottom = false;
 
   final ScrollController _scrollController = ScrollController();
@@ -126,21 +117,21 @@ class _STMessagesState extends State<STMessages> {
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
-                      return Center(
+                      return const Center(
                         child: CircularProgressIndicator(),
                       );
                     }
                     updates.clear();
-                    snapshot.data!.docs.forEach((doc) {
-                      updates.add(Message(
+                    for (var doc in snapshot.data!.docs) {
+                      updates.add(MessageModel(
                         messageId: doc
                             .id, // Assuming 'id' is the messageId in Firestore
                         datetime: doc['timestamp'],
                         description: doc['message'],
                       ));
-                    });
+                    }
                     sortMessagesByTimestamp();
-                    WidgetsBinding.instance!.addPostFrameCallback((_) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
                       if (_shouldScrollToBottom) {
                         _scrollController.animateTo(
                           _scrollController.position.maxScrollExtent,

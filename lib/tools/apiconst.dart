@@ -1,6 +1,6 @@
 class Apiconst {
   static String get baseurl =>
-      "http://smart-classmate-server.onrender.com/api/";
+      "https://smart-classmate-server.onrender.com/api/";
   //live api baseurl "https://smart-classmate-server.onrender.com/"
   //Emulator baseurl "http://10.0.2.2:3000/"
   // static String get baseurl => "http://laptopip:3000/"
@@ -11,6 +11,7 @@ class Apiconst {
   static String giveuserlogin = '${baseurl}login/username';
   static String getTeacher = '${baseurl}login/getTeacher';
   static String findemail = '${baseurl}login/find';
+  static String givestudProfile = '${baseurl}login/getStudProfile';
 
   static String addTeacher = '${baseurl}teacher';
   static String updateTeacher = '${baseurl}teacher/update';

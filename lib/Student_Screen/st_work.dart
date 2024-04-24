@@ -1,4 +1,5 @@
-import 'package:file_picker/file_picker.dart';
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:smartclassmate/tools/apiconst.dart';
@@ -217,7 +218,7 @@ class _STWorkState extends State<STWork> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
+                          SizedBox(
                             // color: MyTheme.button1,
                             width: getWidth(context, 0.4),
                             height: getHeight(context, 0.03),
