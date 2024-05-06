@@ -41,7 +41,7 @@ class _ManageTeacherState extends State<ManageTeacher> {
               'id': teacher['login']['id'],
               'username': teacher['login']['username'],
               'type': teacher['login']['type'],
-              'isActive': teacher['login']['isActive'],
+              'is_active': teacher['login']['is_active'],
             });
           }
           setState(() {
@@ -230,7 +230,7 @@ class _ManageTeacherState extends State<ManageTeacher> {
 
   void toggleActiveStatus(int index) {
     setState(() {
-      teacherData[index]['isActive'] = !teacherData[index]['isActive'];
+      teacherData[index]['is_active'] = !teacherData[index]['is_active'];
     });
   }
 
@@ -350,7 +350,7 @@ class _ManageTeacherState extends State<ManageTeacher> {
                                                     fontSize:
                                                         getSize(context, 2.7),
                                                     fontWeight: FontWeight.bold,
-                                                    color: teacher['isActive']
+                                                    color: teacher['is_active']
                                                         ? MyTheme.textcolor
                                                         : MyTheme.textcolor
                                                             .withOpacity(0.3),
@@ -398,7 +398,7 @@ class _ManageTeacherState extends State<ManageTeacher> {
                                                   return Colors
                                                       .grey; // Disabled color
                                                 }
-                                                return teacher['isActive']
+                                                return teacher['is_active']
                                                     ? Colors.green
                                                         .withOpacity(0.2)
                                                     : Colors.red
@@ -411,7 +411,7 @@ class _ManageTeacherState extends State<ManageTeacher> {
                                                 borderRadius:
                                                     BorderRadius.circular(15),
                                                 side: BorderSide(
-                                                  color: teacher['isActive']
+                                                  color: teacher['is_active']
                                                       ? Colors.green
                                                           .withOpacity(0.7)
                                                       : Colors.red
@@ -423,11 +423,11 @@ class _ManageTeacherState extends State<ManageTeacher> {
                                             ),
                                           ),
                                           child: Text(
-                                            teacher['isActive']
+                                            teacher['is_active']
                                                 ? "Activate"
                                                 : "Deactivate",
                                             style: TextStyle(
-                                              color: teacher['isActive']
+                                              color: teacher['is_active']
                                                   ? Colors.green
                                                       .withOpacity(0.7)
                                                   : Colors.red.withOpacity(0.7),

@@ -56,7 +56,7 @@ class _STHomepageState extends State<STHomepage> {
       coursename = mydata['data']['courseinfo']['course_name'] ?? "";
     }
     fetchWork(studentid);
-    // fetchEvents();
+    fetchEvents();
     fetchHoliday();
     fetchAttendance(studentid);
   }
@@ -156,8 +156,7 @@ class _STHomepageState extends State<STHomepage> {
                 'id': item['id'],
                 'homework_details': item['homework_details'],
                 'is_submited': item['is_submited'],
-                'homework_date': item['homework_date'],
-                'remark': item['remark']
+                'homework_date': item['homework_date']
               });
             }
           }

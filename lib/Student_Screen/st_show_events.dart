@@ -70,7 +70,7 @@ class _StShowEventsState extends State<StShowEvents> {
           shifts = shiftsData.map((shift) {
             return {
               'id': shift['id'],
-              'shiftName': shift['shiftName'].toString(),
+              'shift_name': shift['shift_name'].toString(),
             };
           }).toList();
           setState(() {});
@@ -128,7 +128,7 @@ class _StShowEventsState extends State<StShowEvents> {
     );
 
     // Return the shift name if it exists, otherwise return null
-    return shift != null ? shift['shiftName'] : null;
+    return shift != null ? shift['shift_name'] : null;
   }
 
   @override
@@ -293,7 +293,8 @@ class _StShowEventsState extends State<StShowEvents> {
                                             children: <TextSpan>[
                                               TextSpan(
                                                 text: getShiftNameById(
-                                                    event.shiftdatumId, shifts),
+                                                    event.shiftdatum_id,
+                                                    shifts),
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: MyTheme.textcolor,

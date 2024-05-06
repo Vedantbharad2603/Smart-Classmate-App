@@ -82,7 +82,7 @@ class _AddEventPageState extends State<AddEventPage> {
           shifts = shiftsData.map((shift) {
             return {
               'id': shift['id'],
-              'shiftName': shift['shiftName'].toString(),
+              'shift_name': shift['shift_name'].toString(),
             };
           }).toList();
           setState(() {});
@@ -110,7 +110,7 @@ class _AddEventPageState extends State<AddEventPage> {
       Map<String, dynamic> body = {
         "event_description": description,
         "event_date": date.toIso8601String(),
-        "shiftdatumId": id,
+        "shiftdatum_id": id,
       };
       final response = await http.post(
         Uri.parse(Apiconst.addEvent),
@@ -176,7 +176,7 @@ class _AddEventPageState extends State<AddEventPage> {
     );
 
     // Return the shift name if it exists, otherwise return null
-    return shift != null ? shift['shiftName'] : null;
+    return shift != null ? shift['shift_name'] : null;
   }
 
   @override
@@ -453,7 +453,8 @@ class _AddEventPageState extends State<AddEventPage> {
                                             children: <TextSpan>[
                                               TextSpan(
                                                 text: getShiftNameById(
-                                                    event.shiftdatumId, shifts),
+                                                    event.shiftdatum_id,
+                                                    shifts),
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: MyTheme.textcolor,
@@ -489,7 +490,7 @@ class _AddEventPageState extends State<AddEventPage> {
       children: shifts.map((shift) {
         return RadioListTile<String>(
           title: Text(
-            shift['shiftName'],
+            shift['shift_name'],
             style: TextStyle(color: MyTheme.textcolor),
           ),
           value: shift['id'].toString(), // Use unique identifier as value

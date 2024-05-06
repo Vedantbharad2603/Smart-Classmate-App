@@ -123,10 +123,15 @@ class _STMessagesState extends State<STMessages> {
                     }
                     updates.clear();
                     for (var doc in snapshot.data!.docs) {
+                      Timestamp timestamp = doc['timestamp'];
+                      DateTime dateTime =
+                          timestamp.toDate(); // Convert Timestamp to DateTime
+                      String formattedDateTime =
+                          DateFormat('yyyy-MM-dd HH:mm:ss')
+                              .format(dateTime); // Format DateTime to String
                       updates.add(MessageModel(
-                        messageId: doc
-                            .id, // Assuming 'id' is the messageId in Firestore
-                        datetime: doc['timestamp'],
+                        messageId: doc.id,
+                        datetime: formattedDateTime,
                         description: doc['message'],
                       ));
                     }

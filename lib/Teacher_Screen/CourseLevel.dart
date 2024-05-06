@@ -35,11 +35,12 @@ class _CourseLevelState extends State<CourseLevel> {
   }
 
   Future<void> fetchCourses(int id) async {
+    print(id);
     setState(() {
       _isLoading = true;
     });
     try {
-      Map<String, int> body = {'courseId': id};
+      Map<String, int> body = {'course_id': id};
       final response = await http.post(
         Uri.parse(Apiconst.getCourseLevels),
         headers: {'Content-Type': 'application/json'},
@@ -74,7 +75,7 @@ class _CourseLevelState extends State<CourseLevel> {
     try {
       Map<String, dynamic> body = {
         "level_name": lName,
-        "courseId": widget.courseid
+        "course_id": widget.courseid
       };
       final response = await http.post(
         Uri.parse(Apiconst.addCourseLevels),

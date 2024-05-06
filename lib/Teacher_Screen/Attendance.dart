@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:smartclassmate/tools/apiconst.dart';
 import 'package:smartclassmate/tools/helper.dart';
 import 'package:smartclassmate/tools/theme.dart';
@@ -38,7 +39,7 @@ class _AttendanceState extends State<Attendance> {
             shifts = shiftsData.map((shift) {
               return {
                 'id': shift['id'],
-                'name': shift['shiftName'].toString(),
+                'name': shift['shift_name'].toString(),
               };
             }).toList();
             selectedShift = shifts[0]['id'].toString();
@@ -171,7 +172,15 @@ class _AttendanceState extends State<Attendance> {
       _isLoading = true;
     });
     try {
-      final response2 = await http.post(Uri.parse(Apiconst.addTodayAttendance));
+      DateTime now = DateTime.now();
+
+      String formattedDate = DateFormat('yyyy-MM-dd').format(now);
+      Map<String, dynamic> body = {"date": formattedDate.toString()};
+
+      final response2 = await http.post(Uri.parse(Apiconst.addTodayAttendance),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(body));
+      print(response2.statusCode);
       if (response2.statusCode == 200) {
         final response = await http.get(Uri.parse(Apiconst.getTodayAttendance));
         if (response.statusCode == 200) {
@@ -181,7 +190,7 @@ class _AttendanceState extends State<Attendance> {
             setState(() {
               studentData.clear();
               for (var student in studData) {
-                int studentdatumId = student['studentdatumId'];
+                int studentdatum_id = student['studentdatum_id'];
                 String status = student['status'];
                 studentData.add({
                   'id': student['id'],
@@ -189,12 +198,13 @@ class _AttendanceState extends State<Attendance> {
                   'status': mapStatusToInt(status),
                   'createdAt': student['createdAt'],
                   'updatedAt': student['updatedAt'],
-                  'studentdatumId': studentdatumId,
+                  'studentdatum_id': studentdatum_id,
                   'full_name': student['full_name'],
-                  'shiftdatumId': student['shiftdatumId']
+                  'shiftdatum_id': student['shiftdatum_id']
                 });
               }
             });
+            print(studentData.toString());
           } else {
             throw Exception('Data key not found in API response');
           }
@@ -234,7 +244,7 @@ class _AttendanceState extends State<Attendance> {
     if (!_isLoading) {
       filteredStudents = studentData
           .where((student) =>
-              student['shiftdatumId'] == int.parse(selectedShift!) &&
+              student['shiftdatum_id'] == int.parse(selectedShift!) &&
               student['full_name']
                   .toLowerCase()
                   .contains(searchText.toLowerCase()))
@@ -666,7 +676,7 @@ class _AttendanceState extends State<Attendance> {
   void _markAllStudentsPresent() {
     setState(() {
       for (var student in studentData) {
-        if (student['shiftdatumId'].toString() == selectedShift.toString()) {
+        if (student['shiftdatum_id'].toString() == selectedShift.toString()) {
           student['status'] = 1; // Mark as Present
         }
       }
@@ -676,7 +686,7 @@ class _AttendanceState extends State<Attendance> {
   void _markAllStudentsAbsent() {
     setState(() {
       for (var student in studentData) {
-        if (student['shiftdatumId'].toString() == selectedShift.toString()) {
+        if (student['shiftdatum_id'].toString() == selectedShift.toString()) {
           student['status'] = 2; // Mark as Absent
         }
       }

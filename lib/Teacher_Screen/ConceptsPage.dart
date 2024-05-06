@@ -128,11 +128,14 @@ class _ConceptsPageState extends State<ConceptsPage> {
     try {
       Map<String, dynamic> body;
       if (widget.levelid != null) {
-        body = {"courseLevelId": widget.levelid, "courseId": widget.courseid};
+        body = {
+          "course_level_id": widget.levelid,
+          "course_id": widget.courseid
+        };
       } else {
-        body = {"courseId": widget.courseid};
+        body = {"course_id": widget.courseid};
       }
-      // Map<String, int> body = {'courseId': id};
+      // Map<String, int> body = {'course_id': id};
       final response = await http.post(
         Uri.parse(Apiconst.getConcepts),
         headers: {'Content-Type': 'application/json'},
@@ -168,11 +171,11 @@ class _ConceptsPageState extends State<ConceptsPage> {
       if (widget.levelid != null) {
         body = {
           "concept_name": cName,
-          "courseLevelId": widget.levelid,
-          "courseId": widget.courseid
+          "course_level_id": widget.levelid,
+          "course_id": widget.courseid
         };
       } else {
-        body = {"concept_name": cName, "courseId": widget.courseid};
+        body = {"concept_name": cName, "course_id": widget.courseid};
       }
       final response = await http.post(
         Uri.parse(Apiconst.addCourseConcepts),

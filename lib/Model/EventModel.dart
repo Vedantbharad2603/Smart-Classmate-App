@@ -3,19 +3,19 @@
 class EventModel {
   final String event_description;
   final String event_date;
-  final int shiftdatumId;
+  final int shiftdatum_id;
 
   EventModel({
     required this.event_description,
     required this.event_date,
-    required this.shiftdatumId,
+    required this.shiftdatum_id,
   });
 
   Map<String, dynamic> toJson() {
     return {
       'description': event_description,
       'date': event_date,
-      'shiftid': shiftdatumId,
+      'shiftid': shiftdatum_id,
     };
   }
 
@@ -23,7 +23,7 @@ class EventModel {
     return EventModel(
       event_description: json['event_description'],
       event_date: json['event_date'],
-      shiftdatumId: json['shiftdatumId'],
+      shiftdatum_id: json['shiftdatum_id'],
     );
   }
 }

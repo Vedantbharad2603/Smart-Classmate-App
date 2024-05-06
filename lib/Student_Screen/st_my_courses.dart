@@ -25,24 +25,24 @@ class StMyCourses extends StatefulWidget {
 
 class _StMyCoursesState extends State<StMyCourses> {
   List<String> concepts = [
-    "Writing-CP_SM",
-    "Writing-Address",
-    "Vocab",
-    "Noun",
-    "Capital letters",
-    "C/U",
-    "Sin/Plu",
-    "Possessive",
-    "Test",
-    "Opp",
-    "Adj",
-    "c.ofAdj",
-    "Gender",
-    "Pronouns",
-    "Articles",
-    "There is/are",
-    "Test sec-2",
-    "File given & Spiral"
+    // "Writing-CP_SM",
+    // "Writing-Address",
+    // "Vocab",
+    // "Noun",
+    // "Capital letters",
+    // "C/U",
+    // "Sin/Plu",
+    // "Possessive",
+    // "Test",
+    // "Opp",
+    // "Adj",
+    // "c.ofAdj",
+    // "Gender",
+    // "Pronouns",
+    // "Articles",
+    // "There is/are",
+    // "Test sec-2",
+    // "File given & Spiral"
   ];
   int activeIndex = 0;
   bool _isLoading = false;
@@ -63,11 +63,14 @@ class _StMyCoursesState extends State<StMyCourses> {
     try {
       Map<String, dynamic> body;
       if (widget.levelid != 0) {
-        body = {"courseLevelId": widget.levelid, "courseId": widget.courseid};
+        body = {
+          "course_level_id": widget.levelid,
+          "course_id": widget.courseid
+        };
       } else {
-        body = {"courseId": widget.courseid};
+        body = {"course_id": widget.courseid};
       }
-      // Map<String, int> body = {'courseId': id};
+      // Map<String, int> body = {'course_id': id};
       final response = await http.post(
         Uri.parse(Apiconst.getConcepts),
         headers: {'Content-Type': 'application/json'},

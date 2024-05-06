@@ -42,18 +42,18 @@ class _ProfilePageState extends State<STProfilePage> {
     fetchShifts();
     GetStorage storage = GetStorage();
     final mydata = storage.read('login_data');
-    // print(mydata['data']['userdata']['shiftdatumId']);
+    // print(mydata['data']['userdata']['shiftdatum_id']);
     if (mydata != null) {
       role = mydata['data']['login']['type'] ?? "";
       full_name_d = mydata['data']['userdata']['full_name'] ?? "";
       username_d = mydata['data']['login']['username'] ?? "";
       password_d = mydata['data']['login']['password'] ?? "";
-      shift_d = mydata['data']['userdata']['shiftdatumId'].toString();
+      shift_d = mydata['data']['userdata']['shiftdatum_id'].toString();
       coursename = mydata['data']['courseinfo']['course_name'] ?? "";
       lastmon = mydata['data']['courseinfo']['last_month'] ?? "";
 
-      s_courseId = mydata['data']['courseinfo']['courseId'] ?? 0;
-      s_courseLevelId = mydata['data']['courseinfo']['courseLevelId'] ?? 0;
+      s_courseId = mydata['data']['courseinfo']['course_id'] ?? 0;
+      s_courseLevelId = mydata['data']['courseinfo']['course_level_id'] ?? 0;
       s_courseStatus = mydata['data']['courseinfo']['course_status'] ?? 0;
     }
   }
@@ -71,7 +71,7 @@ class _ProfilePageState extends State<STProfilePage> {
           shifts = shiftsData.map((shift) {
             return {
               'id': shift['id'],
-              'shiftName': shift['shiftName'].toString(),
+              'shift_name': shift['shift_name'].toString(),
             };
           }).toList();
           setState(() {});
@@ -100,7 +100,7 @@ class _ProfilePageState extends State<STProfilePage> {
     );
 
     // Return the shift name if it exists, otherwise return an empty string
-    return shift.isNotEmpty ? shift['shiftName'] ?? '' : '';
+    return shift.isNotEmpty ? shift['shift_name'] ?? '' : '';
   }
 
   @override

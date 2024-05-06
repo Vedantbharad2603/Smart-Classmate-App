@@ -55,7 +55,7 @@ class _AddStudentPageState extends State<AddStudentPage> {
           shifts = shiftsData.map((shift) {
             return {
               'id': shift['id'],
-              'name': shift['shiftName'].toString(),
+              'name': shift['shift_name'].toString(),
             };
           }).toList();
           setState(() {});
@@ -126,7 +126,7 @@ class _AddStudentPageState extends State<AddStudentPage> {
         final Map<String, dynamic> data = json.decode(response.body);
         if (data.containsKey('data')) {
           return {
-            'timeDuration': data['data']['timeDuration'],
+            'time_duration': data['data']['time_duration'],
             'has_levels': data['data']['has_levels']
           };
         } else {
@@ -221,7 +221,7 @@ class _AddStudentPageState extends State<AddStudentPage> {
         "password": password,
         "email": email,
         "type": selectedType,
-        "isActive": true
+        "is_active": true
       };
       // print(body);
 
@@ -269,7 +269,7 @@ class _AddStudentPageState extends State<AddStudentPage> {
 
   Future<void> addEnrollment(int studid, int courseid) async {
     Map<String, dynamic> courseInfo = await fetchCourse(courseid);
-    int temp = courseInfo['timeDuration'];
+    int temp = courseInfo['time_duration'];
     bool hasLevels = courseInfo['has_levels'];
 
     String lastMon = findLastMonth(temp);
@@ -279,9 +279,9 @@ class _AddStudentPageState extends State<AddStudentPage> {
         "is_current_course": 1,
         "last_month": lastMon,
         "course_status": 1,
-        "studentdatumId": studid,
-        "courseId": courseid,
-        "courseLevelId": hasLevels ? 1 : null
+        "studentdatum_id": studid,
+        "course_id": courseid,
+        "course_level_id": hasLevels ? 1 : null
       };
 
       final response = await http.post(
@@ -305,8 +305,8 @@ class _AddStudentPageState extends State<AddStudentPage> {
       Map<String, dynamic> addStudentdata = {
         "full_name": '$firstName $lastName',
         "mobile_number": phone,
-        "logindatumId": loginid,
-        "shiftdatumId": shiftid
+        "logindatum_id": loginid,
+        "shiftdatum_id": shiftid
       };
       final studentResponse = await http.post(
         Uri.parse(Apiconst.addStudent),

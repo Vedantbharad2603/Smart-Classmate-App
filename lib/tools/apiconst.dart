@@ -4,6 +4,7 @@ class Apiconst {
   //live api baseurl "https://smart-classmate-server.onrender.com/"
   //Emulator baseurl "http://10.0.2.2:3000/"
   // static String get baseurl => "http://laptopip:3000/"
+
   static String logincheck = '${baseurl}login/check';
   static String addLogindata = '${baseurl}login';
   static String changeLoginstatus = '${baseurl}login/change';

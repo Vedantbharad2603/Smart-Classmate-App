@@ -60,8 +60,7 @@ class _MessagesState extends State<Messages> {
   }
 
   void sortMessagesByTimestamp() {
-    updates.sort((a, b) =>
-        DateTime.parse(a.datetime).compareTo(DateTime.parse(b.datetime)));
+    updates.sort((a, b) => a.datetime.compareTo(b.datetime));
   }
 
   @override
@@ -119,12 +118,17 @@ class _MessagesState extends State<Messages> {
                     }
                     updates.clear();
                     for (var doc in snapshot.data!.docs) {
+                      Timestamp timestamp = doc['timestamp'];
+                      DateTime dateTime =
+                          timestamp.toDate(); // Convert Timestamp to DateTime
                       updates.add(MessageModel(
                         messageId: doc.id,
-                        datetime: doc['timestamp'],
+                        datetime:
+                            dateTime.toString(), // Convert DateTime to String
                         description: doc['message'],
                       ));
                     }
+
                     sortMessagesByTimestamp();
                     return ListView.builder(
                       controller: _scrollController,

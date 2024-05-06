@@ -41,7 +41,7 @@ class _ManageCourseState extends State<ManageCourse> {
       Map<String, dynamic> body = {
         "course_name": cName,
         "has_levels": level,
-        "timeDuration": months,
+        "time_duration": months,
       };
       final response = await http.post(
         Uri.parse(Apiconst.addCourses),
@@ -137,7 +137,7 @@ class _ManageCourseState extends State<ManageCourse> {
       "id": idin,
       "course_name": cName,
       "has_levels": hasLevelstemp,
-      "timeDuration": duration,
+      "time_duration": duration,
     };
     try {
       http.Response response = await http.put(
@@ -366,7 +366,7 @@ class _ManageCourseState extends State<ManageCourse> {
                                                       context,
                                                       coures['course_name'],
                                                       coures['id'],
-                                                      coures['timeDuration'],
+                                                      coures['time_duration'],
                                                       coures['has_levels']);
                                                 },
                                                 icon: Icon(

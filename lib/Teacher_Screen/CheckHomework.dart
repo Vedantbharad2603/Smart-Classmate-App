@@ -51,8 +51,8 @@ class _CheckHomeworkState extends State<CheckHomework> {
               'is_submited': item['is_submited'],
               'homework_date': item['homework_date'],
               'remark': item['remark'],
-              'studentdatumId': item['studentdatumId'],
-              'teacherdatumId': item['teacherdatumId'],
+              'studentdatum_id': item['studentdatum_id'],
+              'teacherdatum_id': item['teacherdatum_id'],
               'student_name': item['student_name']
             });
           }
@@ -85,9 +85,9 @@ class _CheckHomeworkState extends State<CheckHomework> {
       "is_submited": true,
       "homework_date": workdate,
       "remark": remarks,
-      "studentdatumId": studid,
-      "teacherdatumId": teacherid,
-      "checkerTeacherId": checkerid
+      "studentdatum_id": studid,
+      "teacherdatum_id": teacherid,
+      "checker_teacher_id": checkerid
     };
     try {
       http.Response response = await http.put(
@@ -215,8 +215,8 @@ class _CheckHomeworkState extends State<CheckHomework> {
                               work['homework_date'],
                               work['homework_details'],
                               work['id'],
-                              work['studentdatumId'],
-                              work['teacherdatumId']);
+                              work['studentdatum_id'],
+                              work['teacherdatum_id']);
                         },
                       ),
                     ),

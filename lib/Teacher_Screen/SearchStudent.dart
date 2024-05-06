@@ -70,9 +70,9 @@ class _SearchStudentState extends State<SearchStudent> {
               'pin_code': item['pin_code'],
               'createdAt': item['createdAt'],
               'updatedAt': item['updatedAt'],
-              'logindatumId': item['logindatumId'],
-              'shiftdatumId': item['shiftdatumId'],
-              'isActive': item['isActive'],
+              'logindatum_id': item['logindatum_id'],
+              'shiftdatum_id': item['shiftdatum_id'],
+              'is_active': item['is_active'],
               'username': item['username'],
               'course_name': item['course_name'],
             });
@@ -107,8 +107,8 @@ class _SearchStudentState extends State<SearchStudent> {
         "homework_details": details,
         "homework_date": formattedDate,
         "is_submited": false,
-        "studentdatumId": studid,
-        "teacherdatumId": teacherid
+        "studentdatum_id": studid,
+        "teacherdatum_id": teacherid
       };
       final response = await http.post(
         Uri.parse(Apiconst.addHomeWork),

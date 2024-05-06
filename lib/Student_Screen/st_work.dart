@@ -58,7 +58,7 @@ class _STWorkState extends State<STWork> {
               'homework_date': item['homework_date'],
               'remark': item['remark'],
               'teachername': item['teachername'],
-              'checkerTeacher': item['checkerTeacher']
+              'checker_teacher': item['checker_teacher']
             });
           }
           setState(() {
@@ -182,7 +182,7 @@ class _STWorkState extends State<STWork> {
 
   Widget buildWorkItem(BuildContext context, Map<String, dynamic> work) {
     String workinfo = "${work['teachername']}: ${work['homework_details']}";
-    String remarkinfo = "${work['checkerTeacher']}: ${work['remark']}";
+    String remarkinfo = "${work['checker_teacher']}: ${work['remark']}";
     return SizedBox(
       width: getWidth(context, 0.8),
       child: Padding(

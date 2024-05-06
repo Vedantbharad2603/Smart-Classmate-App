@@ -38,7 +38,6 @@ class _ProfilePageState extends State<StudentInfo> {
   @override
   void initState() {
     super.initState();
-    print(widget.studid);
     addAndGetTodayattendance();
     fetchAttendance();
   }
@@ -56,12 +55,11 @@ class _ProfilePageState extends State<StudentInfo> {
         headers: {'Content-Type': 'application/json'},
         body: json.encode(body),
       );
-      print(Apiconst.givestudProfile);
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData = json.decode(response.body);
         studentfullname = responseData['data']['userdata']['full_name'];
         studentusername = responseData['data']['login']['username'];
-        studentshift = responseData['data']['shift']['shiftName'];
+        studentshift = responseData['data']['shift']['shift_name'];
         studentcourse = responseData['data']['courseinfo']['course_name'];
         studentlastdate = responseData['data']['courseinfo']['last_month'];
         enrollmentid = responseData['data']['courseinfo']['id'];
@@ -180,7 +178,7 @@ class _ProfilePageState extends State<StudentInfo> {
                                       backgroundColor: MyTheme.highlightcolor,
                                       radius: getSize(context, 4.2),
                                       child: Text(
-                                        studentData[0]['name'][0],
+                                        studentfullname[0],
                                         style: TextStyle(
                                             fontSize: getSize(context, 4.1),
                                             color: Colors.black),

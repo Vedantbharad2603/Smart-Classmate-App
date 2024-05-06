@@ -113,7 +113,7 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
       "email": email,
       "password": password,
       "type": selectedType,
-      "isActive": true
+      "is_active": true
     };
 
     final response = await http.post(
@@ -146,7 +146,7 @@ class _AddTeacherPageState extends State<AddTeacherPage> {
     Map<String, dynamic> addteacherdata = {
       "full_name": '$firstName $lastName',
       "mobile_number": phone,
-      "logindatumId": id
+      "logindatum_id": id
     };
     final teacherResponse = await http.post(
       Uri.parse(Apiconst.addTeacher),
